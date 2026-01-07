@@ -1,9 +1,9 @@
 using DotBahn.Core.Enumerations;
+using DotBahn.Core.Models;
 using DotBahn.Parsing.Base;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Enumerations;
 using DotBahn.TimetableApi.Models;
-using DotBahn.TimetableApi.Models.Base;
 using DotBahn.TimetableApi.Utilities;
 
 namespace DotBahn.TimetableApi.Transformers;

@@ -1,7 +1,7 @@
-namespace DotBahn.TimetableApi.Models.Base;
+namespace DotBahn.Core.Models;
 
 /// <summary>
-/// Represents a value that has a planned state and an optional changed state, often used for delays or platform changes.
+/// Represents a value that has a planned state and an optional changed state.
 /// </summary>
 /// <typeparam name="T">The type of the value.</typeparam>
 public sealed record ChangedValue<T> {

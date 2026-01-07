@@ -1,5 +1,5 @@
+using DotBahn.Core.Models;
 using DotBahn.TimetableApi.Enumerations;
-using DotBahn.TimetableApi.Models.Base;
 
 namespace DotBahn.TimetableApi.Models;
 
