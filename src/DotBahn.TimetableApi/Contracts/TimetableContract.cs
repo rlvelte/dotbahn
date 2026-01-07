@@ -6,7 +6,7 @@ namespace DotBahn.TimetableApi.Contracts;
 /// Raw XML timetable response
 /// </summary>
 [XmlRoot("timetable")]
-public record TimetableContract g{
+public record TimetableContract{
     /// <summary>
     /// Station name or ID
     /// </summary>
