@@ -38,8 +38,6 @@ public static class ServiceCollectionExtensions {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             }).AddPolicyHandler((_, _) => BuildResiliencePolicy());
             
-            
-            
             return services;
         }
     }

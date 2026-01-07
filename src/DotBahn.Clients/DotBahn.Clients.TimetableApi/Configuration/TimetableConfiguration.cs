@@ -1,6 +1,5 @@
 using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Cache.Configuration;
-using DotBahn.Modules.Shared;
 
 namespace DotBahn.TimetableApi.Configuration;
 
@@ -11,8 +10,15 @@ public record TimetableConfiguration {
     /// <summary>
     /// The base URI of the API.
     /// </summary>
-    public Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/timetables/v1");
+    public required Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/timetables/v1");
     
-    public AuthConfiguration Auth { get; set; }
-    public CacheConfiguration Cache { get; set; }
+    /// <summary>
+    /// Configuration for the authorization provider.
+    /// </summary>
+    public required AuthConfiguration Auth { get; set; }
+    
+    /// <summary>
+    /// Configuration for the cache provider.
+    /// </summary>
+    public CacheConfiguration? Cache { get; set; }
 }
