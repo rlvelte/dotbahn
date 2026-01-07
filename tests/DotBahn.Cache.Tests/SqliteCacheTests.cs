@@ -3,11 +3,7 @@ using FluentAssertions;
 namespace DotBahn.Cache.Tests;
 
 public class SqliteCacheTests : IDisposable {
-    private readonly string _dbPath;
-
-    public SqliteCacheTests() {
-        _dbPath = $"test_cache_{Guid.NewGuid()}.db";
-    }
+    private readonly string _dbPath = $"test_cache_{Guid.NewGuid()}.db";
 
     [Fact]
     public async Task SetAndGet_ShouldReturnCorrectValue() {
@@ -73,16 +69,18 @@ public class SqliteCacheTests : IDisposable {
     }
 
     public void Dispose() {
-        if (File.Exists(_dbPath)) {
-            try {
-                File.Delete(_dbPath);
-            } catch {
-                // Ignore
-            }
+        if (!File.Exists(_dbPath)) {
+            return;
+        }
+
+        try {
+            File.Delete(_dbPath);
+        } catch {
+            // Ignore
         }
     }
 
-    private class TestObject {
+    private record TestObject {
         public string Name { get; set; } = string.Empty;
         public int Id { get; set; }
     }
