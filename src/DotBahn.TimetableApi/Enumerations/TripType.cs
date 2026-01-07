@@ -1,4 +1,4 @@
-namespace DotBahn.Timetable.Enumerations;
+namespace DotBahn.TimetableApi.Enumerations;
 
 /// <summary>
 /// Defines the type of trip a train is performing.

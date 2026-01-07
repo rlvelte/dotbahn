@@ -1,4 +1,4 @@
-namespace DotBahn.Timetable.Enumerations;
+namespace DotBahn.TimetableApi.Enumerations;
 
 /// <summary>
 /// Defines the possible statuses of a train event (arrival or departure).

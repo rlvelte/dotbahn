@@ -1,4 +1,4 @@
-namespace DotBahn.Timetable.Models;
+namespace DotBahn.TimetableApi.Models;
 
 /// <summary>
 /// Represents information about a railway station.

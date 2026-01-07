@@ -1,25 +1,22 @@
-namespace DotBahn.Timetable.Client.Transformers;
+namespace DotBahn.TimetableApi.Utilities;
 
 /// <summary>
 /// Utility methods for parsing API data during transformation.
 /// </summary>
-internal static class TransformerUtils
-{
+internal static class TransformerUtils {
     /// <summary>
     /// Parses time string from API format (YYMMDDhhmm) to DateTime.
     /// </summary>
     /// <param name="timeStr">The time string from the API.</param>
     /// <returns>A DateTime representation.</returns>
     /// <exception cref="ArgumentException">Thrown when the format is invalid.</exception>
-    public static DateTime ParseApiTime(string timeStr)
-    {
+    public static DateTime ParseApiTime(string timeStr) {
         if (string.IsNullOrEmpty(timeStr) || timeStr.Length != 10 ||
             !int.TryParse(timeStr.AsSpan(0, 2), out var yearPart) ||
             !int.TryParse(timeStr.AsSpan(2, 2), out var month) || 
             !int.TryParse(timeStr.AsSpan(4, 2), out var day) ||
             !int.TryParse(timeStr.AsSpan(6, 2), out var hour) || 
-            !int.TryParse(timeStr.AsSpan(8, 2), out var minute))
-        {
+            !int.TryParse(timeStr.AsSpan(8, 2), out var minute)) {
             throw new ArgumentException("Invalid time format", nameof(timeStr));
         }
         
@@ -31,13 +28,6 @@ internal static class TransformerUtils
     /// </summary>
     /// <param name="pathStr">The pipe-separated path string.</param>
     /// <returns>A list of station names.</returns>
-    public static List<string> ParsePath(string? pathStr)
-    {
-        if (string.IsNullOrEmpty(pathStr))
-        {
-            return [];
-        }
-
-        return pathStr.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
-    }
+    public static List<string> ParsePath(string? pathStr) => string.IsNullOrEmpty(pathStr) ? [] :
+        pathStr.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
 }

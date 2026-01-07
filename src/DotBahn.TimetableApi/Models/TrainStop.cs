@@ -1,6 +1,6 @@
 using DotBahn.Core.Models;
 
-namespace DotBahn.Timetable.Models;
+namespace DotBahn.TimetableApi.Models;
 
 /// <summary>
 /// Represents a train stop at a specific station, including arrival and departure details.

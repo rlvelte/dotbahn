@@ -1,5 +1,5 @@
 using DotBahn.Core.Token;
-using DotBahn.Timetable.Client;
+using DotBahn.TimetableApi.Client;
 
 namespace DotBahn.Sample;
 
@@ -10,7 +10,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        var config = new DotBahnClientConfiguration
+        var config = new TimetableClientConfiguration
         {
             BaseUrl = "https://api.deutschebahn.com/timetables/v1",
             ClientId = "YOUR_CLIENT_ID",

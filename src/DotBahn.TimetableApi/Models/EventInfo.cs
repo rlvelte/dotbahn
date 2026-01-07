@@ -1,7 +1,7 @@
-using DotBahn.Timetable.Enumerations;
-using DotBahn.Timetable.Models.Base;
+using DotBahn.TimetableApi.Enumerations;
+using DotBahn.TimetableApi.Models.Base;
 
-namespace DotBahn.Timetable.Models;
+namespace DotBahn.TimetableApi.Models;
 
 /// <summary>
 /// Represents information about a specific event, such as an arrival or a departure.
@@ -16,22 +16,22 @@ public record EventInfo
     /// <summary>
     /// Gets the planned and potentially changed time for the event.
     /// </summary>
-    public ChangedValue<DateTime> Time { get; init; } = new();
+    public ChangedValue<DateTime?> Time { get; init; } = new();
 
     /// <summary>
     /// Gets the planned and potentially changed platform for the event.
     /// </summary>
-    public ChangedValue<string> Platform { get; init; } = new();
+    public ChangedValue<string?> Platform { get; init; } = new();
 
     /// <summary>
     /// Gets the planned and potentially changed route or path for the event.
     /// </summary>
-    public ChangedValue<List<string>> Path { get; init; } = new();
+    public ChangedValue<List<string>?> Path { get; init; } = new();
 
     /// <summary>
     /// Gets the planned and potentially changed distant endpoint (e.g., destination for departure, origin for arrival).
     /// </summary>
-    public ChangedValue<string> DistantEndpoint { get; init; } = new();
+    public ChangedValue<string?> DistantEndpoint { get; init; } = new();
 
     /// <summary>
     /// Gets a value indicating whether the event should be hidden from public displays.

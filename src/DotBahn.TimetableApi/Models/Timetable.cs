@@ -1,4 +1,4 @@
-namespace DotBahn.Timetable.Models;
+namespace DotBahn.TimetableApi.Models;
 
 /// <summary>
 /// Represents a timetable containing train stops for a specific station.

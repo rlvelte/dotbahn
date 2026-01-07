@@ -5,7 +5,8 @@
         <LangVersion>latestmajor</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>DotBahn.Timetable</RootNamespace>
+        <RootNamespace>DotBahn.TimetableApi</RootNamespace>
+        <AssemblyName>DotBahn.TimetableApi</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetable.Contracts;
+namespace DotBahn.TimetableApi.Contracts;
 
 /// <summary>
 /// Base class for raw event information (Arrival/Departure)

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBahn.Sample", "samples\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBahn.Core", "src\DotBahn.Core\DotBahn.Core.csproj", "{D8E76576-460A-4800-809E-DB9F1397295C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBahn.Timetable", "src\DotBahn.Timetable\DotBahn.Timetable.csproj", "{FC4169F3-F05A-491F-815A-44A880DED1D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBahn.TimetableApi", "src\DotBahn.TimetableApi\DotBahn.TimetableApi.csproj", "{FC4169F3-F05A-491F-815A-44A880DED1D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBahn.Parsing", "src\DotBahn.Parsing\DotBahn.Parsing.csproj", "{7ED598AC-B4BE-4A71-9D3E-4A0F08062373}"
 EndProject

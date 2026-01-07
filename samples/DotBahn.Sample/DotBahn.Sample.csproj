@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\DotBahn.Core\DotBahn.Core.csproj" />
-        <ProjectReference Include="..\..\src\DotBahn.Timetable\DotBahn.Timetable.csproj" />
+        <ProjectReference Include="..\..\src\DotBahn.TimetableApi\DotBahn.TimetableApi.csproj" />
     </ItemGroup>
 
 </Project>
