@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>DotBahn.Timetable</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotBahn.Core\DotBahn.Core.csproj" />
+      <ProjectReference Include="..\DotBahn.Parsing\DotBahn.Parsing.csproj" />
+    </ItemGroup>
+
+</Project>
