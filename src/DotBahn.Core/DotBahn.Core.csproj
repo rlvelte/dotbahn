@@ -10,7 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DotBahn.Cache\DotBahn.Cache.csproj" />
       <ProjectReference Include="..\DotBahn.Parsing\DotBahn.Parsing.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Cache\" />
     </ItemGroup>
 
 </Project>

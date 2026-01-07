@@ -5,11 +5,11 @@ using DotBahn.TimetableApi.Models;
 namespace DotBahn.TimetableApi.Transformers;
 
 /// <summary>
-/// Transformer for converting <see cref="TimetableContract"/> to <see cref="Models.Timetable"/>.
+/// Transformer for converting <see cref="TimetableResponseContract"/> to <see cref="Models.Timetable"/>.
 /// </summary>
-public class TimetableTransformer(StopTransformer stopTransformer) : ITransformer<TimetableContract, Timetable> {
+public class TimetableTransformer(StopTransformer stopTransformer) : ITransformer<TimetableResponseContract, Timetable> {
     /// <inheritdoc />
-    public Timetable Transform(TimetableContract contract) {
+    public Timetable Transform(TimetableResponseContract contract) {
         var stops = contract.Stops.Select(stop => {
                 var transformedStop = stopTransformer.Transform(stop);
                 return transformedStop with {

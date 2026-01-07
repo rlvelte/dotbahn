@@ -1,3 +1,5 @@
+using DotBahn.Cache.Configuration;
+
 namespace DotBahn.Core.Client;
 
 /// <summary>
@@ -10,4 +12,9 @@ public record BaseClientConfiguration {
     public required string BaseUrl { get; init; }
     public required string ClientId { get; init; }
     public required string ClientSecret { get; init; }
+
+    /// <summary>
+    /// Caching configuration
+    /// </summary>
+    public CacheOptions CacheOptions { get; init; } = new();
 }

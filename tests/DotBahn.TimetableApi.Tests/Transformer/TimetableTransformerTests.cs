@@ -21,7 +21,7 @@ public class TimetableTransformerTests {
     [Fact]
     public void Transform_ShouldMapStationNameAndStops() {
         // Arrange
-        var contract = new TimetableContract {
+        var contract = new TimetableResponseContract {
             Station = "Berlin Hbf",
             Stops = [
                 new StopDataContract { Id = "s1", Eva = "12345" },
