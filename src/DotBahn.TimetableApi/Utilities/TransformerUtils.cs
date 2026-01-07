@@ -3,7 +3,7 @@ namespace DotBahn.TimetableApi.Utilities;
 /// <summary>
 /// Utility methods for parsing API data during transformation.
 /// </summary>
-internal static class TransformerUtils {
+public static class TransformerUtils {
     /// <summary>
     /// Parses time string from API format (YYMMDDhhmm) to DateTime.
     /// </summary>
