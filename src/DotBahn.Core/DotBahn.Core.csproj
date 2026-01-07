@@ -9,4 +9,8 @@
         <AssemblyName>DotBahn.Core</AssemblyName>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DotBahn.Parsing\DotBahn.Parsing.csproj" />
+    </ItemGroup>
+
 </Project>

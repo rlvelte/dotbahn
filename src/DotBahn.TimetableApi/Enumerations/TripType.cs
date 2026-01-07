@@ -1,3 +1,5 @@
+using DotBahn.Core.Enumerations;
+
 namespace DotBahn.TimetableApi.Enumerations;
 
 /// <summary>
@@ -7,15 +9,18 @@ public enum TripType {
     /// <summary>
     /// A standard passenger train.
     /// </summary>
+    [AssociatedValue("p")]
     Passenger,
 
     /// <summary>
     /// An empty train run (e.g., for positioning).
     /// </summary>
+    [AssociatedValue("e")]
     Empty,
 
     /// <summary>
     /// A freight train.
     /// </summary>
+    [AssociatedValue("z")]
     Freight
 }

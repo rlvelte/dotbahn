@@ -1,12 +1,11 @@
-using DotBahn.Core.Enumerations;
+using DotBahn.TimetableApi.Enumerations;
 
-namespace DotBahn.Core.Models;
+namespace DotBahn.TimetableApi.Models;
 
 /// <summary>
 /// Represents a message or disruption information related to a train or station.
 /// </summary>
-public record Message
-{
+public record Message {
     /// <summary>
     /// Gets the unique identifier for the message.
     /// </summary>

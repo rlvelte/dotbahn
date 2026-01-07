@@ -1,3 +1,4 @@
+using DotBahn.Core.Enumerations;
 using DotBahn.Parsing.Base;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Enumerations;
@@ -11,12 +12,6 @@ namespace DotBahn.TimetableApi.Transformers;
 /// Transformer for converting <see cref="EventContract"/> to <see cref="EventInfo"/>.
 /// </summary>
 public class EventTransformer : ITransformer<EventContract, EventInfo?> {
-    private static readonly Dictionary<string, EventStatus> StatusMap = new() {
-        { "p", EventStatus.Planned },
-        { "a", EventStatus.Added },
-        { "c", EventStatus.Cancelled }
-    };
-
     /// <inheritdoc />
     public EventInfo? Transform(EventContract contract) {
         if (string.IsNullOrEmpty(contract.PlannedTime)) {
@@ -31,7 +26,7 @@ public class EventTransformer : ITransformer<EventContract, EventInfo?> {
         var changedPath = TransformerUtils.ParsePath(contract.ChangedPath);
 
         return new EventInfo {
-            Status = ParseEventStatus(contract.PlannedStatus ?? "p"),
+            Status = EnumExtensions.FromAssociatedValue(contract.PlannedStatus, EventStatus.Planned),
             IsHidden = contract.IsHidden == "1",
             Line = contract.Line,
             Time = new ChangedValue<DateTime?> {
@@ -52,7 +47,4 @@ public class EventTransformer : ITransformer<EventContract, EventInfo?> {
             }
         };
     }
-
-    private static EventStatus ParseEventStatus(string? status) =>
-        status != null && StatusMap.TryGetValue(status, out var eventStatus) ? eventStatus : EventStatus.Planned;
 }

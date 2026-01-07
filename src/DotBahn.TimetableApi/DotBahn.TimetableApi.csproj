@@ -11,7 +11,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DotBahn.Core\DotBahn.Core.csproj" />
-      <ProjectReference Include="..\DotBahn.Parsing\DotBahn.Parsing.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Attributes\" />
     </ItemGroup>
 
 </Project>

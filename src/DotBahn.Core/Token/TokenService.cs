@@ -10,9 +10,9 @@ namespace DotBahn.Core.Token;
 /// <summary>
 /// Default implementation of the token service
 /// </summary>
-public class TokenService(BaseDotBahnConfiguration configuration, HttpClient httpClient) : ITokenService
+public class TokenService(BaseClientConfiguration configuration, HttpClient httpClient) : ITokenService
 {
-    private readonly BaseDotBahnConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    private readonly BaseClientConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     private OAuthToken? _currentToken;
     private DateTime _tokenExpiry;

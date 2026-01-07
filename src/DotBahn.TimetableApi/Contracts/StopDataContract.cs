@@ -1,5 +1,4 @@
 using System.Xml.Serialization;
-using DotBahn.Core.Contracts;
 
 namespace DotBahn.TimetableApi.Contracts;
 
@@ -41,5 +40,5 @@ public record StopDataContract {
     /// List of messages
     /// </summary>
     [XmlElement("m")]
-    public List<RawMessage>? Messages { get; init; }
+    public List<MessageContract>? Messages { get; init; }
 }

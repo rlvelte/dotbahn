@@ -1,3 +1,5 @@
+using DotBahn.Core.Enumerations;
+
 namespace DotBahn.TimetableApi.Enumerations;
 
 /// <summary>
@@ -7,15 +9,18 @@ public enum EventStatus {
     /// <summary>
     /// The event is planned as scheduled.
     /// </summary>
+    [AssociatedValue("p")]
     Planned,
 
     /// <summary>
     /// The event has been added as an extra or unscheduled stop.
     /// </summary>
+    [AssociatedValue("a")]
     Added,  
 
     /// <summary>
     /// The event has been canceled.
     /// </summary>
+    [AssociatedValue("c")]
     Cancelled
 }

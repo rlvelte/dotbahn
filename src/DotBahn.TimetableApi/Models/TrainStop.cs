@@ -1,5 +1,3 @@
-using DotBahn.Core.Models;
-
 namespace DotBahn.TimetableApi.Models;
 
 /// <summary>

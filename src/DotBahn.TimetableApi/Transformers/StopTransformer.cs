@@ -1,5 +1,4 @@
-using DotBahn.Core.Contracts;
-using DotBahn.Core.Models;
+using DotBahn.Core.Enumerations;
 using DotBahn.Parsing.Base;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Enumerations;
@@ -10,13 +9,7 @@ namespace DotBahn.TimetableApi.Transformers;
 /// <summary>
 /// Transformer for converting <see cref="StopDataContract"/> to <see cref="TrainStop"/>.
 /// </summary>
-public class StopTransformer(ITransformer<EventContract, EventInfo?> eventTransformer, ITransformer<RawMessage, Message> messageTransformer) : ITransformer<StopDataContract, TrainStop> {
-    private static readonly Dictionary<string, TripType> TripTypeMap = new() {
-        { "p", TripType.Passenger },
-        { "e", TripType.Empty },
-        { "z", TripType.Freight }
-    };
-
+public class StopTransformer(ITransformer<EventContract, EventInfo?> eventTransformer, ITransformer<MessageContract, Message> messageTransformer) : ITransformer<StopDataContract, TrainStop> {
     /// <inheritdoc />
     public TrainStop Transform(StopDataContract contract) {
         var arrival = contract.Arrival != null ? eventTransformer.Transform(contract.Arrival) : null;
@@ -32,7 +25,7 @@ public class StopTransformer(ITransformer<EventContract, EventInfo?> eventTransf
             Train = contract.TripLabel != null ? new TrainInfo {
                 Category = contract.TripLabel.Category ?? string.Empty,
                 Number = contract.TripLabel.Number ?? string.Empty,
-                Type = ParseTripType(contract.TripLabel.TripType ?? "p"),
+                Type = EnumExtensions.FromAssociatedValue(contract.TripLabel.TripType, TripType.Passenger),
                 Owner = contract.TripLabel.Owner,
                 FilterFlags = contract.TripLabel.FilterFlags
             } : new TrainInfo(),
@@ -41,7 +34,4 @@ public class StopTransformer(ITransformer<EventContract, EventInfo?> eventTransf
             Messages = messages
         };
     }
-
-    private static TripType ParseTripType(string? type) => 
-        type != null && TripTypeMap.TryGetValue(type, out var tripType) ? tripType : TripType.Passenger;
 }

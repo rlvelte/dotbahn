@@ -9,8 +9,8 @@ namespace DotBahn.TimetableApi.Client;
 /// <summary>
 /// API client for fetching timetable information.
 /// </summary>
-public class TimetableApiClient(BaseDotBahnConfiguration configuration, ITokenService tokenService, HttpClient httpClient) 
-    : BaseDotBahnClient(configuration, tokenService, httpClient) {
+public class TimetableApiClient(BaseClientConfiguration configuration, ITokenService tokenService, HttpClient httpClient) 
+    : BaseClient(configuration, tokenService, httpClient) {
     
     private readonly XmlParser<TimetableContract> _parser = new();
     private readonly TimetableTransformer _transformer = new(

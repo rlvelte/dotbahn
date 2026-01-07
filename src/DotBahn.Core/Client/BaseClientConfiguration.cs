@@ -3,7 +3,7 @@ namespace DotBahn.Core.Client;
 /// <summary>
 /// Configuration for DotBahn API
 /// </summary>
-public record BaseDotBahnConfiguration {
+public record BaseClientConfiguration {
     /// <summary>
     /// The base url of the endpoint
     /// </summary>
