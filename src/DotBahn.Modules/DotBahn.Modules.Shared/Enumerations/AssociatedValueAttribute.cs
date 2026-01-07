@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace DotBahn.Modules.Shared;
+namespace DotBahn.Modules.Shared.Enumerations;
 
 /// <summary>
 /// Attribute to associate a string value to an enum member.

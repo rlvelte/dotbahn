@@ -1,9 +1,9 @@
 using DotBahn.TimetableApi.Contracts;
-using DotBahn.TimetableApi.Transformers;
 using DotBahn.TimetableApi.Enumerations;
+using DotBahn.TimetableApi.Transformers;
 using FluentAssertions;
 
-namespace DotBahn.TimetableApi.Tests.Transformer;
+namespace DotBahn.Tests.TimetableApi.Transformer;
 
 public class MessageTransformerTests {
     private readonly MessageTransformer _transformer = new();

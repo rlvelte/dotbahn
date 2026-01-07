@@ -1,4 +1,5 @@
 using DotBahn.Modules.Shared;
+using DotBahn.Modules.Shared.Enumerations;
 
 namespace DotBahn.TimetableApi.Enumerations;
 

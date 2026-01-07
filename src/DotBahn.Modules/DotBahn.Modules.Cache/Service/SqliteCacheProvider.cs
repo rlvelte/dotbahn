@@ -1,8 +1,8 @@
 using System.Text.Json;
-using DotBahn.Modules.Cache.Base;
+using DotBahn.Modules.Cache.Service.Base;
 using Microsoft.Data.Sqlite;
 
-namespace DotBahn.Modules.Cache;
+namespace DotBahn.Modules.Cache.Service;
 
 /// <summary>
 /// SQLite implementation of the caching system for local persistence.

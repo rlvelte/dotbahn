@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace DotBahn.Modules.Shared;
+namespace DotBahn.Modules.Shared.Enumerations;
 
 /// <summary>
 /// Extension methods for enumerations.

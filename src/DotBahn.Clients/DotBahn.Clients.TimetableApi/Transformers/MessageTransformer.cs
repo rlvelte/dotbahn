@@ -1,5 +1,6 @@
-using DotBahn.Modules.Parsing.Base;
 using DotBahn.Modules.Shared;
+using DotBahn.Modules.Shared.Enumerations;
+using DotBahn.Modules.Shared.Transformer;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Enumerations;
 using DotBahn.TimetableApi.Models;

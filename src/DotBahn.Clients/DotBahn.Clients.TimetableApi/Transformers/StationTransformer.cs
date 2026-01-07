@@ -1,4 +1,4 @@
-using DotBahn.Modules.Parsing.Base;
+using DotBahn.Modules.Shared.Transformer;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Models;
 

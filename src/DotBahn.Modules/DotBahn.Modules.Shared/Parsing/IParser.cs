@@ -1,4 +1,4 @@
-namespace DotBahn.Modules.Parsing.Base;
+namespace DotBahn.Modules.Shared.Parsing;
 
 /// <summary>
 /// Generic interface for parsing raw data into a target type.

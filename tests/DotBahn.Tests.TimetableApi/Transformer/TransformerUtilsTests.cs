@@ -1,7 +1,7 @@
 using DotBahn.TimetableApi.Utilities;
 using FluentAssertions;
 
-namespace DotBahn.TimetableApi.Tests.Transformer;
+namespace DotBahn.Tests.TimetableApi.Transformer;
 
 public class TransformerUtilsTests {
     [Fact]

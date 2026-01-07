@@ -1,5 +1,8 @@
-namespace DotBahn.Modules.Shared;
+using JetBrains.Annotations;
 
+namespace DotBahn.Modules.Auth.Configuration;
+
+[UsedImplicitly]
 public abstract record AuthConfiguration {
     /// <summary>
     /// The Client ID for authentication.

@@ -1,3 +1,4 @@
+using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Cache.Configuration;
 using DotBahn.Modules.Shared;
 

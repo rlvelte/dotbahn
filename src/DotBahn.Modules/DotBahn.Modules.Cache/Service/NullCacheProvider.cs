@@ -1,6 +1,6 @@
-using DotBahn.Modules.Cache.Base;
+using DotBahn.Modules.Cache.Service.Base;
 
-namespace DotBahn.Modules.Cache;
+namespace DotBahn.Modules.Cache.Service;
 
 /// <summary>
 /// No-op implementation of the caching system (Null Object Pattern).

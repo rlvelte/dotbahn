@@ -2,7 +2,7 @@ using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Transformers;
 using FluentAssertions;
 
-namespace DotBahn.TimetableApi.Tests.Transformer;
+namespace DotBahn.Tests.TimetableApi.Transformer;
 
 public class StationTransformerTests {
     private readonly StationTransformer _transformer = new();

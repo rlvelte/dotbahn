@@ -1,4 +1,4 @@
-namespace DotBahn.Modules.Parsing.Base;
+namespace DotBahn.Modules.Shared.Transformer;
 
 /// <summary>
 /// Generic interface for transforming a contract type into a domain model.

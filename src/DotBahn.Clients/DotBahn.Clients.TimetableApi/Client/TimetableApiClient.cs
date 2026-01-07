@@ -1,8 +1,8 @@
 using DotBahn.Clients.Shared;
-using DotBahn.Modules.Auth.Base;
-using DotBahn.Modules.Cache.Base;
-using DotBahn.Modules.Parsing;
-using DotBahn.Modules.Parsing.Base;
+using DotBahn.Modules.Auth.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Transformer;
 using DotBahn.TimetableApi.Configuration;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Models;

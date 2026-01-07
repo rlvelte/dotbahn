@@ -10,7 +10,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Auth\DotBahn.Modules.Auth.csproj" />
       <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
-      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Parsing\DotBahn.Modules.Parsing.csproj" />
     </ItemGroup>
 
 </Project>

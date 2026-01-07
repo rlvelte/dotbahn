@@ -1,11 +1,11 @@
-using DotBahn.Parsing.Base;
+using DotBahn.Modules.Shared.Transformer;
 using DotBahn.TimetableApi.Contracts;
 using DotBahn.TimetableApi.Models;
 using DotBahn.TimetableApi.Transformers;
 using FluentAssertions;
 using NSubstitute;
 
-namespace DotBahn.TimetableApi.Tests.Transformer;
+namespace DotBahn.Tests.TimetableApi.Transformer;
 
 public class StopTransformerTests {
     private readonly ITransformer<EventContract, EventInfo?> _eventTransformer;

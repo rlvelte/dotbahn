@@ -1,12 +1,12 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using DotBahn.Modules.Auth.Base;
+using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Auth.Models;
-using DotBahn.Modules.Shared;
+using DotBahn.Modules.Auth.Service.Base;
 using Microsoft.Extensions.Options;
 
-namespace DotBahn.Modules.Auth;
+namespace DotBahn.Modules.Auth.Service;
 
 /// <summary>
 /// Service for managing OAuth access tokens.

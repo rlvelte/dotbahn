@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
-using DotBahn.Modules.Auth.Base;
-using DotBahn.Modules.Cache.Base;
+using DotBahn.Modules.Auth.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
 
 namespace DotBahn.Clients.Shared;
 

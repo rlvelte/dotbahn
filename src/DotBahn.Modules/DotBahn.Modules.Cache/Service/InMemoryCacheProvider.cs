@@ -1,7 +1,7 @@
-using DotBahn.Modules.Cache.Base;
+using DotBahn.Modules.Cache.Service.Base;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DotBahn.Modules.Cache;
+namespace DotBahn.Modules.Cache.Service;
 
 /// <summary>
 /// In-memory implementation of the caching system

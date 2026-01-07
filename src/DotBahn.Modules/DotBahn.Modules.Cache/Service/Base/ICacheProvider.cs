@@ -1,4 +1,4 @@
-namespace DotBahn.Modules.Cache.Base;
+namespace DotBahn.Modules.Cache.Service.Base;
 
 /// <summary>
 /// Interface for the caching system
