@@ -1,7 +1,9 @@
 using DotBahn.Core.Client;
 using DotBahn.Core.Token;
 using DotBahn.TimetableApi.Client;
+using DotBahn.TimetableApi.Transformers;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 
 namespace DotBahn.TimetableApi.IntegrationTests;
 
@@ -10,15 +12,23 @@ public class TimetableApiIntegrationTests : IDisposable {
     private readonly HttpClient _httpClient;
 
     public TimetableApiIntegrationTests() {
-        var config = new BaseClientConfiguration {
-            BaseUrl = "https://api.deutschebahn.com/timetables/v1",
+        var options = new TimetableConfiguration {
+            BaseUri = new Uri("https://api.deutschebahn.com/timetables/v1"),
             ClientId = "ABC" ?? throw new Exception("CLIENT_ID not found."),
             ClientSecret = "ABC" ?? throw new Exception("CLIENT_KEY not found.")
         };
 
+        var optionsWrapper = Options.Create(options);
+
         _httpClient = new HttpClient();
-        var tokenService = new TokenService(config, _httpClient);
-        _client = new TimetableApiClient(config, tokenService, _httpClient);
+        var tokenService = new TokenService(optionsWrapper, _httpClient);
+
+        var transformer = new TimetableTransformer(
+            new StopTransformer(new EventTransformer(), new MessageTransformer())
+        );
+        var stationTransformer = new StationTransformer();
+        
+        _client = new TimetableApiClient(optionsWrapper, tokenService, _httpClient, transformer, stationTransformer);
     }
 
     [Fact]

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Auth\DotBahn.Modules.Auth.csproj" />
+      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
+      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Parsing\DotBahn.Modules.Parsing.csproj" />
+    </ItemGroup>
+
+</Project>

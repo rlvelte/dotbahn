@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/DotBahn.Clients/">
+    <Project Path="src/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <Project Path="src/DotBahn.Clients/DotBahn.Clients.TimetableApi/DotBahn.Clients.TimetableApi.csproj" />
+  </Folder>
+  <Folder Name="/DotBahn.Modules/">
+    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Auth/DotBahn.Modules.Auth.csproj" />
+    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
+    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Parsing/DotBahn.Modules.Parsing.csproj" />
+    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
+  </Folder>
+</Solution>

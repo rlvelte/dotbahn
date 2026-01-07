@@ -2,7 +2,9 @@ using DotBahn.Cache;
 using DotBahn.Cache.Configuration;
 using DotBahn.Core.Client;
 using DotBahn.Core.Token;
+using DotBahn.TimetableApi;
 using DotBahn.TimetableApi.Client;
+using DotBahn.TimetableApi.Transformers;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DotBahn.Sample;
@@ -17,26 +19,30 @@ public static class Program {
             return;
         }
 
-        var config = new BaseClientConfiguration {
-            BaseUrl = "https://api.deutschebahn.com/timetables/v1",
+        var options = new DotBahnTimetableOptions {
+            BaseUri = new Uri("https://api.deutschebahn.com/timetables/v1"),
             ClientId = args[0],
             ClientSecret = args[1],
             CacheOptions = new CacheOptions {
-                DefaultExpiration = TimeSpan.FromSeconds(30),
-                PathExpirations = new Dictionary<string, TimeSpan> {
-                    { "/station/", TimeSpan.FromHours(24) }
-                }
+                DefaultExpiration = TimeSpan.FromSeconds(30)
             }
         };
 
+        var optionsWrapper = Microsoft.Extensions.Options.Options.Create(options);
+
         using var httpClient = new HttpClient();
-        var tokenService = new TokenService(config, httpClient);
+        var tokenService = new TokenService(optionsWrapper, httpClient);
         
-        // Initialize Cache
         using var memoryCache = new MemoryCache(new MemoryCacheOptions());
         var cache = new InMemoryCache(memoryCache);
+
+        // Manually creating the transformer hierarchy (or use DI in a real app)
+        var transformer = new TimetableTransformer(
+            new StopTransformer(new EventTransformer(), new MessageTransformer())
+        );
+        var stationTransformer = new StationTransformer();
         
-        using var client = new TimetableApiClient(config, tokenService, httpClient, cache);
+        using var client = new TimetableApiClient(optionsWrapper, tokenService, httpClient, transformer, stationTransformer, cache);
 
         try {
             Console.WriteLine("1. Request (API): Frankfurt Hbf...");
@@ -47,12 +53,11 @@ public static class Program {
             var timetableCached = await client.GetFullChangesAsync("8000105");
             Console.WriteLine($"   Station: {timetableCached.Station}, Stops: {timetableCached.Stops.Count}");
 
-            Console.WriteLine("\n3. Station Search (Long-term Cache):");
+            Console.WriteLine("\n3. Station Search:");
             var stations = await client.SearchStationsAsync("Berlin");
             Console.WriteLine($"   Found {stations.Count} stations.");
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
