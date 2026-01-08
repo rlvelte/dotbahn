@@ -21,6 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotBahn.Clients\DotBahn.Clients.TimetableApi\DotBahn.Clients.TimetableApi.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.TimetableApi\DotBahn.Clients.TimetableApi.csproj" />
   </ItemGroup>
 </Project>

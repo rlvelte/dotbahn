@@ -1,12 +1,15 @@
 <Solution>
   <Folder Name="/DotBahn.Clients/">
-    <Project Path="src/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <Project Path="src/DotBahn.Clients/DotBahn.Clients.TimetableApi/DotBahn.Clients.TimetableApi.csproj" />
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.TimetableApi/DotBahn.Clients.TimetableApi.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Modules/">
-    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Auth/DotBahn.Modules.Auth.csproj" />
-    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
-    <Project Path="src/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Auth/DotBahn.Modules.Auth.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
+  </Folder>
+  <Folder Name="/DotBahn.Samples/">
+    <Project Path="samples/DotBahn.Sample.TimetableApi/DotBahn.Sample.TimetableApi.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">
     <Project Path="tests\DotBahn.Tests.TimetableApi\DotBahn.Tests.TimetableApi.csproj" />
