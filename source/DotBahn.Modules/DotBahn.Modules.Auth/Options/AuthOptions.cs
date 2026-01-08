@@ -10,7 +10,7 @@ public record AuthOptions {
     /// <summary>
     /// The type of authorization provider to use
     /// </summary>
-    public AuthProviderType ProviderType { get; set; } = AuthProviderType.Token;
+    public AuthProviderType ProviderType { get; set; } = AuthProviderType.ApiKey;
 
     /// <summary>
     /// The Client ID for authentication.

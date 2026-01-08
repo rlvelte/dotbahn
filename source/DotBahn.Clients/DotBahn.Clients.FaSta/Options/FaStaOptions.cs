@@ -12,5 +12,5 @@ public record FaStaOptions {
     /// <summary>
     /// The base URI of the FaSta API.
     /// </summary>
-    public required Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/fasta/v2");
+    public required Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/fasta/v2/");
 }

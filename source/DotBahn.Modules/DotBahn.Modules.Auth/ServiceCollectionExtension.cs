@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions {
                 var options = sp.GetRequiredService<IOptions<AuthOptions>>().Value;
 
                 return options.ProviderType switch {
-                    AuthProviderType.Token => new TokenAuthorizationProvider(options, sp.GetRequiredService<HttpClient>()),
+                    AuthProviderType.ApiKey => new ApiKeyAuthorizationProvider(options),
                     _ => new NullAuthorizationProvider()
                 };
             });

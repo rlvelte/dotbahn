@@ -19,7 +19,7 @@ services.AddLogging();
 
 // Add Authorization
 services.AddAuthorizationProvider((_, opt) => {
-    opt.ProviderType = AuthProviderType.Token; 
+    opt.ProviderType = AuthProviderType.ApiKey; 
     opt.ClientId = clientId;
     opt.ClientSecret = clientSecret;
 });
@@ -27,12 +27,12 @@ services.AddAuthorizationProvider((_, opt) => {
 // Add Cache
 services.AddCacheProvider((_, opt) => {
     opt.ProviderType = CacheProviderType.InMemory; 
-    opt.DefaultExpiration = TimeSpan.FromMinutes(5); 
+    opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
 // Add Timetable API Client
 services.AddDotBahnTimetables((_, opt) => {
-    opt.BaseEndpoint = new Uri("https://api.deutschebahn.com/timetables/v1");
+    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 });
 
 var serviceProvider = services.BuildServiceProvider();

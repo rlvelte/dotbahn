@@ -7,7 +7,7 @@ namespace DotBahn.Modules.Auth.Service.Base;
 /// </summary>
 public class NullAuthorizationProvider : IAuthorizationProvider {
     /// <inheritdoc />
-    public Task<string> GetAccessTokenAsync() {
-        return Task.FromResult(string.Empty);
+    public Task AuthorizeRequestAsync(HttpRequestMessage request) {
+        return Task.CompletedTask;
     }
 }

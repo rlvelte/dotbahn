@@ -44,11 +44,22 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
         if (cachedData != null) {
             return cachedData;
         }
-        
-        var token = await authorization.GetAccessTokenAsync();
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, relativeUrl);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var path = relativeUrl.StartsWith('/') ? relativeUrl[1..] : relativeUrl;
+        Uri requestUri;
+
+        if (http.BaseAddress != null) {
+            var baseUriStr = http.BaseAddress.ToString();
+            if (!baseUriStr.EndsWith('/')) {
+                baseUriStr += "/";
+            }
+            requestUri = new Uri(new Uri(baseUriStr), path);
+        } else {
+            requestUri = new Uri(path, UriKind.RelativeOrAbsolute);
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        await authorization.AuthorizeRequestAsync(request);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
 
         var response = await http.SendAsync(request);

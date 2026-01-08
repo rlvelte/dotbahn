@@ -10,7 +10,7 @@ public enum AuthProviderType {
     None,
 
     /// <summary>
-    /// OAuth Token-based authorization
+    /// API Key-based authorization (Headers)
     /// </summary>
-    Token
+    ApiKey
 }

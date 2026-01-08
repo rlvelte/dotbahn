@@ -12,5 +12,5 @@ public record TimetableOptions {
     /// <summary>
     /// The base URI of the API.
     /// </summary>
-    public required Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/timetables/v1");
+    public required Uri BaseEndpoint { get; set; } = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
 }

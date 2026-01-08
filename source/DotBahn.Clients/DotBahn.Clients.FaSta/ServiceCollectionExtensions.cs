@@ -38,6 +38,8 @@ public static class ServiceCollectionExtensions {
         }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
         }).AddPolicyHandler((_, _) => BuildResiliencePolicy());
+        
+        // TODO: Transformer
 
         services.AddSingleton<IParser<List<FacilityContract>>, JsonParser<List<FacilityContract>>>();
         services.AddSingleton<IParser<FacilityContract>, JsonParser<FacilityContract>>();
