@@ -4,14 +4,13 @@ using System.Text.Json;
 using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Auth.Models;
 using DotBahn.Modules.Auth.Service.Base;
-using Microsoft.Extensions.Options;
 
 namespace DotBahn.Modules.Auth.Service;
 
 /// <summary>
 /// Service for managing OAuth access tokens.
 /// </summary>
-public class TokenAuthorizationProvider(IOptions<AuthConfiguration> options, HttpClient httpClient) : IAuthorizationProvider {
+public class TokenAuthorizationProvider(AuthConfiguration configuration, HttpClient httpClient) : IAuthorizationProvider {
     private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     private OAuthToken? _currentToken;
     private DateTime _tokenExpiry;
@@ -24,7 +23,7 @@ public class TokenAuthorizationProvider(IOptions<AuthConfiguration> options, Htt
 
         const string tokenUrl = "https://api.deutschebahn.com/oauth/v1/token";
         var credentials = Convert.ToBase64String(
-            Encoding.UTF8.GetBytes($"{options.Value.ClientId}:{options.Value.ClientSecret}")
+            Encoding.UTF8.GetBytes($"{configuration.ClientId}:{configuration.ClientSecret}")
         );
 
         using var request = new HttpRequestMessage(HttpMethod.Post, tokenUrl);
