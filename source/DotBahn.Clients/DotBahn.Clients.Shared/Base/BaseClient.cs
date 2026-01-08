@@ -11,7 +11,7 @@ namespace DotBahn.Clients.Shared.Base;
 /// <param name="http">The HTTP client used for requests.</param>
 /// <param name="authorization">The provider used for retrieving access tokens.</param>
 /// <param name="cache">The cache provider for storing responses.</param>
-public abstract class BaseClient(HttpClient http, IAuthorizationProvider authorization, ICacheProvider cache) : IDisposable {
+public abstract class BaseClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache) : IDisposable {
     /// <summary>
     /// Sends a GET request to the specified relative URL and parses the response.
     /// </summary>
@@ -20,7 +20,7 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
     /// <param name="parser">The parser used to convert the raw response to the contract.</param>
     /// <param name="acceptHeader">The value for the Accept header.</param>
     /// <returns>The parsed contract.</returns>
-    protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader = "application/xml") {
+    protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader) {
         var rawData = await GetContractDataAsync(relativeUrl, acceptHeader);
         return parser.Parse(rawData);
     }
@@ -33,12 +33,18 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
     /// <param name="parser">The parser used to convert the raw responses to the contracts.</param>
     /// <param name="acceptHeader">The value for the Accept header.</param>
     /// <returns>A collection of parsed contracts.</returns>
-    protected async Task<IEnumerable<TContract>> GetBatchAsync<TContract>(IEnumerable<string> relativeUrls, IParser<TContract> parser, string acceptHeader = "application/xml") {
+    protected async Task<IEnumerable<TContract>> GetBatchAsync<TContract>(IEnumerable<string> relativeUrls, IParser<TContract> parser, string acceptHeader) {
         var tasks = relativeUrls.Select(url => GetAsync(url, parser, acceptHeader));
         return await Task.WhenAll(tasks);
     }
     
-    private async Task<string> GetContractDataAsync(string relativeUrl, string acceptHeader = "application/xml") {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="relativeUrl"></param>
+    /// <param name="acceptHeader"></param>
+    /// <returns></returns>
+    private async Task<string> GetContractDataAsync(string relativeUrl, string acceptHeader) {
         var cacheKey = $"{relativeUrl}_{acceptHeader}";
         var cachedData = await cache.GetAsync<string>(cacheKey);
         if (cachedData != null) {

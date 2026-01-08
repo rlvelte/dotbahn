@@ -8,6 +8,6 @@ namespace DotBahn.Clients.FaSta.Client;
 /// <summary>
 /// API client for fetching station facilities status (FaSta).
 /// </summary>
-public class FaStaClient(HttpClient http, IAuthorizationProvider authorization, ICacheProvider cache)
+public class FaStaClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache)
     : BaseClient(http, authorization, cache) {
 }

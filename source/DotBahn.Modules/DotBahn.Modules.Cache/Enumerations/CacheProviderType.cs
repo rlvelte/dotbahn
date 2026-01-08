@@ -12,10 +12,5 @@ public enum CacheProviderType {
     /// <summary>
     /// In-memory cache provider
     /// </summary>
-    InMemory,
-
-    /// <summary>
-    /// SQLite-based cache provider
-    /// </summary>
-    Sqlite
+    InMemory
 }

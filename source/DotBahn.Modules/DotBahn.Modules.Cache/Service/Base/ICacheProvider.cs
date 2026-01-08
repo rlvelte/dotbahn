@@ -3,7 +3,7 @@ namespace DotBahn.Modules.Cache.Service.Base;
 /// <summary>
 /// Interface for the caching system
 /// </summary>
-public interface ICacheProvider {
+public interface IRequestCache {
     /// <summary>
     /// Gets a value from the cache
     /// </summary>

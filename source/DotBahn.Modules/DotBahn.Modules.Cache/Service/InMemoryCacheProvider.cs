@@ -4,9 +4,9 @@ using Microsoft.Extensions.Caching.Memory;
 namespace DotBahn.Modules.Cache.Service;
 
 /// <summary>
-/// In-memory implementation of the caching system
+/// In-memory implementation of the request caching system
 /// </summary>
-public class InMemoryCacheProvider(IMemoryCache memoryCache) : ICacheProvider {
+public class InMemoryRequestCacheProvider(IMemoryCache memoryCache) : IRequestCache {
     private readonly IMemoryCache _cache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
 
     /// <inheritdoc />

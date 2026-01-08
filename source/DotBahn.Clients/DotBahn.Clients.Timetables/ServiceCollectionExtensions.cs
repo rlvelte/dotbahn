@@ -1,11 +1,8 @@
 using System.Net;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Clients.Timetables.Models;
 using DotBahn.Clients.Timetables.Options;
-using DotBahn.Clients.Timetables.Transformers;
 using DotBahn.Modules.Shared.Parsing;
-using DotBahn.Modules.Shared.Transformer;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -43,14 +40,7 @@ public static class ServiceCollectionExtensions {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             }).AddPolicyHandler((_, _) => BuildResiliencePolicy());
             
-            services.AddSingleton<ITransformer<EventContract, EventInfo?>, EventTransformer>();
-            services.AddSingleton<ITransformer<MessageContract, Message>, MessageTransformer>();
-            services.AddSingleton<ITransformer<StationContract, StationInfo>, StationTransformer>();
-            services.AddSingleton<ITransformer<StopDataContract, TrainStop>, StopTransformer>();
-            services.AddSingleton<ITransformer<TimetableResponseContract, Timetable>, TimetableTransformer>();
-            
             services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
-            services.AddSingleton<IParser<StationsResponseContract>, XmlParser<StationsResponseContract>>();
         
             return services;
         }
@@ -64,7 +54,7 @@ public static class ServiceCollectionExtensions {
             .HandleTransientHttpError()
             .OrResult(r => r.StatusCode is (HttpStatusCode)429 or HttpStatusCode.ServiceUnavailable)
             .WaitAndRetryAsync(retryCount: 4, (retryAttempt, outcome, _) => {
-                                   var retryAfter = outcome?.Result?.Headers?.RetryAfter;
+                                   var retryAfter = outcome?.Result?.Headers.RetryAfter;
                                    if (retryAfter != null) {
                                        var ra = retryAfter.Delta ?? (retryAfter.Date.HasValue ? retryAfter.Date.Value - DateTimeOffset.UtcNow : null);
                                        if (ra.HasValue && ra.Value > TimeSpan.Zero) {

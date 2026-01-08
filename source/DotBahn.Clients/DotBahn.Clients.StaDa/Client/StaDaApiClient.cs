@@ -8,6 +8,6 @@ namespace DotBahn.Clients.StaDa.Client;
 /// <summary>
 /// API client for fetching station data (StaDa).
 /// </summary>
-public class StaDaClient(HttpClient http, IAuthorizationProvider authorization, ICacheProvider cache)
+public class StaDaClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache)
     : BaseClient(http, authorization, cache) {
 }
