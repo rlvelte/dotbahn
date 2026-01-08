@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Auth\DotBahn.Modules.Auth.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
+        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
+        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.RequestCache\DotBahn.Modules.RequestCache.csproj" />
     </ItemGroup>
 </Project>

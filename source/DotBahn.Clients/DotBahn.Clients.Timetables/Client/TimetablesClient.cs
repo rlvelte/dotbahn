@@ -1,7 +1,7 @@
 using DotBahn.Clients.Shared.Base;
 using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Modules.Auth.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Authorization.Service.Base;
+using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 
 namespace DotBahn.Clients.Timetables.Client;

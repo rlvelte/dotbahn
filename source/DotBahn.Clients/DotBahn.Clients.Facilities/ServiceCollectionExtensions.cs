@@ -1,13 +1,10 @@
 using System.Net;
 using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Clients.Facilities.Options;
 using DotBahn.Modules.Shared.Parsing;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Extensions.Http;
 
 namespace DotBahn.Clients.Facilities;
 
@@ -19,20 +16,20 @@ public static class ServiceCollectionExtensions {
     /// Adds the FaSta client using HttpClientFactory, with options configured via callback.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
-    /// <param name="configuration">Delegate to configure <see cref="FaStaOptions"/>. Can use the service provider.</param>
+    /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
     /// <returns>The service collection.</returns>
     [UsedImplicitly]
-    public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<IServiceProvider, FaStaOptions> configuration) {
+    public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<IServiceProvider, ClientOptions> configuration) {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddSingleton<IConfigureOptions<FaStaOptions>>(sp => new ConfigureOptions<FaStaOptions>(opt => configuration(sp, opt)));
-        services.AddOptions<FaStaOptions>()
+        services.AddSingleton<IConfigureOptions<ClientOptions>>(sp => new ConfigureOptions<ClientOptions>(opt => configuration(sp, opt)));
+        services.AddOptions<ClientOptions>()
                 .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                 .ValidateOnStart();
 
-        services.AddHttpClient<FacilityClient>((sp, http) => {
-            var options = sp.GetRequiredService<IOptions<FaStaOptions>>().Value;
+        services.AddHttpClient<FacilitiesClient>((sp, http) => {
+            var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
             http.BaseAddress = options.BaseEndpoint;
             http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
         }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {

@@ -1,13 +1,10 @@
 using System.Net;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Clients.Timetables.Options;
 using DotBahn.Modules.Shared.Parsing;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Extensions.Http;
 
 namespace DotBahn.Clients.Timetables;
 
@@ -20,20 +17,20 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         /// Adds the Timetables client using HttpClientFactory, with options configured via callback.
         /// </summary>
-        /// <param name="configuration">Delegate to configure <see cref="TimetableOptions"/>. Can use the service provider.</param>
+        /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddDotBahnTimetables(Action<IServiceProvider, TimetableOptions> configuration) {
+        public IServiceCollection AddDotBahnTimetables(Action<IServiceProvider, ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
         
-            services.AddSingleton<IConfigureOptions<TimetableOptions>>(sp => new ConfigureOptions<TimetableOptions>(opt => configuration(sp, opt)));
-            services.AddOptions<TimetableOptions>()
+            services.AddSingleton<IConfigureOptions<ClientOptions>>(sp => new ConfigureOptions<ClientOptions>(opt => configuration(sp, opt)));
+            services.AddOptions<ClientOptions>()
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
 
             services.AddHttpClient<TimetablesClient>((sp, http) => {
-                var options = sp.GetRequiredService<IOptions<TimetableOptions>>().Value;
+                var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
                 http.BaseAddress = options.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
             }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {

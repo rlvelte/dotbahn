@@ -1,5 +1,6 @@
-﻿using DotBahn.Clients.Timetables;
-using DotBahn.Clients.Timetables.Client;
+﻿
+using DotBahn.Clients.Stations;
+using DotBahn.Clients.Stations.Client;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Enumerations;
 using DotBahn.Modules.RequestCache;
@@ -7,7 +8,7 @@ using DotBahn.Modules.RequestCache.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 
 if (args.Length < 2) {
-    Console.WriteLine("Usage: DotBahn.Sample.Timetables <ClientId> <ClientSecret>");
+    Console.WriteLine("Usage: DotBahn.Sample.Stations <ClientId> <ClientSecret>");
     return;
 }
 
@@ -30,20 +31,13 @@ services.AddRequestCacheProvider((_, opt) => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
-// Add Timetable API Client
-services.AddDotBahnTimetables((_, opt) => {
-    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
+// Add Stations Client
+services.AddDotBahnStations((_, opt) => {
+    opt.BaseEndpoint = new Uri("https://api.deutschebahn.com/stada/v2/");
 });
 
 var serviceProvider = services.BuildServiceProvider();
 
 
 // Use the API
-var client = serviceProvider.GetRequiredService<TimetablesClient>();
-
-var timetable = await client.GetPlannedTimetableAsync("8000261", DateTime.Now);
-Console.WriteLine($"Found {timetable.Stops.Count} stops.");
-        
-foreach (var stop in timetable.Stops.Take(3)) {
-    Console.WriteLine($"- ID: {stop.Id}");
-}
+var client = serviceProvider.GetRequiredService<StationsClient>();

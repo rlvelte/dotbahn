@@ -16,13 +16,13 @@ public record StopDataContract {
     /// EVA number of the station
     /// </summary>
     [XmlAttribute("eva")]
-    public string Eva { get; init; } = string.Empty;
+    public string Eva { get; init; } = string.Empty; // TODO: ?
     
     /// <summary>
     /// Trip label information
     /// </summary>
     [XmlElement("tl")]
-    public TripLabelContract? TripLabel { get; init; }
+    public TripInfoContract? TripInfo { get; init; }
     
     /// <summary>
     /// Arrival information

@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
-using DotBahn.Modules.Auth.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Authorization.Service.Base;
+using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 
 namespace DotBahn.Clients.Shared.Base;
@@ -19,9 +19,11 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
     /// <param name="relativeUrl">The relative URL for the request.</param>
     /// <param name="parser">The parser used to convert the raw response to the contract.</param>
     /// <param name="acceptHeader">The value for the Accept header.</param>
+    /// <param name="queryParams">Optional query parameters.</param>
     /// <returns>The parsed contract.</returns>
-    protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader) {
-        var rawData = await GetContractDataAsync(relativeUrl, acceptHeader);
+    protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null) {
+        var fullUrl = BuildUrl(relativeUrl, queryParams);
+        var rawData = await GetContractDataAsync(fullUrl, acceptHeader);
         return parser.Parse(rawData);
     }
     
@@ -39,11 +41,26 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
     }
     
     /// <summary>
-    /// 
+    /// Builds a URL with query parameters.
     /// </summary>
-    /// <param name="relativeUrl"></param>
-    /// <param name="acceptHeader"></param>
-    /// <returns></returns>
+    /// <param name="relativeUrl">The base relative URL.</param>
+    /// <param name="queryParams">Optional query parameters.</param>
+    /// <returns>The complete URL with query string.</returns>
+    private static string BuildUrl(string relativeUrl, QueryParameters? queryParams) {
+        if (queryParams == null || !queryParams.Any()) {
+            return relativeUrl;
+        }
+        
+        var queryString = queryParams.ToQueryString();
+        return string.IsNullOrEmpty(queryString) ? relativeUrl : $"{relativeUrl}?{queryString}";
+    }
+    
+    /// <summary>
+    /// Retrieves contract data from the API or cache.
+    /// </summary>
+    /// <param name="relativeUrl">The relative URL including query parameters.</param>
+    /// <param name="acceptHeader">The value for the Accept header.</param>
+    /// <returns>The raw response data.</returns>
     private async Task<string> GetContractDataAsync(string relativeUrl, string acceptHeader) {
         var cacheKey = $"{relativeUrl}_{acceptHeader}";
         var cachedData = await cache.GetAsync<string>(cacheKey);
