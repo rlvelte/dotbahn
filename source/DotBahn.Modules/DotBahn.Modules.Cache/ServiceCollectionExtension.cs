@@ -1,6 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
-using DotBahn.Modules.Cache.Configuration;
 using DotBahn.Modules.Cache.Enumerations;
+using DotBahn.Modules.Cache.Options;
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
 using JetBrains.Annotations;
@@ -19,21 +18,21 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         /// Adds the cache system, with options configured via callback.
         /// </summary>
-        /// <param name="configuration">Delegate to configure <see cref="CacheConfiguration"/>. Can use the service provider.</param>
+        /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddCacheProvider(Action<IServiceProvider, CacheConfiguration> configuration) {
+        public IServiceCollection AddCacheProvider(Action<IServiceProvider, CacheOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
-            services.AddSingleton<IConfigureOptions<CacheConfiguration>>(sp => new ConfigureOptions<CacheConfiguration>(opt => configuration(sp, opt)));
-            services.AddOptions<CacheConfiguration>()
+            services.AddSingleton<IConfigureOptions<CacheOptions>>(sp => new ConfigureOptions<CacheOptions>(opt => configuration(sp, opt)));
+            services.AddOptions<CacheOptions>()
                     .Validate(o => o.DefaultExpiration.TotalSeconds > 1, "DotBahn: Cache 'DefaultExpiration' must be > 1.")
                     .ValidateOnStart();
 
             services.AddMemoryCache();
             services.AddSingleton<ICacheProvider>(sp => {
-                var options = sp.GetRequiredService<IOptions<CacheConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptions<CacheOptions>>().Value;
 
                 return options.ProviderType switch {
                     CacheProviderType.InMemory => new InMemoryCacheProvider(sp.GetRequiredService<IMemoryCache>()),

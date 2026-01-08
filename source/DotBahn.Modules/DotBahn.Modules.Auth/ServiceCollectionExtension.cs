@@ -1,6 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
-using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Auth.Enumerations;
+using DotBahn.Modules.Auth.Options;
 using DotBahn.Modules.Auth.Service;
 using DotBahn.Modules.Auth.Service.Base;
 using JetBrains.Annotations;
@@ -18,22 +17,22 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         /// Adds the authorization system, with options configured via callback.
         /// </summary>
-        /// <param name="configuration">Delegate to configure <see cref="AuthConfiguration"/>. Can use the service provider.</param>
+        /// <param name="configuration">Delegate to configure <see cref="AuthOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddAuthorizationProvider(Action<IServiceProvider, AuthConfiguration> configuration) {
+        public IServiceCollection AddAuthorizationProvider(Action<IServiceProvider, AuthOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
-            services.AddSingleton<IConfigureOptions<AuthConfiguration>>(sp => new ConfigureOptions<AuthConfiguration>(opt => configuration(sp, opt)));
-            services.AddOptions<AuthConfiguration>()
-                    .Validate(o => string.IsNullOrWhiteSpace(o.ClientId), "DotBahn: 'ClientId' can't be null or empty.")
-                    .Validate(o => string.IsNullOrWhiteSpace(o.ClientSecret), "DotBahn: 'ClientSecret' can't be null or empty.")
+            services.AddSingleton<IConfigureOptions<AuthOptions>>(sp => new ConfigureOptions<AuthOptions>(opt => configuration(sp, opt)));
+            services.AddOptions<AuthOptions>()
+                    .Validate(o => !string.IsNullOrWhiteSpace(o.ClientId), "DotBahn: 'ClientId' can't be null or empty.")
+                    .Validate(o => !string.IsNullOrWhiteSpace(o.ClientSecret), "DotBahn: 'ClientSecret' can't be null or empty.")
                     .ValidateOnStart();
 
             services.AddHttpClient();
             services.AddSingleton<IAuthorizationProvider>(sp => {
-                var options = sp.GetRequiredService<IOptions<AuthConfiguration>>().Value;
+                var options = sp.GetRequiredService<IOptions<AuthOptions>>().Value;
 
                 return options.ProviderType switch {
                     AuthProviderType.Token => new TokenAuthorizationProvider(options, sp.GetRequiredService<HttpClient>()),

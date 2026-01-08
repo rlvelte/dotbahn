@@ -4,7 +4,7 @@ namespace DotBahn.Modules.Shared.Models;
 /// Represents a value that has a planned state and an optional changed state.
 /// </summary>
 /// <typeparam name="T">The type of the value.</typeparam>
-public sealed record ChangedValue<T> {
+public record ChangedValue<T> {
     /// <summary>
     /// Gets the original planned value.
     /// </summary>

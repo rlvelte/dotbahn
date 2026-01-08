@@ -1,0 +1,12 @@
+using DotBahn.Clients.Shared;
+using DotBahn.Modules.Auth.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
+
+namespace DotBahn.Clients.StaDa.Client;
+
+/// <summary>
+/// API client for fetching station data (StaDa).
+/// </summary>
+public class StaDaClient(HttpClient http, IAuthorizationProvider authorization, ICacheProvider cache)
+    : BaseClient(http, authorization, cache) {
+}

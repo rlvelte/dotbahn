@@ -1,8 +1,8 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using DotBahn.Modules.Auth.Configuration;
 using DotBahn.Modules.Auth.Models;
+using DotBahn.Modules.Auth.Options;
 using DotBahn.Modules.Auth.Service.Base;
 
 namespace DotBahn.Modules.Auth.Service;
@@ -10,7 +10,7 @@ namespace DotBahn.Modules.Auth.Service;
 /// <summary>
 /// Service for managing OAuth access tokens.
 /// </summary>
-public class TokenAuthorizationProvider(AuthConfiguration configuration, HttpClient httpClient) : IAuthorizationProvider {
+public class TokenAuthorizationProvider(AuthOptions configuration, HttpClient httpClient) : IAuthorizationProvider {
     private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     private OAuthToken? _currentToken;
     private DateTime _tokenExpiry;

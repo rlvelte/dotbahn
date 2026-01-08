@@ -5,7 +5,7 @@ namespace DotBahn.Modules.Auth.Models;
 /// <summary>
 /// OAuth token response from Deutsche Bahn API
 /// </summary>
-public record OAuthToken {
+public partial record OAuthToken {
     /// <summary>
     /// The access token issued by the authorization server.
     /// </summary>
