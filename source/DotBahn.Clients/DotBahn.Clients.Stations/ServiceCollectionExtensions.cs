@@ -37,6 +37,8 @@ public static class ServiceCollectionExtensions {
         });
 
         services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
+        services.AddSingleton<IParser<List<StationContract>>, JsonParser<List<StationContract>>>();
+        services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
         
         return services;
     }

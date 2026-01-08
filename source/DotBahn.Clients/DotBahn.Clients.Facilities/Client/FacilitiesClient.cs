@@ -19,7 +19,7 @@ public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorizat
     /// <param name="equipmentnumbers">Array of equipment numbers to filter by.</param>
     /// <param name="stationnumbers">Array of station numbers to filter by.</param>
     /// <returns>List of facilities matching the criteria.</returns>
-    public async Task<List<FacilityContract>> FindFacilitiesAsync(string? type = null, string? state = null, int[]? equipmentnumbers = null, int[]? stationnumbers = null) {
+    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, int[]? equipmentnumbers = null, int[]? stationnumbers = null) {
         var queryParams = QueryParameters.Create()
                                          .Add("type", type)
                                          .Add("state", state)
@@ -30,18 +30,18 @@ public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorizat
     }
     
     /// <summary>
+    /// Finds a station by its station number.
+    /// </summary>
+    /// <param name="eva">The station number (EVA).</param>
+    /// <returns>The station details.</returns>
+    public async Task<StationContract> GetStationByEvaAsync(int eva) => 
+        await GetAsync($"/stations/{eva}", stationParser, "application/json");
+    
+    /// <summary>
     /// Gets a specific facility by its equipment number.
     /// </summary>
     /// <param name="equipmentNumber">The equipment number of the facility.</param>
     /// <returns>The facility details.</returns>
     private async Task<FacilityContract> GetFacilitiesByEquipmentNumberAsync(int equipmentNumber) => 
         await GetAsync($"/facilities/{equipmentNumber}", facilityParser, "application/json");
-    
-    /// <summary>
-    /// Finds a station by its station number.
-    /// </summary>
-    /// <param name="eva">The station number (EVA).</param>
-    /// <returns>The station details.</returns>
-    public async Task<StationContract> FindStationByEvaAsync(int eva) => 
-        await GetAsync($"/stations/{eva}", stationParser, "application/json");
 }

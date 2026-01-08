@@ -5,6 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <AssemblyName>DotBahn.Tests.Facilities</AssemblyName>
+        <RootNamespace>DotBahn.Tests.Facilities</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

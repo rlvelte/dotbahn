@@ -32,7 +32,7 @@ services.AddRequestCacheProvider((_, opt) => {
 
 // Add Facilities Client
 services.AddDotBahnFacilities((_, opt) => {
-    opt.BaseEndpoint = new Uri("https://api.deutschebahn.com/fasta/v2/");
+    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
 });
 
 var serviceProvider = services.BuildServiceProvider();
@@ -41,5 +41,9 @@ var serviceProvider = services.BuildServiceProvider();
 // Use the API
 var client = serviceProvider.GetRequiredService<FacilitiesClient>();
 
-var facilities = await client.FindFacilitiesAsync();
-
+var facilities = await client.GetFacilitiesAsync("ELEVATOR");
+Console.WriteLine($"Found {facilities.Count} facilities.");
+        
+foreach (var f in facilities.Take(3)) {
+    Console.WriteLine($"- {f.Description}");
+}

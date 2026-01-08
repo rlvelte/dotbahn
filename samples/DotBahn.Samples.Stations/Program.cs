@@ -33,7 +33,7 @@ services.AddRequestCacheProvider((_, opt) => {
 
 // Add Stations Client
 services.AddDotBahnStations((_, opt) => {
-    opt.BaseEndpoint = new Uri("https://api.deutschebahn.com/stada/v2/");
+    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
 
 var serviceProvider = services.BuildServiceProvider();
@@ -41,3 +41,7 @@ var serviceProvider = services.BuildServiceProvider();
 
 // Use the API
 var client = serviceProvider.GetRequiredService<StationsClient>();
+
+var contract = await client.GetStationByEvaAsync("8000406");
+Console.WriteLine($"- {contract.Name}");
+

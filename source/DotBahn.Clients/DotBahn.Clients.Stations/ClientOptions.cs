@@ -12,5 +12,5 @@ public record ClientOptions {
     /// <summary>
     /// The base URI of the API.
     /// </summary>
-    public required Uri BaseEndpoint { get; set; } = new("https://api.deutschebahn.com/stada/v2/");
+    public required Uri BaseEndpoint { get; set; } = new("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 }

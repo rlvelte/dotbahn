@@ -23,7 +23,7 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// <param name="offset">Number of results to skip for pagination (default: 0).</param>
     /// <param name="limit">Maximum number of results to return (default: 50, max: 10000).</param>
     /// <returns>List of stations matching the search criteria.</returns>
-    public async Task<List<StationContract>> SearchStationsAsync(string? searchstring = null, int? category = null, string? federalstate = null, int? eva = null, string? ril = null, string? logicaloperator = null, int? offset = null, int? limit = null) {
+    public async Task<List<StationContract>> GetStationsAsync(string? searchstring = null, int? category = null, string? federalstate = null, int? eva = null, string? ril = null, string? logicaloperator = null, int? offset = null, int? limit = null) {
         var queryParams = QueryParameters.Create()
                                          .Add("searchstring", searchstring)
                                          .Add("category", category)
@@ -42,6 +42,6 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// </summary>
     /// <param name="eva">The station number (EVA).</param>
     /// <returns>The station details.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(int eva) =>
+    public async Task<StationContract> GetStationByEvaAsync(string eva) =>
         await GetAsync($"/stations/{eva}", stationParser, "application/json");
 }
