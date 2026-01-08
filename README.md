@@ -1,3 +1,5 @@
+<img src="https://i.imgur.com/hwplHVj.png" width=200>
+
 # DotBahn - .NET client for various Deutsche Bahn API's
 
 > [!IMPORTANT]
