@@ -5,10 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         
-        <PackageId>dotbahn.fasta</PackageId>
+        <PackageId>dotbahn.facilities</PackageId>
         <Version>1.0.0</Version>
 
-        <Title>DotBahn.FaSta</Title>
+        <Title>DotBahn.Facilities</Title>
         <Authors>Robin L. Velte</Authors>
         <Description>.NET client for DB FaSta API.</Description>
         <PackageTags>db;bahn;client;deutschebahn</PackageTags>
@@ -20,8 +20,6 @@
 
         <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyName>DotBahn.Clients.Facilities</AssemblyName>
-        <RootNamespace>DotBahn.Clients.Facilities</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

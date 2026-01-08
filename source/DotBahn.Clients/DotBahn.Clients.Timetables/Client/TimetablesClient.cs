@@ -7,16 +7,16 @@ using DotBahn.Modules.Shared.Parsing;
 namespace DotBahn.Clients.Timetables.Client;
 
 /// <summary>
-/// Client for fetching timetable information.
+/// Client for accessing 'Deutsche Bahn Timetables'-API.
 /// </summary>
 public class TimetablesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<TimetableResponseContract> timetableParser)
-    : BaseClient(http, authorization, cache) {
+    : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Gets full changes for a specific station.
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <returns>A <see cref="TimetableResponseContract"/> with current information.</returns>
-    public async Task<TimetableResponseContract> GetFullChangesAsync(string eva) => 
+    public async Task<TimetableResponseContract> GetFullChangesAsync(string eva) =>
         await GetAsync($"/fchg/{eva}", timetableParser, "application/xml");
 
     /// <summary>

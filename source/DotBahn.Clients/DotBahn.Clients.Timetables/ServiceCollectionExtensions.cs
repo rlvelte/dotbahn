@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions {
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
 
-            services.AddHttpClient<TimetablesClient>((sp, http) => {
+            services.AddHttpClient<Client.TimetablesClient>((sp, http) => {
                 var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
                 http.BaseAddress = options.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");

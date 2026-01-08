@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using DotBahn.Clients.Shared.Queries;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
@@ -6,12 +7,12 @@ using DotBahn.Modules.Shared.Parsing;
 namespace DotBahn.Clients.Shared.Base;
 
 /// <summary>
-/// Base class for clients, providing common functionality for authentication and request caching.
+/// Base class for rest clients, providing common functionality for authentication and request caching.
 /// </summary>
 /// <param name="http">The HTTP client used for requests.</param>
 /// <param name="authorization">The provider used for retrieving access tokens.</param>
 /// <param name="cache">The cache provider for storing responses.</param>
-public abstract class BaseClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache) : IDisposable {
+public abstract class ClientBase(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache) : IDisposable {
     /// <summary>
     /// Sends a GET request to the specified relative URL and parses the response.
     /// </summary>
@@ -22,8 +23,9 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
     /// <param name="queryParams">Optional query parameters.</param>
     /// <returns>The parsed contract.</returns>
     protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null) {
-        var fullUrl = BuildUrl(relativeUrl, queryParams);
-        var rawData = await GetContractDataAsync(fullUrl, acceptHeader);
+        var url = BuildUrl(relativeUrl, queryParams);
+        var rawData = await GetContractDataAsync(url, acceptHeader);
+
         return parser.Parse(rawData);
     }
     
@@ -39,7 +41,7 @@ public abstract class BaseClient(HttpClient http, IAuthorizationProvider authori
         var tasks = relativeUrls.Select(url => GetAsync(url, parser, acceptHeader));
         return await Task.WhenAll(tasks);
     }
-    
+
     /// <summary>
     /// Builds a URL with query parameters.
     /// </summary>

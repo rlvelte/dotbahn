@@ -5,10 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         
-        <PackageId>dotbahn.stada</PackageId>
+        <PackageId>dotbahn.stations</PackageId>
         <Version>1.0.0</Version>
 
-        <Title>DotBahn.StaDa</Title>
+        <Title>DotBahn.Stations</Title>
         <Authors>Robin L. Velte</Authors>
         <Description>.NET client for DB StaDa API.</Description>
         <PackageTags>db;bahn;client;deutschebahn</PackageTags>
@@ -20,8 +20,6 @@
 
         <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyName>DotBahn.Clients.Stations</AssemblyName>
-        <RootNamespace>DotBahn.Clients.Stations</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
