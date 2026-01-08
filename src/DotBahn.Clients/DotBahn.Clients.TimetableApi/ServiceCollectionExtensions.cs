@@ -18,14 +18,14 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         /// Adds the Timetable API client using HttpClientFactory, with options configured via callback.
         /// </summary>
-        /// <param name="configure">Delegate to configure <see cref="TimetableConfiguration"/>. Can use the service provider.</param>
+        /// <param name="config">Delegate to configure <see cref="TimetableConfiguration"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddDotBahnTimetableApi(Action<IServiceProvider, TimetableConfiguration> configure) {
+        public IServiceCollection AddDotBahnTimetableApi(Action<IServiceProvider, TimetableConfiguration> config) {
             ArgumentNullException.ThrowIfNull(services);
-            ArgumentNullException.ThrowIfNull(configure);
+            ArgumentNullException.ThrowIfNull(config);
             
-            services.AddSingleton<IConfigureOptions<TimetableConfiguration>>(sp => new ConfigureOptions<TimetableConfiguration>(opt => configure(sp, opt)));
+            services.AddSingleton<IConfigureOptions<TimetableConfiguration>>(sp => new ConfigureOptions<TimetableConfiguration>(opt => config(sp, opt)));
             services.AddOptions<TimetableConfiguration>()
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
