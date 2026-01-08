@@ -1,6 +1,6 @@
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Clients.Timetables.Enumerations;
 
-namespace DotBahn.Timetables.Models;
+namespace DotBahn.Clients.Timetables.Models;
 
 /// <summary>
 /// Represents information about a specific train, including its category, number, and type.

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Clients.Timetables.Contracts;
 
 /// <summary>
 /// Raw XML structure for a single station from the station search endpoint.

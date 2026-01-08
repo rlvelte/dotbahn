@@ -1,5 +1,5 @@
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Transformers;
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Transformers;
 using FluentAssertions;
 
 namespace DotBahn.Tests.Timetables.Transformer;

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Clients.Timetables.Contracts;
 
 /// <summary>
 /// Root element for the station search response.

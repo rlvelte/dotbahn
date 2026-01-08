@@ -1,4 +1,4 @@
-using DotBahn.Timetables.Utilities;
+using DotBahn.Clients.Timetables.Utilities;
 using FluentAssertions;
 
 namespace DotBahn.Tests.Timetables.Transformer;

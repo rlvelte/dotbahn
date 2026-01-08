@@ -1,7 +1,7 @@
+using DotBahn.Clients.Timetables.Enumerations;
 using DotBahn.Modules.Shared.Models;
-using DotBahn.Timetables.Enumerations;
 
-namespace DotBahn.Timetables.Models;
+namespace DotBahn.Clients.Timetables.Models;
 
 /// <summary>
 /// Represents information about a specific event, such as an arrival or a departure.

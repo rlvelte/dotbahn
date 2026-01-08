@@ -1,18 +1,18 @@
 using System.Net;
+using DotBahn.Clients.Timetables.Client;
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Models;
+using DotBahn.Clients.Timetables.Options;
+using DotBahn.Clients.Timetables.Transformers;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Client;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Models;
-using DotBahn.Timetables.Options;
-using DotBahn.Timetables.Transformers;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 
-namespace DotBahn.Timetables;
+namespace DotBahn.Clients.Timetables;
 
 /// <summary>
 /// Extension methods for setting up Timetables services in an <see cref="IServiceCollection"/>.

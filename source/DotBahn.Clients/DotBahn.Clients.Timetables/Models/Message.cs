@@ -1,6 +1,6 @@
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Clients.Timetables.Enumerations;
 
-namespace DotBahn.Timetables.Models;
+namespace DotBahn.Clients.Timetables.Models;
 
 /// <summary>
 /// Represents a message or disruption information related to a train or station.

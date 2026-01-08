@@ -1,13 +1,12 @@
-using DotBahn.Clients.Shared;
 using DotBahn.Clients.Shared.Base;
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Models;
 using DotBahn.Modules.Auth.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Models;
 
-namespace DotBahn.Timetables.Client;
+namespace DotBahn.Clients.Timetables.Client;
 
 /// <summary>
 /// API client for fetching timetable information.

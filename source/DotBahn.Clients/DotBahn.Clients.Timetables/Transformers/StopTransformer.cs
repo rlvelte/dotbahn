@@ -1,10 +1,10 @@
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Enumerations;
+using DotBahn.Clients.Timetables.Models;
 using DotBahn.Modules.Shared.Enumerations;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Enumerations;
-using DotBahn.Timetables.Models;
 
-namespace DotBahn.Timetables.Transformers;
+namespace DotBahn.Clients.Timetables.Transformers;
 
 /// <summary>
 /// Transformer for converting <see cref="StopDataContract"/> to <see cref="TrainStop"/>.

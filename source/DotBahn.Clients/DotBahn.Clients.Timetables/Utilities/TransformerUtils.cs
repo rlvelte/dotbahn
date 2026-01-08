@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace DotBahn.Timetables.Utilities;
+namespace DotBahn.Clients.Timetables.Utilities;
 
 /// <summary>
 /// Utility methods for parsing API data during transformation.

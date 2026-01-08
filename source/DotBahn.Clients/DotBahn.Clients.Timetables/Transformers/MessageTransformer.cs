@@ -1,11 +1,11 @@
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Enumerations;
+using DotBahn.Clients.Timetables.Models;
+using DotBahn.Clients.Timetables.Utilities;
 using DotBahn.Modules.Shared.Enumerations;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Enumerations;
-using DotBahn.Timetables.Models;
-using DotBahn.Timetables.Utilities;
 
-namespace DotBahn.Timetables.Transformers;
+namespace DotBahn.Clients.Timetables.Transformers;
 
 /// <summary>
 /// Transformer for converting <see cref="MessageContract"/> to <see cref="Message"/>.

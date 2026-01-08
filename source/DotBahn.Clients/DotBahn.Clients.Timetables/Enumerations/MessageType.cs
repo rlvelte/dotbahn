@@ -1,6 +1,6 @@
 using DotBahn.Modules.Shared.Enumerations;
 
-namespace DotBahn.Timetables.Enumerations;
+namespace DotBahn.Clients.Timetables.Enumerations;
 
 /// <summary>
 /// Defines the type of message or notification.

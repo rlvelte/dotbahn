@@ -1,8 +1,8 @@
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Models;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Models;
 
-namespace DotBahn.Timetables.Transformers;
+namespace DotBahn.Clients.Timetables.Transformers;
 
 /// <summary>
 /// Transformer for converting <see cref="StationContract"/> to <see cref="StationInfo"/>.

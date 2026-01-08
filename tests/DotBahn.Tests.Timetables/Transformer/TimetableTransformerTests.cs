@@ -1,7 +1,7 @@
+using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Models;
+using DotBahn.Clients.Timetables.Transformers;
 using DotBahn.Modules.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Models;
-using DotBahn.Timetables.Transformers;
 using FluentAssertions;
 using NSubstitute;
 

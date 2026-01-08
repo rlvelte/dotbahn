@@ -1,9 +1,9 @@
-﻿using DotBahn.Modules.Auth;
+﻿using DotBahn.Clients.Timetables;
+using DotBahn.Clients.Timetables.Client;
+using DotBahn.Modules.Auth;
 using DotBahn.Modules.Auth.Enumerations;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Enumerations;
-using DotBahn.Timetables;
-using DotBahn.Timetables.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 if (args.Length < 2) {

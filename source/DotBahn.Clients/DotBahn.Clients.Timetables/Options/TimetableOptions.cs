@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
-namespace DotBahn.Timetables.Options;
+namespace DotBahn.Clients.Timetables.Options;
 
 /// <summary>
 /// Options for the DotBahn API clients.
