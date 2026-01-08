@@ -1,4 +1,5 @@
 using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Base;
 using DotBahn.Modules.Auth.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
 

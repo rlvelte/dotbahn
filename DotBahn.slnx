@@ -11,6 +11,8 @@
     <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Samples/">
+    <Project Path="samples/DotBahn.Samples.FaSta/DotBahn.Samples.FaSta.csproj" />
+    <Project Path="samples/DotBahn.Samples.StaDa/DotBahn.Samples.StaDa.csproj" />
     <Project Path="samples\DotBahn.Sample.Timetables\DotBahn.Sample.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">

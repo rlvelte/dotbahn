@@ -3,7 +3,7 @@ using DotBahn.Modules.Auth.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 
-namespace DotBahn.Clients.Shared;
+namespace DotBahn.Clients.Shared.Base;
 
 /// <summary>
 /// Base class for API clients, providing common functionality for authentication and caching.
