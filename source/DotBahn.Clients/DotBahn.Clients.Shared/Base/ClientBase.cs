@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
-using DotBahn.Clients.Shared.Queries;
+using DotBahn.Clients.Shared.Models;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;

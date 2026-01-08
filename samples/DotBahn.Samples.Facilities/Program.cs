@@ -1,5 +1,7 @@
 ﻿using DotBahn.Clients.Facilities;
 using DotBahn.Clients.Facilities.Client;
+using DotBahn.Clients.Facilities.Enumerations;
+using DotBahn.Clients.Facilities.Models;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Enumerations;
 using DotBahn.Modules.RequestCache;
@@ -41,9 +43,9 @@ var serviceProvider = services.BuildServiceProvider();
 // Use the API
 var client = serviceProvider.GetRequiredService<FacilitiesClient>();
 
-var facilities = await client.GetFacilitiesAsync("ELEVATOR");
+var facilities = await client.GetFacilitiesAsync(new FacilitiesQuery().WithType(FacilityType.Elevator));
 Console.WriteLine($"Found {facilities.Count} facilities.");
         
-foreach (var f in facilities.Take(3)) {
+foreach (var f in facilities.Take(10)) {
     Console.WriteLine($"- {f.Description}");
 }

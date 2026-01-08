@@ -1,5 +1,6 @@
 ﻿using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Client;
+using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Enumerations;
 using DotBahn.Modules.RequestCache;
@@ -41,7 +42,7 @@ var serviceProvider = services.BuildServiceProvider();
 // Use the API
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var t = await client.GetStationsWithNameAsync("Nürnberg");
+var t = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg"));
 foreach (var s in t.Stations) {
-    Console.WriteLine($"x- {s.Name}");
+    Console.WriteLine($"- {s.Name}");
 }

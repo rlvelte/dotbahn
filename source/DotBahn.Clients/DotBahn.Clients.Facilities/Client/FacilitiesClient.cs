@@ -1,6 +1,7 @@
 using DotBahn.Clients.Facilities.Contracts;
+using DotBahn.Clients.Facilities.Models;
 using DotBahn.Clients.Shared.Base;
-using DotBahn.Clients.Shared.Queries;
+using DotBahn.Clients.Shared.Models;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
@@ -10,7 +11,7 @@ namespace DotBahn.Clients.Facilities.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<StationContract> stationParser, IParser<FacilityContract> facilityParser, IParser<List<FacilityContract>> facilitiesParser)
+public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<List<FacilityContract>> facilitiesParser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Finds facilities based on optional filter criteria.
@@ -28,5 +29,14 @@ public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorizat
             .Add("stationnumber", stationId);
 
         return await GetAsync("/facilities", facilitiesParser, "application/json", queryParams);
+    }
+
+    /// <summary>
+    /// Finds facilities based on optional filter criteria.
+    /// </summary>
+    /// <param name="query">The query to specify results with.</param>
+    /// <returns>List of facilities matching the criteria.</returns>
+    public async Task<List<FacilityContract>> GetFacilitiesAsync(FacilitiesQuery query) {
+        return await GetAsync("/facilities", facilitiesParser, "application/json", query.ToQueryParameters());
     }
 }

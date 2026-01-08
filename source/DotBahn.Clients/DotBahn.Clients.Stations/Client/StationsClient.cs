@@ -1,10 +1,10 @@
 using DotBahn.Clients.Shared.Base;
-using DotBahn.Clients.Shared.Queries;
+using DotBahn.Clients.Shared.Models;
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
-using Polly.RateLimit;
 
 namespace DotBahn.Clients.Stations.Client;
 
@@ -40,6 +40,15 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     }
 
     /// <summary>
+    /// Searches for stations using a query structure.
+    /// </summary>
+    /// <param name="query">The query to specify results with.</param>
+    /// <returns>List of stations matching the search criteria.</returns>
+    public async Task<StationsResponseContract> GetStationsAsync(StationsQuery query) {
+        return await GetAsync("/stations", parser, "application/json", query.ToQueryParameters());
+    }
+
+    /// <summary>
     /// Retrieves stations whose names match the given search string.
     /// </summary>
     /// <remarks>If no wildcard is provided, a trailing '*' is automatically appended to avoid overly strict matches.</remarks>
@@ -47,7 +56,7 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// <param name="limit">The limit of returning stations.</param>
     /// <returns>A list of stations whose names match the provided search string.</returns>
     public async Task<StationsResponseContract> GetStationsWithNameAsync(string name, int limit = 5) {
-        var parameters = QueryParameters.Create().Add("searchstring", name.Contains('*') ? name : $"{name}*").Add("limit", limit.ToString());
+        var parameters = QueryParameters.Create().Add("searchstring", name.Contains('*') ? name : $"*{name}*").Add("limit", limit.ToString());
         
         return await GetAsync("/stations", parser, "application/json", parameters);
     }
