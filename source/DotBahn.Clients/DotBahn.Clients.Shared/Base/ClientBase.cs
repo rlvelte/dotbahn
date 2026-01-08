@@ -1,8 +1,10 @@
+using System.Net;
 using System.Net.Http.Headers;
 using DotBahn.Clients.Shared.Queries;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Shared.Base;
 
@@ -47,7 +49,7 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
     /// </summary>
     /// <param name="relativeUrl">The base relative URL.</param>
     /// <param name="queryParams">Optional query parameters.</param>
-    /// <returns>The complete URL with query string.</returns>
+    /// <returns>The complete URL with a query string.</returns>
     private static string BuildUrl(string relativeUrl, QueryParameters? queryParams) {
         if (queryParams == null || !queryParams.Any()) {
             return relativeUrl;
@@ -56,13 +58,15 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
         var queryString = queryParams.ToQueryString();
         return string.IsNullOrEmpty(queryString) ? relativeUrl : $"{relativeUrl}?{queryString}";
     }
-    
+
     /// <summary>
     /// Retrieves contract data from the API or cache.
     /// </summary>
     /// <param name="relativeUrl">The relative URL including query parameters.</param>
     /// <param name="acceptHeader">The value for the Accept header.</param>
-    /// <returns>The raw response data.</returns>
+    /// <returns>The raw response data or an empty string if the resource was not found.</returns>
+    /// <exception cref="UnauthorizedAccessException">Thrown when the request is unauthorized (401).</exception>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     private async Task<string> GetContractDataAsync(string relativeUrl, string acceptHeader) {
         var cacheKey = $"{relativeUrl}_{acceptHeader}";
         var cachedData = await cache.GetAsync<string>(cacheKey);
@@ -78,8 +82,10 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
             if (!baseUriStr.EndsWith('/')) {
                 baseUriStr += "/";
             }
+
             requestUri = new Uri(new Uri(baseUriStr), path);
-        } else {
+        }
+        else {
             requestUri = new Uri(path, UriKind.RelativeOrAbsolute);
         }
 
@@ -88,11 +94,29 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
 
         var response = await http.SendAsync(request);
+
+        if (response.StatusCode == HttpStatusCode.NotFound) {
+            return string.Empty;
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized) {
+            throw new UnauthorizedAccessException($"Request to '{requestUri}' was not authorized.");
+        }
+
+        if (response.StatusCode == HttpStatusCode.MethodNotAllowed) {
+            throw new HttpRequestException($"HTTP method GET is not allowed for '{requestUri}'.", null, response.StatusCode);
+        }
+        
+        if (response.StatusCode == HttpStatusCode.BadRequest) {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new ArgumentException($"Bad request for '{requestUri}'. Response: {error}");
+        }
+
         response.EnsureSuccessStatusCode();
 
         var raw = await response.Content.ReadAsStringAsync();
         await cache.SetAsync(cacheKey, raw);
-        
+
         return raw;
     }
 

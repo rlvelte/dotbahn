@@ -41,9 +41,7 @@ var serviceProvider = services.BuildServiceProvider();
 // Use the API
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var stations = await client.GetStationsAsync("Berlin*");
-Console.WriteLine($"Found {stations.Count} stations.");
-        
-foreach (var s in stations.Take(3)) {
-    Console.WriteLine($"- {s.Name}");
+var t = await client.GetStationsWithNameAsync("Nürnberg");
+foreach (var s in t.Stations) {
+    Console.WriteLine($"x- {s.Name}");
 }

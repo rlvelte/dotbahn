@@ -3,7 +3,7 @@ using DotBahn.Clients.Shared.Base;
 using DotBahn.Clients.Shared.Queries;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Facilities.Client;
 
@@ -18,31 +18,15 @@ public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorizat
     /// <param name="type">Type of facility (e.g., "ESCALATOR", "ELEVATOR").</param>
     /// <param name="state">State of facility (e.g., "ACTIVE", "INACTIVE").</param>
     /// <param name="equipmentNumbers">Array of equipment numbers to filter by.</param>
-    /// <param name="eva">The station number (EVA).</param>
+    /// <param name="stationId">The station id.</param>
     /// <returns>List of facilities matching the criteria.</returns>
-    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? eva = null) {
+    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? stationId = null) {
         var queryParams = QueryParameters.Create()
             .Add("type", type)
             .Add("state", state)
             .Add("equipmentnumbers", equipmentNumbers)
-            .Add("stationnumber", eva);
+            .Add("stationnumber", stationId);
 
         return await GetAsync("/facilities", facilitiesParser, "application/json", queryParams);
     }
-
-    /// <summary>
-    /// Finds a station by its station number.
-    /// </summary>
-    /// <param name="eva">The station number (EVA).</param>
-    /// <returns>The station details.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(int eva) =>
-        await GetAsync($"/stations/{eva}", stationParser, "application/json");
-    
-    /// <summary>
-    /// Gets a specific facility by its equipment number.
-    /// </summary>
-    /// <param name="equipmentNumber">The equipment number of the facility.</param>
-    /// <returns>The facility details.</returns>
-    public async Task<FacilityContract> GetFacilitiesByEquipmentNumberAsync(int equipmentNumber) => 
-        await GetAsync($"/facilities/{equipmentNumber}", facilityParser, "application/json");
 }

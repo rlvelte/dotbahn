@@ -2,6 +2,7 @@ using System.Net;
 using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

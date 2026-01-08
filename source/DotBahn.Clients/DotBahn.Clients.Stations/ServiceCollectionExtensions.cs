@@ -2,6 +2,7 @@ using System.Net;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -37,7 +38,6 @@ public static class ServiceCollectionExtensions {
         });
 
         services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
-        services.AddSingleton<IParser<List<StationContract>>, JsonParser<List<StationContract>>>();
         services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
         
         return services;

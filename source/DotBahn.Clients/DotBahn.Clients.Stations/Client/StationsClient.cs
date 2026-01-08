@@ -3,19 +3,20 @@ using DotBahn.Clients.Shared.Queries;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
+using Polly.RateLimit;
 
 namespace DotBahn.Clients.Stations.Client;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
-public class StationsClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<List<StationContract>> stationsParser, IParser<StationContract> stationParser)
+public class StationsClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<StationsResponseContract> parser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Searches for stations using various filter criteria.
     /// </summary>
-    /// <param name="searchString">Search pattern for station names. Use '*' as wildcard (e.g., "Berlin*", "*Hbf").</param>
+    /// <param name="searchString">Search pattern for station names. Use '*' as a wildcard (e.g., "Berlin*", "*Hbf").</param>
     /// <param name="category">Station category (1-7, where 1 is the largest stations).</param>
     /// <param name="federalState">Federal state name (e.g., "Bayern", "Berlin").</param>
     /// <param name="eva">EVA station number.</param>
@@ -24,7 +25,7 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// <param name="offset">Number of results to skip for pagination (default: 0).</param>
     /// <param name="limit">Maximum number of results to return (default: 50, max: 10000).</param>
     /// <returns>List of stations matching the search criteria.</returns>
-    public async Task<List<StationContract>> GetStationsAsync(string? searchString = null, string? category = null, string? federalState = null, string? eva = null, string? ril = null, string? logicalOperator = null, string? offset = null, string? limit = null) {
+    public async Task<StationsResponseContract> GetStationsAsync(string? searchString = null, string? category = null, string? federalState = null, string? eva = null, string? ril = null, string? logicalOperator = null, int? offset = null, int? limit = null) {
         var parameters = QueryParameters.Create()
             .Add("searchstring", searchString)
             .Add("category", category)
@@ -32,17 +33,47 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
             .Add("eva", eva)
             .Add("ril", ril)
             .Add("logicaloperator", logicalOperator)
-            .Add("offset", offset)
-            .Add("limit", limit);
+            .Add("offset", offset.ToString())
+            .Add("limit", limit.ToString());
 
-        return await GetAsync("/stations", stationsParser, "application/json", parameters);
+        return await GetAsync("/stations", parser, "application/json", parameters);
+    }
+
+    /// <summary>
+    /// Retrieves stations whose names match the given search string.
+    /// </summary>
+    /// <remarks>If no wildcard is provided, a trailing '*' is automatically appended to avoid overly strict matches.</remarks>
+    /// <param name="name">The station name fragment to search for. Wildcards are supported (e.g., "Berlin*", "*Hbf").</param>
+    /// <param name="limit">The limit of returning stations.</param>
+    /// <returns>A list of stations whose names match the provided search string.</returns>
+    public async Task<StationsResponseContract> GetStationsWithNameAsync(string name, int limit = 5) {
+        var parameters = QueryParameters.Create().Add("searchstring", name.Contains('*') ? name : $"{name}*").Add("limit", limit.ToString());
+        
+        return await GetAsync("/stations", parser, "application/json", parameters);
     }
     
     /// <summary>
-    /// Gets a specific station by its station number.
+    /// Retrieves a single station by its EVA number.
     /// </summary>
-    /// <param name="eva">The station number (EVA).</param>
-    /// <returns>The station details.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(string eva) =>
-        await GetAsync($"/stations/{eva}", stationParser, "application/json");
+    /// <param name="eva">The EVA station number used as a unique identifier.</param>
+    /// <returns>The station matching the specified EVA number.</returns>
+    public async Task<StationContract> GetStationByEvaAsync(string eva) {
+        var parameters = QueryParameters.Create().Add("eva", eva).Add("limit", "1");
+
+        var result = await GetAsync("/stations", parser, "application/json", parameters);
+        return result.Stations.First();
+    }
+    
+    /// <summary>
+    /// Retrieves a single station by its RIL100 identifier.
+    /// </summary>
+    /// <param name="ril">The RIL100 used as a unique identifier.</param>
+    /// <returns>The station matching the specified RIL100 number.</returns>
+    public async Task<StationContract> GetStationByRilAsync(string ril) {
+        var parameters = QueryParameters.Create().Add("ril", ril).Add("limit", "1");
+        
+        var result = await GetAsync("/stations", parser, "application/json", parameters);
+        return result.Stations.First();
+    }
+
 }

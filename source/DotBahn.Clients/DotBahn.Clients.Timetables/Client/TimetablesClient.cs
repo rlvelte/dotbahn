@@ -3,6 +3,7 @@ using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.RequestCache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Timetables.Client;
 
