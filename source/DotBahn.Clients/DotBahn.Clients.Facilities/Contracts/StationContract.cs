@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Clients.FaSta.Contracts;
+namespace DotBahn.Clients.Facilities.Contracts;
 
 /// <summary>
 /// Raw structure for a station in the FaSta API.

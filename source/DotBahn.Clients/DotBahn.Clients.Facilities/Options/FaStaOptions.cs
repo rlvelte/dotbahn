@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
-namespace DotBahn.Clients.FaSta.Options;
+namespace DotBahn.Clients.Facilities.Options;
 
 /// <summary>
 /// Options for the FaSta API client.

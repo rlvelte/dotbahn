@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Clients.StaDa.Contracts;
+namespace DotBahn.Clients.Stations.Contracts;
 
 /// <summary>
 /// Raw structure for the mailing address of a station.

@@ -7,7 +7,7 @@ using DotBahn.Modules.Shared.Parsing;
 namespace DotBahn.Clients.Timetables.Client;
 
 /// <summary>
-/// API client for fetching timetable information.
+/// Client for fetching timetable information.
 /// </summary>
 public class TimetablesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<TimetableResponseContract> timetableParser)
     : BaseClient(http, authorization, cache) {

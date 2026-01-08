@@ -6,7 +6,7 @@ using DotBahn.Modules.Shared.Parsing;
 namespace DotBahn.Clients.Shared.Base;
 
 /// <summary>
-/// Base class for API clients, providing common functionality for authentication and caching.
+/// Base class for clients, providing common functionality for authentication and request caching.
 /// </summary>
 /// <param name="http">The HTTP client used for requests.</param>
 /// <param name="authorization">The provider used for retrieving access tokens.</param>

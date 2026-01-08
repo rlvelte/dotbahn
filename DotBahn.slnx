@@ -1,14 +1,12 @@
 <Solution>
   <Folder Name="/DotBahn.Clients/">
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.FaSta/DotBahn.Clients.FaSta.csproj" />
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.StaDa/DotBahn.Clients.StaDa.csproj" />
+    <Project Path="source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
+    <Project Path="source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Modules/">
     <Project Path="source/DotBahn.Modules/DotBahn.Modules.Auth/DotBahn.Modules.Auth.csproj" />
     <Project Path="source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Samples/">
     <Project Path="samples/DotBahn.Samples.FaSta/DotBahn.Samples.FaSta.csproj" />
@@ -19,5 +17,9 @@
     <Project Path="tests/DotBahn.Tests.FaSta/DotBahn.Tests.FaSta.csproj" />
     <Project Path="tests/DotBahn.Tests.StaDa/DotBahn.Tests.StaDa.csproj" />
     <Project Path="tests\DotBahn.Tests.Timetables\DotBahn.Tests.Timetables.csproj" />
+  </Folder>
+  <Folder Name="/_Shared/">
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </Folder>
 </Solution>

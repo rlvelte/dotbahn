@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Clients.FaSta.Contracts;
+namespace DotBahn.Clients.Facilities.Contracts;
 
 /// <summary>
 /// Raw structure for a station facility (elevator or escalator) in the FaSta API.

@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
-namespace DotBahn.Clients.StaDa.Options;
+namespace DotBahn.Clients.Stations.Options;
 
 /// <summary>
 /// Options for the DotBahn API clients.
