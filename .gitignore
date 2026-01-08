@@ -15,6 +15,7 @@ StrykerOutput/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+*.DotSettings
 
 # Mono auto generated files
 mono_crash.*

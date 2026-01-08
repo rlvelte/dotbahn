@@ -16,6 +16,8 @@
     <Project Path="samples\DotBahn.Sample.Timetables\DotBahn.Sample.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">
+    <Project Path="tests/DotBahn.Tests.FaSta/DotBahn.Tests.FaSta.csproj" />
+    <Project Path="tests/DotBahn.Tests.StaDa/DotBahn.Tests.StaDa.csproj" />
     <Project Path="tests\DotBahn.Tests.Timetables\DotBahn.Tests.Timetables.csproj" />
   </Folder>
 </Solution>
