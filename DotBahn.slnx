@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/DotBahn.Clients/">
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Unified/DotBahn.Clients.Unified.csproj" />
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
