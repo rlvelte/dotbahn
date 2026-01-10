@@ -1,7 +1,7 @@
 using DotBahn.Clients.Shared.Base;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.RequestCache.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Timetables.Client;
@@ -9,7 +9,7 @@ namespace DotBahn.Clients.Timetables.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn Timetables'-API.
 /// </summary>
-public class TimetablesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<TimetableResponseContract> timetableParser)
+public class TimetablesClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<TimetableResponseContract> timetableParser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Gets full changes for a specific station.

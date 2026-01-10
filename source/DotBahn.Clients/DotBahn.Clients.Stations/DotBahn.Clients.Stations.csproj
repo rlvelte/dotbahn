@@ -24,7 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.RequestCache\DotBahn.Modules.RequestCache.csproj" />
+      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
       <ProjectReference Include="..\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
     </ItemGroup>
 

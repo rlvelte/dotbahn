@@ -2,10 +2,9 @@
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Authorization.Enumerations;
-using DotBahn.Modules.RequestCache;
-using DotBahn.Modules.RequestCache.Enumerations;
+using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 if (args.Length < 2) {
     Console.WriteLine("Usage: DotBahn.Sample.Stations <ClientId> <ClientSecret>");
@@ -16,19 +15,21 @@ var clientId = args[0];
 var clientSecret = args[1];
 
 var services = new ServiceCollection();
-services.AddLogging();
+
+// Add Logging
+services.AddLogging(builder => {
+    builder.SetMinimumLevel(LogLevel.Debug);
+});
 
 // Add Authorization
 services.AddAuthorizationProvider((_, opt) => {
-    opt.ProviderType = AuthProviderType.ApiKey; 
     opt.ClientId = clientId;
     opt.ClientSecret = clientSecret;
 });
 
 // Add Cache
-services.AddRequestCacheProvider((_, opt) => {
-    opt.ProviderType = CacheProviderType.InMemory; 
-    opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
+services.AddCacheProvider((_, opt) => {
+    opt.DefaultExpiration = TimeSpan.FromSeconds(10);
 });
 
 // Add Stations Client
@@ -37,12 +38,20 @@ services.AddDotBahnStations((_, opt) => {
 });
 
 var serviceProvider = services.BuildServiceProvider();
-
-
-// Use the API
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var t = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg"));
+var t = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
 foreach (var s in t.Stations) {
+    Console.WriteLine($"- {s.Name}");
+}
+
+Thread.Sleep(5000);
+var t2 = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
+foreach (var s in t2.Stations) {
+    Console.WriteLine($"- {s.Name}");
+}
+
+var t3 = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
+foreach (var s in t3.Stations) {
     Console.WriteLine($"- {s.Name}");
 }

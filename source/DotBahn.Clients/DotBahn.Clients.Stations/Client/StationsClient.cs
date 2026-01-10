@@ -3,7 +3,7 @@ using DotBahn.Clients.Shared.Models;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.RequestCache.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Stations.Client;
@@ -11,7 +11,7 @@ namespace DotBahn.Clients.Stations.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
-public class StationsClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<StationsResponseContract> parser)
+public class StationsClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<StationsResponseContract> parser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Searches for stations using various filter criteria.
@@ -51,12 +51,14 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// <summary>
     /// Retrieves stations whose names match the given search string.
     /// </summary>
-    /// <remarks>If no wildcard is provided, a trailing '*' is automatically appended to avoid overly strict matches.</remarks>
+    /// <remarks>If no wildcard is provided or exact is false (default), a trailing '*' is automatically appended to avoid overly strict matches.</remarks>
     /// <param name="name">The station name fragment to search for. Wildcards are supported (e.g., "Berlin*", "*Hbf").</param>
     /// <param name="limit">The limit of returning stations.</param>
+    /// <param name="exact">Try to resolve via an exact match of parameter. Default is <c>false</c>.</param>
     /// <returns>A list of stations whose names match the provided search string.</returns>
-    public async Task<StationsResponseContract> GetStationsWithNameAsync(string name, int limit = 5) {
-        var parameters = QueryParameters.Create().Add("searchstring", name.Contains('*') ? name : $"*{name}*").Add("limit", limit.ToString());
+    public async Task<StationsResponseContract> GetStationsLikeAsync(string name, int limit = 5, bool exact = false) {
+        var search = exact || name.Contains('*') ? name : $"{name}*";
+        var parameters = QueryParameters.Create().Add("searchstring", search).Add("limit", limit.ToString());
         
         return await GetAsync("/stations", parser, "application/json", parameters);
     }
@@ -66,8 +68,8 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
     /// </summary>
     /// <param name="eva">The EVA station number used as a unique identifier.</param>
     /// <returns>The station matching the specified EVA number.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(string eva) {
-        var parameters = QueryParameters.Create().Add("eva", eva).Add("limit", "1");
+    public async Task<StationContract> GetStationByEvaAsync(int eva) {
+        var parameters = QueryParameters.Create().Add("eva", eva.ToString()).Add("limit", "1");
 
         var result = await GetAsync("/stations", parser, "application/json", parameters);
         return result.Stations.First();
@@ -84,5 +86,4 @@ public class StationsClient(HttpClient http, IAuthorizationProvider authorizatio
         var result = await GetAsync("/stations", parser, "application/json", parameters);
         return result.Stations.First();
     }
-
 }

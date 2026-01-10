@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using DotBahn.Modules.Authorization.Enumerations;
 using JetBrains.Annotations;
 
 namespace DotBahn.Modules.Authorization;
@@ -10,11 +9,6 @@ namespace DotBahn.Modules.Authorization;
 [UsedImplicitly]
 [ExcludeFromCodeCoverage]
 public record ModuleOptions {
-    /// <summary>
-    /// The type of authorization provider to use
-    /// </summary>
-    public AuthProviderType ProviderType { get; set; } = AuthProviderType.ApiKey;
-
     /// <summary>
     /// The Client ID for authentication.
     /// </summary>

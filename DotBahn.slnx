@@ -6,7 +6,7 @@
   </Folder>
   <Folder Name="/DotBahn.Modules/">
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-    <Project Path="source\DotBahn.Modules\DotBahn.Modules.RequestCache\DotBahn.Modules.RequestCache.csproj" />
+    <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Samples/">
     <Project Path="samples\DotBahn.Sample.Timetables\DotBahn.Sample.Timetables.csproj" />

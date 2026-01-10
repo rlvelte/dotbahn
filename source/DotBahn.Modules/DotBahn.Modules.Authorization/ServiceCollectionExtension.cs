@@ -1,4 +1,3 @@
-using DotBahn.Modules.Authorization.Enumerations;
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
 using JetBrains.Annotations;
@@ -30,13 +29,9 @@ public static class ServiceCollectionExtensions {
                     .ValidateOnStart();
 
             services.AddHttpClient();
-            services.AddSingleton<IAuthorizationProvider>(sp => {
+            services.AddSingleton<IAuthorization>(sp => {
                 var options = sp.GetRequiredService<IOptions<ModuleOptions>>().Value;
-
-                return options.ProviderType switch {
-                    AuthProviderType.ApiKey => new ApiKeyAuthorizationProvider(options),
-                    _ => new NullAuthorizationProvider()
-                };
+                return new ApiKeyAuthorization(options);
             });
         
             return services;

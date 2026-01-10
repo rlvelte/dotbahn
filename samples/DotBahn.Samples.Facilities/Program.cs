@@ -3,9 +3,7 @@ using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Enumerations;
 using DotBahn.Clients.Facilities.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Authorization.Enumerations;
-using DotBahn.Modules.RequestCache;
-using DotBahn.Modules.RequestCache.Enumerations;
+using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 
 if (args.Length < 2) {
@@ -21,14 +19,12 @@ services.AddLogging();
 
 // Add Authorization
 services.AddAuthorizationProvider((_, opt) => {
-    opt.ProviderType = AuthProviderType.ApiKey; 
     opt.ClientId = clientId;
     opt.ClientSecret = clientSecret;
 });
 
 // Add Cache
-services.AddRequestCacheProvider((_, opt) => {
-    opt.ProviderType = CacheProviderType.InMemory; 
+services.AddCacheProvider((_, opt) => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
