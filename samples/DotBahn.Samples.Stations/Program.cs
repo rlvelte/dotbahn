@@ -37,21 +37,18 @@ services.AddDotBahnStations((_, opt) => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
 
+// Usage
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var t = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
-foreach (var s in t.Stations) {
-    Console.WriteLine($"- {s.Name}");
-}
-
-Thread.Sleep(5000);
-var t2 = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
-foreach (var s in t2.Stations) {
-    Console.WriteLine($"- {s.Name}");
-}
-
-var t3 = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg Hbf"));
-foreach (var s in t3.Stations) {
-    Console.WriteLine($"- {s.Name}");
+var response = await client.GetStationsAsync(new StationsQuery().WithName("*Hbf").LimitTo(3).Skip(Random.Shared.Next(0,10)));
+foreach (var s in response.Stations) {
+    Console.WriteLine($"""
+                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier})
+                      ==========================================================
+                      Region: {s.RegionalArea.Name} (ID: {s.RegionalArea.Number})
+                      Address: {s.MailingAddress.Street}
+                               {s.MailingAddress.ZipCode} {s.MailingAddress.City}
+                      
+                      """);
 }

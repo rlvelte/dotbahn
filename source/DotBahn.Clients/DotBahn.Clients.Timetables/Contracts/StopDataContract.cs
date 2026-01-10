@@ -16,7 +16,7 @@ public record StopDataContract {
     /// EVA number of the station
     /// </summary>
     [XmlAttribute("eva")]
-    public string Eva { get; init; } = string.Empty; // TODO: ?
+    public string Eva { get; init; } = string.Empty;
     
     /// <summary>
     /// Trip label information

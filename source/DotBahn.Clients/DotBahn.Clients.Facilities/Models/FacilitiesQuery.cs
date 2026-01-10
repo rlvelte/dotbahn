@@ -57,8 +57,8 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Filters facilities by station ID.
     /// </summary>
-    public FacilitiesQuery AtStation(string stationId) {
-        StationId = stationId;
+    public FacilitiesQuery AtStation(int stationId) {
+        StationId = stationId.ToString();
         return this;
     }
 
