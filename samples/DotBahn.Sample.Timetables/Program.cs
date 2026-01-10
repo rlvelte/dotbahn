@@ -1,4 +1,5 @@
-﻿using DotBahn.Clients.Timetables;
+﻿using System.Text.Json;
+using DotBahn.Clients.Timetables;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
@@ -47,7 +48,5 @@ Console.WriteLine($"""
                   ==========================================================
                   """);
 foreach (var stop in timetable.Stops) {
-    Console.WriteLine($"""
-                       {stop.TripInfo.Category} {stop.TripInfo.Number}
-                       """);
+    Console.WriteLine(JsonSerializer.Serialize(stop));
 }
