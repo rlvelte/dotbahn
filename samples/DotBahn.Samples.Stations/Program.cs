@@ -41,10 +41,13 @@ services.AddDotBahnStations((_, opt) => {
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var response = await client.GetStationsAsync(new StationsQuery().WithName("*Hbf").LimitTo(3).Skip(Random.Shared.Next(0,10)));
+var response = await client.GetStationsAsync(new StationsQuery {
+    Categories = "1-2",
+    Names = ["hamburg"]
+});
 foreach (var s in response.Stations) {
     Console.WriteLine($"""
-                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier})
+                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier} | CAT: {s.Category})
                       ==========================================================
                       Region: {s.RegionalArea.Name} (ID: {s.RegionalArea.Number})
                       Address: {s.MailingAddress.Street}

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Clients.Facilities.Models;
 using DotBahn.Clients.Shared.Base;
@@ -21,6 +22,7 @@ public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICa
     /// <param name="equipmentNumbers">Array of equipment numbers to filter by.</param>
     /// <param name="stationId">The station id.</param>
     /// <returns>List of facilities matching the criteria.</returns>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? stationId = null) {
         var queryParams = QueryParameters.Create()
             .Add("type", type)
