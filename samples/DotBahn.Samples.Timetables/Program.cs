@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 if (args.Length < 2) {
-    Console.WriteLine("Usage: DotBahn.Sample.Timetables <ClientId> <ClientSecret>");
+    Console.WriteLine("Usage: DotBahn.Samples.Timetables <ClientId> <ClientSecret>");
     return;
 }
 

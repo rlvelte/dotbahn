@@ -9,9 +9,9 @@
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Samples/">
-    <Project Path="samples\DotBahn.Sample.Timetables\DotBahn.Sample.Timetables.csproj" />
     <Project Path="samples\DotBahn.Samples.Facilities\DotBahn.Samples.Facilities.csproj" />
     <Project Path="samples\DotBahn.Samples.Stations\DotBahn.Samples.Stations.csproj" />
+    <Project Path="samples\DotBahn.Samples.Timetables\DotBahn.Samples.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">
     <Project Path="tests\DotBahn.Tests.Facilities\DotBahn.Tests.Facilities.csproj" />

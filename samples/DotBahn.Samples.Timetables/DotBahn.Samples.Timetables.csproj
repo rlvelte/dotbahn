@@ -5,8 +5,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>DotBahn.Sample.Timetables</AssemblyName>
-        <RootNamespace>DotBahn.Sample.Timetables</RootNamespace>
+        <AssemblyName>DotBahn.Samples.Timetables</AssemblyName>
+        <RootNamespace>DotBahn.Samples.Timetables</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
