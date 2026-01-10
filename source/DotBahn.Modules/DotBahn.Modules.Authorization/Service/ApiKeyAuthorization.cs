@@ -5,7 +5,7 @@ namespace DotBahn.Modules.Authorization.Service;
 /// <summary>
 /// Service for API Key-based authorization using headers.
 /// </summary>
-public class ApiKeyAuthorizationProvider(ModuleOptions configuration) : IAuthorizationProvider {
+public class ApiKeyAuthorization(ModuleOptions configuration) : IAuthorization {
     /// <inheritdoc />
     public Task AuthorizeRequestAsync(HttpRequestMessage request) {
         request.Headers.Add("DB-Client-Id", configuration.ClientId);

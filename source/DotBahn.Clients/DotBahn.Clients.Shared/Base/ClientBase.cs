@@ -2,8 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using DotBahn.Clients.Shared.Models;
 using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.RequestCache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Shared.Base;
@@ -13,8 +12,8 @@ namespace DotBahn.Clients.Shared.Base;
 /// </summary>
 /// <param name="http">The HTTP client used for requests.</param>
 /// <param name="authorization">The provider used for retrieving access tokens.</param>
-/// <param name="cache">The cache provider for storing responses.</param>
-public abstract class ClientBase(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache) : IDisposable {
+/// <param name="cache">The cache provider for storing requests.</param>
+public abstract class ClientBase(HttpClient http, IAuthorization authorization, ICache cache) : IDisposable {
     /// <summary>
     /// Sends a GET request to the specified relative URL and parses the response.
     /// </summary>
@@ -26,9 +25,9 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
     /// <returns>The parsed contract.</returns>
     protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null) {
         var url = BuildUrl(relativeUrl, queryParams);
-        var rawData = await GetContractDataAsync(url, acceptHeader);
-
-        return parser.Parse(rawData);
+        
+        var raw = await GetContractDataAsync(url, acceptHeader);
+        return parser.Parse(raw);
     }
     
     /// <summary>
@@ -68,15 +67,9 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
     /// <exception cref="UnauthorizedAccessException">Thrown when the request is unauthorized (401).</exception>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     private async Task<string> GetContractDataAsync(string relativeUrl, string acceptHeader) {
-        var cacheKey = $"{relativeUrl}_{acceptHeader}";
-        var cachedData = await cache.GetAsync<string>(cacheKey);
-        if (cachedData != null) {
-            return cachedData;
-        }
-
         var path = relativeUrl.StartsWith('/') ? relativeUrl[1..] : relativeUrl;
+        
         Uri requestUri;
-
         if (http.BaseAddress != null) {
             var baseUriStr = http.BaseAddress.ToString();
             if (!baseUriStr.EndsWith('/')) {
@@ -88,13 +81,17 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
         else {
             requestUri = new Uri(path, UriKind.RelativeOrAbsolute);
         }
-
+        
+        var cachedRequest = await cache.GetAsync<string>(requestUri.ToString());
+        if (cachedRequest != null) {
+            return cachedRequest;
+        }
+        
         using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
         await authorization.AuthorizeRequestAsync(request);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
-
+        
         var response = await http.SendAsync(request);
-
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return string.Empty;
         }
@@ -113,10 +110,10 @@ public abstract class ClientBase(HttpClient http, IAuthorizationProvider authori
         }
 
         response.EnsureSuccessStatusCode();
-
+        
         var raw = await response.Content.ReadAsStringAsync();
-        await cache.SetAsync(cacheKey, raw);
-
+        await cache.SetAsync(requestUri.ToString(), raw);
+        
         return raw;
     }
 

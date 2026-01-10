@@ -1,10 +1,10 @@
-﻿using DotBahn.Clients.Timetables;
+﻿using System.Text.Json;
+using DotBahn.Clients.Timetables;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Authorization.Enumerations;
-using DotBahn.Modules.RequestCache;
-using DotBahn.Modules.RequestCache.Enumerations;
+using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 if (args.Length < 2) {
     Console.WriteLine("Usage: DotBahn.Sample.Timetables <ClientId> <ClientSecret>");
@@ -15,18 +15,20 @@ var clientId = args[0];
 var clientSecret = args[1];
 
 var services = new ServiceCollection();
-services.AddLogging();
+
+// Add Logging
+services.AddLogging(builder => {
+    builder.SetMinimumLevel(LogLevel.Debug);
+});
 
 // Add Authorization
 services.AddAuthorizationProvider((_, opt) => {
-    opt.ProviderType = AuthProviderType.ApiKey; 
     opt.ClientId = clientId;
     opt.ClientSecret = clientSecret;
 });
 
 // Add Cache
-services.AddRequestCacheProvider((_, opt) => {
-    opt.ProviderType = CacheProviderType.InMemory; 
+services.AddCacheProvider((_, opt) => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
@@ -35,15 +37,16 @@ services.AddDotBahnTimetables((_, opt) => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 });
 
+// Usage
 var serviceProvider = services.BuildServiceProvider();
-
-
-// Use the API
 var client = serviceProvider.GetRequiredService<TimetablesClient>();
 
-var timetable = await client.GetPlannedTimetableAsync("8000261", DateTime.Now);
-Console.WriteLine($"Found {timetable.Stops.Count} stops.");
-        
-foreach (var s in timetable.Stops.Take(3)) {
-    Console.WriteLine($"- ID: {s.Id}");
+var timetable = await client.GetPlannedTimetableAsync(8000261, DateTime.Now);
+
+Console.WriteLine($"""
+                  {timetable.Station.ToUpper()}
+                  ==========================================================
+                  """);
+foreach (var stop in timetable.Stops) {
+    Console.WriteLine(JsonSerializer.Serialize(stop));
 }

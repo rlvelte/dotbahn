@@ -1,5 +1,4 @@
 using System.Net;
-using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;

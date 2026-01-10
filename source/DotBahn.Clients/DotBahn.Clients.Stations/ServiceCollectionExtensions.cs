@@ -1,5 +1,4 @@
 using System.Net;
-using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;

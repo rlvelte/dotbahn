@@ -2,10 +2,9 @@
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Authorization.Enumerations;
-using DotBahn.Modules.RequestCache;
-using DotBahn.Modules.RequestCache.Enumerations;
+using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 if (args.Length < 2) {
     Console.WriteLine("Usage: DotBahn.Sample.Stations <ClientId> <ClientSecret>");
@@ -16,19 +15,21 @@ var clientId = args[0];
 var clientSecret = args[1];
 
 var services = new ServiceCollection();
-services.AddLogging();
+
+// Add Logging
+services.AddLogging(builder => {
+    builder.SetMinimumLevel(LogLevel.Debug);
+});
 
 // Add Authorization
 services.AddAuthorizationProvider((_, opt) => {
-    opt.ProviderType = AuthProviderType.ApiKey; 
     opt.ClientId = clientId;
     opt.ClientSecret = clientSecret;
 });
 
 // Add Cache
-services.AddRequestCacheProvider((_, opt) => {
-    opt.ProviderType = CacheProviderType.InMemory; 
-    opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
+services.AddCacheProvider((_, opt) => {
+    opt.DefaultExpiration = TimeSpan.FromSeconds(10);
 });
 
 // Add Stations Client
@@ -36,13 +37,18 @@ services.AddDotBahnStations((_, opt) => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
 
+// Usage
 var serviceProvider = services.BuildServiceProvider();
-
-
-// Use the API
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var t = await client.GetStationsAsync(new StationsQuery().WithName("Nürnberg"));
-foreach (var s in t.Stations) {
-    Console.WriteLine($"- {s.Name}");
+var response = await client.GetStationsAsync(new StationsQuery().WithName("*Hbf").LimitTo(3).Skip(Random.Shared.Next(0,10)));
+foreach (var s in response.Stations) {
+    Console.WriteLine($"""
+                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier})
+                      ==========================================================
+                      Region: {s.RegionalArea.Name} (ID: {s.RegionalArea.Number})
+                      Address: {s.MailingAddress.Street}
+                               {s.MailingAddress.ZipCode} {s.MailingAddress.City}
+                      
+                      """);
 }

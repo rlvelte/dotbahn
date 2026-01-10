@@ -119,7 +119,7 @@ public sealed record StationsQuery {
     /// </summary>
     /// <param name="operator">Logical operator.</param>
     /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery WithOperator(LogicalOperator @operator) {
+    public StationsQuery CombineAs(LogicalOperator @operator) {
         Operator = @operator;
         return this;
     }

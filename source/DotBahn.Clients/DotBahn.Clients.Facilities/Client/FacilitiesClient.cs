@@ -3,7 +3,7 @@ using DotBahn.Clients.Facilities.Models;
 using DotBahn.Clients.Shared.Base;
 using DotBahn.Clients.Shared.Models;
 using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.RequestCache.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Facilities.Client;
@@ -11,7 +11,7 @@ namespace DotBahn.Clients.Facilities.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<List<FacilityContract>> facilitiesParser)
+public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<List<FacilityContract>> facilitiesParser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Finds facilities based on optional filter criteria.

@@ -1,9 +1,9 @@
-namespace DotBahn.Modules.RequestCache.Service.Base;
+namespace DotBahn.Modules.Cache.Service.Base;
 
 /// <summary>
 /// Interface for the caching system
 /// </summary>
-public interface IRequestCache {
+public interface ICache {
     /// <summary>
     /// Gets a value from the cache
     /// </summary>
@@ -18,6 +18,5 @@ public interface IRequestCache {
     /// <typeparam name="T">The type of the value</typeparam>
     /// <param name="key">The cache key</param>
     /// <param name="value">The value to cache</param>
-    /// <param name="expiration">Optional expiration time</param>
-    Task SetAsync<T>(string key, T value, TimeSpan? expiration = null);
+    Task SetAsync<T>(string key, T value);
 }
