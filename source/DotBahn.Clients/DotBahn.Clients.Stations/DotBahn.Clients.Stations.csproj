@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         
-        <PackageId>dotbahn.stations</PackageId>
+        <PackageId>DotBahn.Stations</PackageId>
         <Version>1.0.3</Version>
 
         <Title>DotBahn.Stations</Title>

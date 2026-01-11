@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-        <PackageId>dotbahn.timetables</PackageId>
+        <PackageId>DotBahn.Timetables</PackageId>
         <Version>1.0.3</Version>
 
         <Title>DotBahn.Timetables</Title>
