@@ -17,9 +17,9 @@ The currently available clients cover the following APIs:
 ## Install
 The easiest way to get started is to install any package you need from [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) or use the versions on [Nuget](https://www.nuget.org/):
 ```
-dotnet add package Dotbahn.Timetables
-dotnet add package Dotbahn.Stations
-dotnet add package Dotbahn.Facilities
+dotnet add package DotBahn.Timetables
+dotnet add package DotBahn.Stations
+dotnet add package DotBahn.Facilities
 ```
 
 ## Authorization
