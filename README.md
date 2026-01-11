@@ -14,6 +14,12 @@ The currently available clients cover the following APIs:
 > [!IMPORTANT]
 > These packages were extracted from a personal project. Ongoing development is driven by my perceived needs rather than a fixed roadmap. Contributions, improvements, and forks are very welcome.
 
+## Table of Contents
+- [Install](#install)
+- [Usage](#usage)
+- [Authorization](#authorization)
+- [Technologies](#technologies)
+
 ## Install
 The easiest way to get started is to install any package you need from [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) or use the versions on [Nuget](https://www.nuget.org/):
 ```
@@ -21,6 +27,12 @@ dotnet add package DotBahn.Timetables
 dotnet add package DotBahn.Stations
 dotnet add package DotBahn.Facilities
 ```
+
+## Usage
+The packages has easy integration with the `ServiceCollection` 
+
+> [!NOTE]
+> More samples and usages can be views at `samples/`.
 
 ## Authorization
 You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).

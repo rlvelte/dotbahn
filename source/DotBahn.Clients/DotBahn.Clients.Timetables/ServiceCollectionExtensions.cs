@@ -1,4 +1,6 @@
 using System.Net;
+using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
@@ -20,16 +22,16 @@ public static class ServiceCollectionExtensions {
         /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddDotBahnTimetables(Action<IServiceProvider, ClientOptions> configuration) {
+        public IServiceCollection AddDotBahnTimetables(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-        
-            services.AddSingleton<IConfigureOptions<ClientOptions>>(sp => new ConfigureOptions<ClientOptions>(opt => configuration(sp, opt)));
+            
+            services.Configure(configuration);
             services.AddOptions<ClientOptions>()
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
-
-            services.AddHttpClient<Client.TimetablesClient>((sp, http) => {
+            
+            services.AddHttpClient<TimetablesClient>((sp, http) => {
                 var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
                 http.BaseAddress = options.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");

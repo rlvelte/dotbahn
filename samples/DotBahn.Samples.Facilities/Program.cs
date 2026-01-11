@@ -23,18 +23,18 @@ services.AddLogging(builder => {
 });
 
 // Add Authorization
-services.AddAuthorizationProvider((_, opt) => {
+services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
-    opt.ClientSecret = clientSecret;
+    opt.ApiKey = clientSecret;
 });
 
 // Add Cache
-services.AddCacheProvider((_, opt) => {
+services.AddDotBahnCache(opt => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
 // Add Facilities Client
-services.AddDotBahnFacilities((_, opt) => {
+services.AddDotBahnFacilities(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
 });
 

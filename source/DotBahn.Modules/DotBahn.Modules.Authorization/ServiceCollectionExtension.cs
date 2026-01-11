@@ -2,6 +2,7 @@ using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace DotBahn.Modules.Authorization;
@@ -15,22 +16,21 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         /// Adds the authorization system, with options configured via callback.
         /// </summary>
-        /// <param name="configuration">Delegate to configure <see cref="ModuleOptions"/>. Can use the service provider.</param>
+        /// <param name="configuration">Delegate to configure <see cref="AuthorizationOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddAuthorizationProvider(Action<IServiceProvider, ModuleOptions> configuration) {
+        public IServiceCollection AddDotBahnAuthorization(Action<AuthorizationOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-
-            services.AddSingleton<IConfigureOptions<ModuleOptions>>(sp => new ConfigureOptions<ModuleOptions>(opt => configuration(sp, opt)));
-            services.AddOptions<ModuleOptions>()
+            
+            services.Configure(configuration);
+            services.AddOptions<AuthorizationOptions>()
                     .Validate(o => !string.IsNullOrWhiteSpace(o.ClientId), "DotBahn: 'ClientId' can't be null or empty.")
-                    .Validate(o => !string.IsNullOrWhiteSpace(o.ClientSecret), "DotBahn: 'ClientSecret' can't be null or empty.")
+                    .Validate(o => !string.IsNullOrWhiteSpace(o.ApiKey), "DotBahn: 'ApiKey' can't be null or empty.")
                     .ValidateOnStart();
-
-            services.AddHttpClient();
-            services.AddSingleton<IAuthorization>(sp => {
-                var options = sp.GetRequiredService<IOptions<ModuleOptions>>().Value;
+            
+            services.TryAddSingleton<IAuthorization>(sp => { // Only add if not present
+                var options = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
                 return new ApiKeyAuthorization(options);
             });
         

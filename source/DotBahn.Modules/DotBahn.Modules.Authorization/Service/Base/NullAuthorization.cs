@@ -5,7 +5,5 @@ namespace DotBahn.Modules.Authorization.Service.Base;
 /// </summary>
 public class NullAuthorization : IAuthorization {
     /// <inheritdoc />
-    public Task AuthorizeRequestAsync(HttpRequestMessage request) {
-        return Task.CompletedTask;
-    }
+    public void AuthorizeRequest(HttpRequestMessage request) { }
 }

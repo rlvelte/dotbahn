@@ -12,7 +12,7 @@ namespace DotBahn.Clients.Facilities.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<List<FacilityContract>> facilitiesParser)
+public class FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<List<FacilityContract>> parser, ICache? cache = null)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Finds facilities based on optional filter criteria.
@@ -31,7 +31,7 @@ public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICa
             .Add("equipmentnumbers", equipmentNumbers)
             .Add("stationnumber", stationId);
 
-        return await GetAsync("/facilities", facilitiesParser, "application/json", queryParams);
+        return await GetAsync("/facilities", parser, "application/json", queryParams);
     }
 
     /// <summary>
@@ -41,6 +41,6 @@ public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICa
     /// <returns>List of facilities matching the criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<List<FacilityContract>> GetFacilitiesAsync(FacilitiesQuery query) {
-        return await GetAsync("/facilities", facilitiesParser, "application/json", query.ToQueryParameters());
+        return await GetAsync("/facilities", parser, "application/json", query.ToQueryParameters());
     }
 }

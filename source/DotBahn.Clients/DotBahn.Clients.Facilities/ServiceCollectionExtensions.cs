@@ -1,5 +1,8 @@
 using System.Net;
+using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Contracts;
+using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Options;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
@@ -12,34 +15,36 @@ namespace DotBahn.Clients.Facilities;
 /// Extension methods for setting up FaSta (Station Facilities Status) services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <summary>
-    /// Adds the FaSta client using HttpClientFactory, with options configured via callback.
-    /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
-    /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
-    /// <returns>The service collection.</returns>
-    [UsedImplicitly]
-    public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<IServiceProvider, ClientOptions> configuration) {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configuration);
+    extension(IServiceCollection services) {
+        /// <summary>
+        /// Adds the FaSta client using HttpClientFactory, with options configured via callback.
+        /// </summary>
+        /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
+        /// <returns>The service collection.</returns>
+        [UsedImplicitly]
+        public IServiceCollection AddDotBahnFacilities(Action<ClientOptions> configuration) {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddSingleton<IConfigureOptions<ClientOptions>>(sp => new ConfigureOptions<ClientOptions>(opt => configuration(sp, opt)));
-        services.AddOptions<ClientOptions>()
-                .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
-                .ValidateOnStart();
+            services.Configure(configuration);
+            services.AddOptions<ClientOptions>()
+                    .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
+                    .ValidateOnStart();
 
-        services.AddHttpClient<Client.FacilitiesClient>((sp, http) => {
-            var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
-            http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
-        }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-        });
+            services.AddHttpClient<FacilitiesClient>((sp, http) => {
+                var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
+                http.BaseAddress = options.BaseEndpoint;
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
+            }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            });
 
-        services.AddSingleton<IParser<List<FacilityContract>>, JsonParser<List<FacilityContract>>>();
-        services.AddSingleton<IParser<FacilityContract>, JsonParser<FacilityContract>>();
-        services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
+            services.AddSingleton<IParser<List<FacilityContract>>, JsonParser<List<FacilityContract>>>();
+            services.AddSingleton<IParser<FacilityContract>, JsonParser<FacilityContract>>();
+            services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
 
-        return services;
+            return services;
+        }
     }
 }

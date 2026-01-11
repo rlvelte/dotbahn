@@ -9,5 +9,5 @@ public interface IAuthorization {
     /// </summary>
     /// <param name="request">The HTTP request to authorize.</param>
     /// <returns>An authorized request.</returns>
-    Task AuthorizeRequestAsync(HttpRequestMessage request);
+    void AuthorizeRequest(HttpRequestMessage request);
 }

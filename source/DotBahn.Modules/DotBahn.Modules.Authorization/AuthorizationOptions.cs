@@ -8,14 +8,14 @@ namespace DotBahn.Modules.Authorization;
 /// </summary>
 [UsedImplicitly]
 [ExcludeFromCodeCoverage]
-public record ModuleOptions {
+public record AuthorizationOptions {
     /// <summary>
     /// The Client ID for authentication.
     /// </summary>
-    public string ClientId { get; set; } = string.Empty;
+    public required string ClientId { get; set; }
 
     /// <summary>
-    /// The Client Secret for authentication.
+    /// The API key for authentication.
     /// </summary>
-    public string ClientSecret { get; set; } = string.Empty;
+    public required string ApiKey { get; set; }
 }

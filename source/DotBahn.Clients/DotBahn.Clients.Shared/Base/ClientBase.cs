@@ -1,20 +1,62 @@
 using System.Net;
 using System.Net.Http.Headers;
 using DotBahn.Clients.Shared.Models;
+using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Shared.Utilities;
+using DotBahn.Modules.Authorization;
+using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
+using DotBahn.Modules.Cache;
+using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DotBahn.Clients.Shared.Base;
 
 /// <summary>
 /// Base class for rest clients, providing common functionality for authentication and request caching.
 /// </summary>
-/// <param name="http">The HTTP client used for requests.</param>
-/// <param name="authorization">The provider used for retrieving access tokens.</param>
-/// <param name="cache">The cache provider for storing requests.</param>
-public abstract class ClientBase(HttpClient http, IAuthorization authorization, ICache cache) {
+public abstract class ClientBase {
+    private readonly HttpClient _http;
+    private readonly IAuthorization _authorization;
+    private readonly ICache? _cache;
+
+    /// <summary>
+    /// Base class for rest clients, providing common functionality for authentication and request caching.
+    /// </summary>
+    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="authorization">The provider used for retrieving access tokens.</param>
+    /// <param name="cache">The cache provider for storing requests.</param>
+    protected ClientBase(HttpClient http, IAuthorization authorization, ICache? cache) {
+        _http = http;
+        _authorization = authorization;
+        _cache = cache;
+    }
+
+    /// <summary>
+    /// Base class for rest clients, providing common functionality for authentication and request caching.
+    /// </summary>
+    /// <param name="options">The options for this instance.</param>
+    /// <param name="auth">The auth credentials for the client.</param>
+    /// <param name="cache">The cache options for the client.</param>
+    protected ClientBase(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
+        _http = new HttpClient {
+            BaseAddress = options.BaseEndpoint,
+        };
+        _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
+        
+        _authorization = new ApiKeyAuthorization(auth);
+        if (cache == null) {
+            return;
+        }
+
+        var memoryCache = new MemoryCache(new MemoryCacheOptions {
+            SizeLimit = 1024
+        });
+        _cache = new InMemoryCache(memoryCache, cache);
+    }
+
     /// <summary>
     /// Sends a GET request to the specified relative URL and parses the response.
     /// </summary>
@@ -41,17 +83,19 @@ public abstract class ClientBase(HttpClient http, IAuthorization authorization, 
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     private async Task<string> GetContractDataAsync(string url, string acceptHeader, CancellationToken cancellation) {
         var requestUri = BuildRequestUri(url);
-        
-        var cachedData = await cache.GetAsync<string>(requestUri.ToString());
-        if (cachedData != null) {
-            return cachedData;
+
+        if (_cache != null) {
+            var cachedData = await _cache.GetAsync<string>(requestUri.ToString());
+            if (cachedData != null) {
+                return cachedData;
+            }
         }
-        
+
         var responseData = await ExecuteHttpRequestAsync(requestUri, acceptHeader, cancellation);
-        if (!string.IsNullOrEmpty(responseData)) {
-            await cache.SetAsync(requestUri.ToString(), responseData);
+        if (_cache != null) {
+            await _cache.SetAsync(requestUri.ToString(), responseData);
         }
-        
+
         return responseData;
     }
 
@@ -61,12 +105,12 @@ public abstract class ClientBase(HttpClient http, IAuthorization authorization, 
     private Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
         
-        if (http.BaseAddress == null) {
+        if (_http.BaseAddress == null) {
             return new Uri(path, UriKind.RelativeOrAbsolute);
         }
         
-        var url = http.BaseAddress.ToString();
-        return new Uri(url.EndsWith('/') ? http.BaseAddress : new Uri(url + "/"), path);
+        var url = _http.BaseAddress.ToString();
+        return new Uri(url.EndsWith('/') ? _http.BaseAddress : new Uri(url + "/"), path);
     }
 
     /// <summary>
@@ -76,9 +120,9 @@ public abstract class ClientBase(HttpClient http, IAuthorization authorization, 
         using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
         
-        await authorization.AuthorizeRequestAsync(request);
+        _authorization.AuthorizeRequest(request);
         
-        using var response = await http.SendAsync(request, cancellationToken);
+        using var response = await _http.SendAsync(request, cancellationToken);
         return await ProcessResponseAsync(response);
     }
 

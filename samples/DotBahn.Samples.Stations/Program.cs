@@ -1,8 +1,8 @@
-﻿using DotBahn.Clients.Stations;
+﻿using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -22,18 +22,13 @@ services.AddLogging(builder => {
 });
 
 // Add Authorization
-services.AddAuthorizationProvider((_, opt) => {
+services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
-    opt.ClientSecret = clientSecret;
-});
-
-// Add Cache
-services.AddCacheProvider((_, opt) => {
-    opt.DefaultExpiration = TimeSpan.FromSeconds(10);
+    opt.ApiKey = clientSecret;
 });
 
 // Add Stations Client
-services.AddDotBahnStations((_, opt) => {
+services.AddDotBahnStations(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
 
