@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using DotBahn.Clients.Shared.Models;
 using DotBahn.Clients.Stations.Enumerations;
 using DotBahn.Modules.Shared.Enumerations;
@@ -9,7 +10,21 @@ namespace DotBahn.Clients.Stations.Models;
 /// Represents the query parameters for searching stations in the Deutsche Bahn StaDa API.
 /// Provides fluent methods for convenient building of queries.
 /// </summary>
-public sealed record StationsQuery {
+public sealed partial record StationsQuery {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [GeneratedRegex(@"^\d+$")]
+    private static partial Regex SimpleCategoryRegex();
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [GeneratedRegex(@"^(\d+)\s*-\s*(\d+)$")]
+    private static partial Regex ComplexCategoryRegex();
+    
     /// <summary>
     /// Strings to search for station names.
     /// The wildcards '*' (indicating an arbitrary number of characters) and '?' (indicating one single character) can be used in the search pattern.
@@ -36,27 +51,41 @@ public sealed record StationsQuery {
             }
 
             var parts = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var normalized = new List<string>();
+            
             foreach (var part in parts) {
-                if (part.Contains('-')) {
-                    var rangeParts = part.Split('-', 2, StringSplitOptions.TrimEntries);
-                    if (rangeParts.Length != 2 || 
-                        !int.TryParse(rangeParts[0], out var start) || 
-                        !int.TryParse(rangeParts[1], out var end)) {
+                var trimmedPart = part.Trim();
+                
+                if (trimmedPart.Contains('-')) {
+                    var rangeMatch = ComplexCategoryRegex().Match(trimmedPart);
+                    if (!rangeMatch.Success) {
                         throw new ArgumentException($"Invalid category range: {part}", nameof(value));
                     }
-
+                    
+                    var start = int.Parse(rangeMatch.Groups[1].Value);
+                    var end = int.Parse(rangeMatch.Groups[2].Value);
                     if (start < 1 || start > 7 || end < 1 || end > 7 || start > end) {
                         throw new ArgumentException($"Category range out of bounds: {part}", nameof(value));
                     }
+                    
+                    normalized.Add($"{start}-{end}");
                 }
                 else {
-                    if (!int.TryParse(part, out var parsed) || parsed < 1 || parsed > 7) {
+                    var singleMatch = SimpleCategoryRegex().Match(trimmedPart);
+                    if (!singleMatch.Success) {
                         throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
                     }
+                    
+                    var parsed = int.Parse(trimmedPart);
+                    if (parsed is < 1 or > 7) {
+                        throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
+                    }
+                    
+                    normalized.Add(parsed.ToString());
                 }
             }
         
-            field = string.Join(',', parts);
+            field = string.Join(',', normalized);
         }
     }
 
@@ -112,8 +141,8 @@ public sealed record StationsQuery {
     /// <param name="categories">One or more category specifications: integers, ranges, or comma-separated values.</param>
     /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
     /// <exception cref="ArgumentException">Thrown if any category is invalid or out of range.</exception>
-    public StationsQuery WithCategories(params string[] categories) {
-        Categories = string.Join(',', categories);
+    public StationsQuery WithCategories(string categories) {
+        Categories = categories;
         return this;
     }
 
