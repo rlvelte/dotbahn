@@ -34,7 +34,16 @@ services.AddDotBahnStations(opt => {
 
 // Usage
 var serviceProvider = services.BuildServiceProvider();
-var client = serviceProvider.GetRequiredService<StationsClient>();
+//var client = serviceProvider.GetRequiredService<StationsClient>();
+var opt = new ClientOptions {
+    BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/")
+};
+
+var auth = new AuthorizationOptions {
+    ClientId = args[0], ApiKey = args[1]
+};
+
+var client = new StationsClient(opt, auth);
 
 var response = await client.GetStationsAsync(new StationsQuery {
     Categories = "1-2",
