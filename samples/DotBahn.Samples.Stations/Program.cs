@@ -1,8 +1,8 @@
-﻿using DotBahn.Clients.Stations;
+﻿using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -22,18 +22,13 @@ services.AddLogging(builder => {
 });
 
 // Add Authorization
-services.AddAuthorizationProvider((_, opt) => {
+services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
-    opt.ClientSecret = clientSecret;
-});
-
-// Add Cache
-services.AddCacheProvider((_, opt) => {
-    opt.DefaultExpiration = TimeSpan.FromSeconds(10);
+    opt.ApiKey = clientSecret;
 });
 
 // Add Stations Client
-services.AddDotBahnStations((_, opt) => {
+services.AddDotBahnStations(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
 
@@ -41,10 +36,13 @@ services.AddDotBahnStations((_, opt) => {
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<StationsClient>();
 
-var response = await client.GetStationsAsync(new StationsQuery().WithName("*Hbf").LimitTo(3).Skip(Random.Shared.Next(0,10)));
+var response = await client.GetStationsAsync(new StationsQuery {
+    Categories = "1-2",
+    Names = ["hamburg"]
+});
 foreach (var s in response.Stations) {
     Console.WriteLine($"""
-                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier})
+                      {s.Name.ToUpper()} (ID: {s.Number} | EVA: {s.EvaNumbers.First().Number} | RIL100: {s.Ril100Identifiers.First().RilIdentifier} | CAT: {s.Category})
                       ==========================================================
                       Region: {s.RegionalArea.Name} (ID: {s.RegionalArea.Number})
                       Address: {s.MailingAddress.Street}

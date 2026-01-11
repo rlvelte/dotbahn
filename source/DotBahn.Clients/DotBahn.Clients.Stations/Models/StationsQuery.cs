@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using DotBahn.Clients.Shared.Models;
 using DotBahn.Clients.Stations.Enumerations;
 using DotBahn.Modules.Shared.Enumerations;
@@ -9,19 +10,84 @@ namespace DotBahn.Clients.Stations.Models;
 /// Represents the query parameters for searching stations in the Deutsche Bahn StaDa API.
 /// Provides fluent methods for convenient building of queries.
 /// </summary>
-public sealed record StationsQuery {
+public sealed partial record StationsQuery {
     /// <summary>
-    /// String to search for a station name.
-    /// The wildcards '*' (indicating an arbitrary number of characters) and '?' (indicating one single character) can be used in the search pattern.
-    /// A comma-separated list of station names is also supported (e.g., hamburg*,berlin*).
+    /// 
     /// </summary>
-    public string? SearchString { get; set; }
+    /// <returns></returns>
+    [GeneratedRegex(@"^\d+$")]
+    private static partial Regex SimpleCategoryRegex();
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [GeneratedRegex(@"^(\d+)\s*-\s*(\d+)$")]
+    private static partial Regex ComplexCategoryRegex();
+    
+    /// <summary>
+    /// Strings to search for station names.
+    /// The wildcards '*' (indicating an arbitrary number of characters) and '?' (indicating one single character) can be used in the search pattern.
+    /// </summary>
+    public string[]? Names { get;
+        set {
+            if (value == null || value.Length == 0) {
+                throw new ArgumentException("At least one name is required.", nameof(value));
+            }
+
+            field = value.Select(n => n.Contains('*') || n.Contains('?') ? n : n + "*").ToArray();
+        } 
+    }
 
     /// <summary>
     /// Filter by station category.
     /// The category must be between 1 and 7, otherwise a parameter exception is returned.
     /// </summary>
-    public int? Category { get; set; }
+    public string? Categories { 
+        get;
+        set {
+            if (string.IsNullOrWhiteSpace(value)) {
+                throw new ArgumentException("At least one category must be specified.", nameof(value));
+            }
+
+            var parts = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var normalized = new List<string>();
+            
+            foreach (var part in parts) {
+                var trimmedPart = part.Trim();
+                
+                if (trimmedPart.Contains('-')) {
+                    var rangeMatch = ComplexCategoryRegex().Match(trimmedPart);
+                    if (!rangeMatch.Success) {
+                        throw new ArgumentException($"Invalid category range: {part}", nameof(value));
+                    }
+                    
+                    var start = int.Parse(rangeMatch.Groups[1].Value);
+                    var end = int.Parse(rangeMatch.Groups[2].Value);
+                    if (start < 1 || start > 7 || end < 1 || end > 7 || start > end) {
+                        throw new ArgumentException($"Category range out of bounds: {part}", nameof(value));
+                    }
+                    
+                    normalized.Add($"{start}-{end}");
+                }
+                else {
+                    var singleMatch = SimpleCategoryRegex().Match(trimmedPart);
+                    if (!singleMatch.Success) {
+                        throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
+                    }
+                    
+                    var parsed = int.Parse(trimmedPart);
+                    if (parsed is < 1 or > 7) {
+                        throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
+                    }
+                    
+                    normalized.Add(parsed.ToString());
+                }
+            }
+        
+            field = string.Join(',', normalized);
+        }
+    }
 
     /// <summary>
     /// Filter by German federal state.
@@ -53,36 +119,33 @@ public sealed record StationsQuery {
     /// The maximum number of hits to be returned by that query.
     /// If 'limit' is set greater than 10000, it will be reset to 10000 internally and only 10000 hits will be returned.
     /// </summary>
-    public int? Limit { get; set; } = 50;
+    public int? Limit { get; set; } = 10000;
 
     /// <summary>
-    /// Sets the station name or fragment to search for.
+    /// Sets the station names or fragments to search for.
     /// Appends a trailing '*' automatically if no wildcard is present.
     /// </summary>
-    /// <param name="name">Station name or fragment.</param>
+    /// <param name="names"></param>
     /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
     /// <exception cref="ArgumentException">Thrown if the name is null or empty.</exception>
-    public StationsQuery WithName(string name) {
-        if (string.IsNullOrWhiteSpace(name)) {
-            throw new ArgumentException("Name required", nameof(name));
-        }
-        SearchString = name.Contains('*') ? name : $"{name}*";
+    public StationsQuery WithNames(params string[] names) {
+        Names = names;
         return this;
     }
 
     /// <summary>
-    /// Sets the station category filter (1–7).
+    /// Sets the station category filter.
+    /// You can specify a single category, a range (e.g., "2-4") or a list of categories (e.g., "1,3-5").
+    /// Categories must be between 1 and 7; otherwise, an <see cref="ArgumentException"/> is thrown.
     /// </summary>
-    /// <param name="category">Station category.</param>
+    /// <param name="categories">One or more category specifications: integers, ranges, or comma-separated values.</param>
     /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if the category is outside 1–7.</exception>
-    public StationsQuery WithCategory(int category) {
-        if (category is < 1 or > 7) {
-            throw new ArgumentOutOfRangeException(nameof(category));
-        }
-        Category = category;
+    /// <exception cref="ArgumentException">Thrown if any category is invalid or out of range.</exception>
+    public StationsQuery WithCategories(string categories) {
+        Categories = categories;
         return this;
     }
+
 
     /// <summary>
     /// Filters stations by federal state.
@@ -149,8 +212,8 @@ public sealed record StationsQuery {
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public QueryParameters ToQueryParameters() => QueryParameters.Create()
-                                                                .Add("searchstring", SearchString)
-                                                                .Add("category", Category.ToString())
+                                                                .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)
+                                                                .Add("category", Categories)
                                                                 .Add("federalstate", State?.GetAssociatedValue())
                                                                 .Add("eva", Eva)
                                                                 .Add("ril", Ril)

@@ -20,11 +20,11 @@ public static class ServiceCollectionExtensions {
         /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
         [UsedImplicitly]
-        public IServiceCollection AddCacheProvider(Action<IServiceProvider, CacheOptions> configuration) {
+        public IServiceCollection AddDotBahnCache(Action<CacheOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
-            services.AddSingleton<IConfigureOptions<CacheOptions>>(sp => new ConfigureOptions<CacheOptions>(opt => configuration(sp, opt)));
+            services.Configure(configuration);
             services.AddOptions<CacheOptions>()
                     .Validate(o => o.DefaultExpiration.TotalSeconds > 1, "DotBahn: Cache 'DefaultExpiration' must be > 1.")
                     .ValidateOnStart();

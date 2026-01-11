@@ -20,4 +20,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
+    </ItemGroup>
+
 </Project>

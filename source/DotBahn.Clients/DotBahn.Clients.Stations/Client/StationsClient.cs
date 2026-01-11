@@ -1,9 +1,14 @@
+using System.ComponentModel;
 using DotBahn.Clients.Shared.Base;
 using DotBahn.Clients.Shared.Models;
+using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Clients.Stations.Models;
+using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
+using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Stations.Client;
@@ -11,8 +16,32 @@ namespace DotBahn.Clients.Stations.Client;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
-public class StationsClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<StationsResponseContract> parser)
-    : ClientBase(http, authorization, cache) {
+public class StationsClient : ClientBase {
+    private readonly IParser<StationsResponseContract> _parser;
+
+    /// <summary>
+    /// Client for accessing 'Deutsche Bahn StaDa'-API.
+    /// </summary>
+    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="authorization">The provider used for retrieving access tokens.</param>
+    /// <param name="parser">The parser for this contract type.</param>
+    /// <param name="cache">The cache provider for storing requests.</param>
+    public StationsClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ICache? cache = null) 
+        : base(http, authorization, cache) {
+        _parser = parser;
+    }
+
+    /// <summary>
+    /// Client for accessing 'Deutsche Bahn StaDa'-API.
+    /// </summary>
+    /// <param name="options">The options for this instance.</param>
+    /// <param name="auth">The auth credentials for the client.</param>
+    /// <param name="cache">The cache options for the client.</param>
+    public StationsClient(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+        : base(options, auth, cache) {
+        _parser = new JsonParser<StationsResponseContract>();
+    }
+    
     /// <summary>
     /// Searches for stations using various filter criteria.
     /// </summary>
@@ -25,6 +54,8 @@ public class StationsClient(HttpClient http, IAuthorization authorization, ICach
     /// <param name="offset">Number of results to skip for pagination (default: 0).</param>
     /// <param name="limit">Maximum number of results to return (default: 50, max: 10000).</param>
     /// <returns>List of stations matching the search criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public async Task<StationsResponseContract> GetStationsAsync(string? searchString = null, string? category = null, string? federalState = null, string? eva = null, string? ril = null, string? logicalOperator = null, int? offset = null, int? limit = null) {
         var parameters = QueryParameters.Create()
             .Add("searchstring", searchString)
@@ -36,7 +67,7 @@ public class StationsClient(HttpClient http, IAuthorization authorization, ICach
             .Add("offset", offset.ToString())
             .Add("limit", limit.ToString());
 
-        return await GetAsync("/stations", parser, "application/json", parameters);
+        return await GetAsync("/stations", _parser, "application/json", parameters);
     }
 
     /// <summary>
@@ -44,46 +75,10 @@ public class StationsClient(HttpClient http, IAuthorization authorization, ICach
     /// </summary>
     /// <param name="query">The query to specify results with.</param>
     /// <returns>List of stations matching the search criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<StationsResponseContract> GetStationsAsync(StationsQuery query) {
-        return await GetAsync("/stations", parser, "application/json", query.ToQueryParameters());
-    }
-
-    /// <summary>
-    /// Retrieves stations whose names match the given search string.
-    /// </summary>
-    /// <remarks>If no wildcard is provided or exact is false (default), a trailing '*' is automatically appended to avoid overly strict matches.</remarks>
-    /// <param name="name">The station name fragment to search for. Wildcards are supported (e.g., "Berlin*", "*Hbf").</param>
-    /// <param name="limit">The limit of returning stations.</param>
-    /// <param name="exact">Try to resolve via an exact match of parameter. Default is <c>false</c>.</param>
-    /// <returns>A list of stations whose names match the provided search string.</returns>
-    public async Task<StationsResponseContract> GetStationsLikeAsync(string name, int limit = 5, bool exact = false) {
-        var search = exact || name.Contains('*') ? name : $"{name}*";
-        var parameters = QueryParameters.Create().Add("searchstring", search).Add("limit", limit.ToString());
-        
-        return await GetAsync("/stations", parser, "application/json", parameters);
-    }
-    
-    /// <summary>
-    /// Retrieves a single station by its EVA number.
-    /// </summary>
-    /// <param name="eva">The EVA station number used as a unique identifier.</param>
-    /// <returns>The station matching the specified EVA number.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(int eva) {
-        var parameters = QueryParameters.Create().Add("eva", eva.ToString()).Add("limit", "1");
-
-        var result = await GetAsync("/stations", parser, "application/json", parameters);
-        return result.Stations.First();
-    }
-    
-    /// <summary>
-    /// Retrieves a single station by its RIL100 identifier.
-    /// </summary>
-    /// <param name="ril">The RIL100 used as a unique identifier.</param>
-    /// <returns>The station matching the specified RIL100 number.</returns>
-    public async Task<StationContract> GetStationByRilAsync(string ril) {
-        var parameters = QueryParameters.Create().Add("ril", ril).Add("limit", "1");
-        
-        var result = await GetAsync("/stations", parser, "application/json", parameters);
-        return result.Stations.First();
+        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters());
+        response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
+        return response;
     }
 }

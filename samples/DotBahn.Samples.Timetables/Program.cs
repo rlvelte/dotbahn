@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 if (args.Length < 2) {
-    Console.WriteLine("Usage: DotBahn.Sample.Timetables <ClientId> <ClientSecret>");
+    Console.WriteLine("Usage: DotBahn.Samples.Timetables <ClientId> <ClientSecret>");
     return;
 }
 
@@ -22,18 +22,18 @@ services.AddLogging(builder => {
 });
 
 // Add Authorization
-services.AddAuthorizationProvider((_, opt) => {
+services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
-    opt.ClientSecret = clientSecret;
+    opt.ApiKey = clientSecret;
 });
 
 // Add Cache
-services.AddCacheProvider((_, opt) => {
+services.AddDotBahnCache(opt => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(30); 
 });
 
 // Add Timetables Client
-services.AddDotBahnTimetables((_, opt) => {
+services.AddDotBahnTimetables(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 });
 
