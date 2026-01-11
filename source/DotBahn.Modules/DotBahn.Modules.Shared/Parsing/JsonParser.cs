@@ -1,4 +1,6 @@
 using System.Text.Json;
+using DotBahn.Modules.Shared.Parsing.Additional;
+using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Modules.Shared.Parsing;
 
@@ -6,13 +8,15 @@ namespace DotBahn.Modules.Shared.Parsing;
 /// Generic JSON parser implementation.
 /// </summary>
 /// <typeparam name="TContract">The raw type to deserialize into.</typeparam>
-public class JsonParser<TContract> : IParser<TContract> {
+public class JsonParser<TContract> : IParser<TContract> where TContract : new() {
     private static readonly JsonSerializerOptions Options = new() {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        Converters = {
+            new BahnDialectJsonConverter()
+        }
     };
 
     /// <inheritdoc />
-    public TContract Parse(string input) {
-        return JsonSerializer.Deserialize<TContract>(input, Options)!;
-    }
+    public TContract Parse(string input) => 
+        string.IsNullOrWhiteSpace(input) ? new TContract() : JsonSerializer.Deserialize<TContract>(input, Options)!;
 }

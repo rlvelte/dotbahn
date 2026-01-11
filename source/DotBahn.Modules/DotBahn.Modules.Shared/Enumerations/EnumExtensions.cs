@@ -27,4 +27,15 @@ public static class EnumExtensions {
 
         return defaultValue;
     }
+    
+    /// <summary>
+    /// Gets the value of the <see cref="AssociatedValueAttribute"/> for a given enum member.
+    /// </summary>
+    /// <param name="enumValue">The enum member to retrieve the associated value from.</param>
+    /// <returns>The associated value if present; otherwise, <c>null</c>.</returns>
+    public static string? GetAssociatedValue(this Enum enumValue) {
+        var field = enumValue.GetType().GetField(enumValue.ToString());
+        var attribute = field?.GetCustomAttribute<AssociatedValueAttribute>();
+        return attribute?.Value;
+    }
 }

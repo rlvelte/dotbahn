@@ -1,16 +1,18 @@
+using System.ComponentModel;
 using DotBahn.Clients.Facilities.Contracts;
+using DotBahn.Clients.Facilities.Models;
 using DotBahn.Clients.Shared.Base;
-using DotBahn.Clients.Shared.Queries;
+using DotBahn.Clients.Shared.Models;
 using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.RequestCache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
+using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Facilities.Client;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorization, IRequestCache cache, IParser<StationContract> stationParser, IParser<FacilityContract> facilityParser, IParser<List<FacilityContract>> facilitiesParser)
+public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICache cache, IParser<List<FacilityContract>> facilitiesParser)
     : ClientBase(http, authorization, cache) {
     /// <summary>
     /// Finds facilities based on optional filter criteria.
@@ -18,31 +20,27 @@ public class FacilitiesClient(HttpClient http, IAuthorizationProvider authorizat
     /// <param name="type">Type of facility (e.g., "ESCALATOR", "ELEVATOR").</param>
     /// <param name="state">State of facility (e.g., "ACTIVE", "INACTIVE").</param>
     /// <param name="equipmentNumbers">Array of equipment numbers to filter by.</param>
-    /// <param name="eva">The station number (EVA).</param>
+    /// <param name="stationId">The station id.</param>
     /// <returns>List of facilities matching the criteria.</returns>
-    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? eva = null) {
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? stationId = null) {
         var queryParams = QueryParameters.Create()
             .Add("type", type)
             .Add("state", state)
             .Add("equipmentnumbers", equipmentNumbers)
-            .Add("stationnumber", eva);
+            .Add("stationnumber", stationId);
 
         return await GetAsync("/facilities", facilitiesParser, "application/json", queryParams);
     }
 
     /// <summary>
-    /// Finds a station by its station number.
+    /// Finds facilities based on optional filter criteria.
     /// </summary>
-    /// <param name="eva">The station number (EVA).</param>
-    /// <returns>The station details.</returns>
-    public async Task<StationContract> GetStationByEvaAsync(int eva) =>
-        await GetAsync($"/stations/{eva}", stationParser, "application/json");
-    
-    /// <summary>
-    /// Gets a specific facility by its equipment number.
-    /// </summary>
-    /// <param name="equipmentNumber">The equipment number of the facility.</param>
-    /// <returns>The facility details.</returns>
-    public async Task<FacilityContract> GetFacilitiesByEquipmentNumberAsync(int equipmentNumber) => 
-        await GetAsync($"/facilities/{equipmentNumber}", facilityParser, "application/json");
+    /// <param name="query">The query to specify results with.</param>
+    /// <returns>List of facilities matching the criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    public async Task<List<FacilityContract>> GetFacilitiesAsync(FacilitiesQuery query) {
+        return await GetAsync("/facilities", facilitiesParser, "application/json", query.ToQueryParameters());
+    }
 }
