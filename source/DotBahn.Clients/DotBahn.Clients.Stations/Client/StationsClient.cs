@@ -26,6 +26,7 @@ public class StationsClient(HttpClient http, IAuthorization authorization, ICach
     /// <param name="offset">Number of results to skip for pagination (default: 0).</param>
     /// <param name="limit">Maximum number of results to return (default: 50, max: 10000).</param>
     /// <returns>List of stations matching the search criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public async Task<StationsResponseContract> GetStationsAsync(string? searchString = null, string? category = null, string? federalState = null, string? eva = null, string? ril = null, string? logicalOperator = null, int? offset = null, int? limit = null) {
         var parameters = QueryParameters.Create()
@@ -46,6 +47,7 @@ public class StationsClient(HttpClient http, IAuthorization authorization, ICach
     /// </summary>
     /// <param name="query">The query to specify results with.</param>
     /// <returns>List of stations matching the search criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<StationsResponseContract> GetStationsAsync(StationsQuery query) {
         var response = await GetAsync("/stations", parser, "application/json", query.ToQueryParameters());
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));

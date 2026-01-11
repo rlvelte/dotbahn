@@ -22,6 +22,7 @@ public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICa
     /// <param name="equipmentNumbers">Array of equipment numbers to filter by.</param>
     /// <param name="stationId">The station id.</param>
     /// <returns>List of facilities matching the criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? stationId = null) {
         var queryParams = QueryParameters.Create()
@@ -38,6 +39,7 @@ public class FacilitiesClient(HttpClient http, IAuthorization authorization, ICa
     /// </summary>
     /// <param name="query">The query to specify results with.</param>
     /// <returns>List of facilities matching the criteria.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<List<FacilityContract>> GetFacilitiesAsync(FacilitiesQuery query) {
         return await GetAsync("/facilities", facilitiesParser, "application/json", query.ToQueryParameters());
     }

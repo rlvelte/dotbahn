@@ -16,6 +16,7 @@ public class TimetablesClient(HttpClient http, IAuthorization authorization, ICa
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <returns>A <see cref="TimetableResponseContract"/> with current information.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<TimetableResponseContract> GetFullChangesAsync(int eva) =>
         await GetAsync($"/fchg/{eva}", timetableParser, "application/xml");
 
@@ -24,6 +25,7 @@ public class TimetablesClient(HttpClient http, IAuthorization authorization, ICa
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <returns>A <see cref="TimetableResponseContract"/> with recent changes.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<TimetableResponseContract> GetRecentChangesAsync(int eva) => 
         await GetAsync($"/rchg/{eva}", timetableParser, "application/xml");
 
@@ -33,6 +35,7 @@ public class TimetablesClient(HttpClient http, IAuthorization authorization, ICa
     /// <param name="eva">The EVA station number.</param>
     /// <param name="dateTime">The date and hour (only YYMMDD/HH are used).</param>
     /// <returns>A <see cref="TimetableResponseContract"/> for the specified hour.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<TimetableResponseContract> GetPlannedTimetableAsync(int eva, DateTime dateTime) {
         var dateStr = dateTime.ToString("yyMMdd");
         var hourStr = dateTime.ToString("HH");
