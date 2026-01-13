@@ -26,7 +26,7 @@ The currently available clients cover the following APIs:
 
 ## Install
 The easiest way to get started is to install any package you need from [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) or use the versions on [Nuget](https://www.nuget.org/):
-```
+```bash
 dotnet add package DotBahn.Timetables
 dotnet add package DotBahn.Stations
 dotnet add package DotBahn.Facilities
@@ -36,7 +36,7 @@ dotnet add package DotBahn.Facilities
 ## Usage
 ### Dependency Injection (recommended)
 The packages are designed have easy integration with the `ServiceCollection`.
-```
+```csharp
 // Add Authorization
 services.AddDotBahnAuthorization(opt => {
     opt.ClientId = <your-client-id>, 
@@ -50,7 +50,7 @@ services.AddDotBahnStations(opt => {
 ```
 
 You can also use the request caching system to reduce load:
-```
+```csharp
 // Add Cache
 services.AddDotBahnCache(opt => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(...); 
@@ -59,7 +59,7 @@ services.AddDotBahnCache(opt => {
 
 ### Manual Initialization
 You can also use the clients in a more conventional way by creating instances manually and providing the options yourself:
-```
+```csharp
 var options = new ClientOptions {
     BaseEndpoint = new Uri("...")
 };
