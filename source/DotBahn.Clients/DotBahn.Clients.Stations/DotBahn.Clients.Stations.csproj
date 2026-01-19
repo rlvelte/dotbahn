@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>DotBahn.Stations</PackageId>
-        <Version>1.2.0</Version>
+        <Version>1.2.1</Version>
 
         <Title>DotBahn.Stations</Title>
         <Authors>Robin L. Velte</Authors>
@@ -24,6 +24,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\DotBahn.Data\DotBahn.Data.Stations\DotBahn.Data.Stations.csproj" />
       <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
       <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
       <ProjectReference Include="..\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />

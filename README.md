@@ -83,5 +83,14 @@ dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id
 
 <img src="https://i.imgur.com/Fl7myMb.png" width=500>
 
+### Station Browser
+An interactive terminal-based station explorer that allows browsing detailed information about DB stations. Search by name and navigate through results using arrow keys. Displays station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
+
+```bash
+dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <your-client-id> <your-client-secret>
+```
+
+<img src="https://i.imgur.com/ZN9rXW2.png" width=500>
+
 ## Authorization
 You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).

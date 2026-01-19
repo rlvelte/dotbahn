@@ -2,6 +2,9 @@ using System.Net;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Clients.Stations.Transformer;
+using DotBahn.Data.Shared.Transformer;
+using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
@@ -14,6 +17,8 @@ namespace DotBahn.Clients.Stations;
 /// Extension methods for setting up StaDa (StationData) services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
+    private const string OptionsName = "DotBahn.Stations";
+
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>
@@ -26,13 +31,13 @@ public static class ServiceCollectionExtensions {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
-            services.Configure(configuration);
-            services.AddOptions<ClientOptions>()
+            services.Configure(OptionsName, configuration);
+            services.AddOptions<ClientOptions>(OptionsName)
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
 
             services.AddHttpClient<StationsClient>((sp, http) => {
-                var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
+                var options = sp.GetRequiredService<IOptionsSnapshot<ClientOptions>>().Get(OptionsName);
                 http.BaseAddress = options.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
             }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
@@ -41,6 +46,8 @@ public static class ServiceCollectionExtensions {
 
             services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
             services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
+            
+            services.AddSingleton<ITransformer<IEnumerable<Station>, StationsResponseContract>, StationTransformer>();
         
             return services;
         }

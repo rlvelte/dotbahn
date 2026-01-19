@@ -1,5 +1,5 @@
-using DotBahn.Clients.Stations.Enumerations;
-using DotBahn.Clients.Stations.Models;
+using DotBahn.Clients.Stations.Query;
+using DotBahn.Data.Stations.Enumerations;
 
 namespace DotBahn.Tests.Stations.Query;
 

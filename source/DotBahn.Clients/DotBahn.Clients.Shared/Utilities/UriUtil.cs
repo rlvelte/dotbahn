@@ -1,4 +1,4 @@
-using DotBahn.Clients.Shared.Models;
+using DotBahn.Clients.Shared.Query;
 
 namespace DotBahn.Clients.Shared.Utilities;
 

@@ -1,8 +1,8 @@
 using DotBahn.Clients.Timetables;
 using DotBahn.Clients.Timetables.Client;
+using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Data.Timetables.Models.Base;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
