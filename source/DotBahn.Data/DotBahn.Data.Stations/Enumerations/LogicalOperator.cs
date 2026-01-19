@@ -1,4 +1,4 @@
-using DotBahn.Modules.Shared.Enumerations;
+using DotBahn.Data.Shared.Enumerations;
 
 namespace DotBahn.Data.Stations.Enumerations;
 
@@ -18,5 +18,5 @@ public enum LogicalOperator {
     /// Associated value: "OR".
     /// </summary>
     [AssociatedValue("OR")]
-    Or,
+    Or
 }

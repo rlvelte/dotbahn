@@ -1,7 +1,7 @@
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Data.Shared.Models;
 
 /// <summary>
-/// Geographic coordinates representing a location on Earth.
+/// Geographic coordinates representing the location of a entity.
 /// </summary>
 public class Coordinates {
     /// <summary>

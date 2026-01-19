@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using DotBahn.Clients.Shared.Query;
+using DotBahn.Data.Shared.Enumerations;
 using DotBahn.Data.Stations.Enumerations;
-using DotBahn.Modules.Shared.Enumerations;
 
 namespace DotBahn.Clients.Stations.Query;
 

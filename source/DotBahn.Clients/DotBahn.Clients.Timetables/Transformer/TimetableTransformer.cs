@@ -1,10 +1,10 @@
 using System.Globalization;
 using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Data.Shared.Enumerations;
+using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Data.Timetables.Models.Base;
-using DotBahn.Modules.Shared.Enumerations;
 
 namespace DotBahn.Clients.Timetables.Transformer;
 

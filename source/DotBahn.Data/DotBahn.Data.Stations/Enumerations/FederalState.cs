@@ -1,4 +1,4 @@
-using DotBahn.Modules.Shared.Enumerations;
+using DotBahn.Data.Shared.Enumerations;
 
 namespace DotBahn.Data.Stations.Enumerations;
 
@@ -68,5 +68,10 @@ public enum FederalState {
 
     /// <summary>State of Thuringia.</summary>
     [AssociatedValue("Thüringen")]
-    Thuringia
+    Thuringia,
+    
+    /// <summary>
+    /// There is no further information available.
+    /// </summary>
+    Unknown
 }

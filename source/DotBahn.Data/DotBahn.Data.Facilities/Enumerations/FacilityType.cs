@@ -1,6 +1,6 @@
-using DotBahn.Modules.Shared.Enumerations;
+using DotBahn.Data.Shared.Enumerations;
 
-namespace DotBahn.Clients.Facilities.Enumerations;
+namespace DotBahn.Data.Facilities.Enumerations;
 
 /// <summary>
 /// Represents the type of facility in a station.
@@ -16,5 +16,10 @@ public enum FacilityType {
     /// Escalator facility.
     /// </summary>
     [AssociatedValue("ESCALATOR")]
-    Escalator
+    Escalator,
+    
+    /// <summary>
+    /// There is no further information available.
+    /// </summary>
+    Unknown
 }

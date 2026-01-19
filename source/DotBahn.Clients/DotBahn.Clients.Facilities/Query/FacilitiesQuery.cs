@@ -1,9 +1,9 @@
 using System.ComponentModel;
-using DotBahn.Clients.Facilities.Enumerations;
 using DotBahn.Clients.Shared.Query;
-using DotBahn.Modules.Shared.Enumerations;
+using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Data.Shared.Enumerations;
 
-namespace DotBahn.Clients.Facilities.Models;
+namespace DotBahn.Clients.Facilities.Query;
 
 /// <summary>
 /// Represents the query parameters for searching facilities in stations.

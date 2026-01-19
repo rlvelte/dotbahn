@@ -1,9 +1,10 @@
-using System.ComponentModel;
 using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Clients.Facilities.Models;
+using DotBahn.Clients.Facilities.Query;
+using DotBahn.Clients.Facilities.Transformer;
 using DotBahn.Clients.Shared.Client;
 using DotBahn.Clients.Shared.Options;
-using DotBahn.Clients.Shared.Query;
+using DotBahn.Data.Facilities.Models;
+using DotBahn.Data.Shared.Transformer;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
@@ -17,7 +18,8 @@ namespace DotBahn.Clients.Facilities.Client;
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
 public class FacilitiesClient : ClientBase {
-    private readonly IParser<List<FacilityContract>> _parser;
+    private readonly IParser<IEnumerable<FacilityContract>> _parser;
+    private readonly ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> _transformer;
 
     /// <summary>
     /// Client for accessing 'Deutsche Bahn FaSta'-API.
@@ -26,9 +28,10 @@ public class FacilitiesClient : ClientBase {
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<List<FacilityContract>> parser, ICache? cache = null) 
+    public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null) 
         : base(http, authorization, cache) {
         _parser = parser;
+        _transformer = transformer;
     }
     
     /// <summary>
@@ -40,26 +43,7 @@ public class FacilitiesClient : ClientBase {
     public FacilitiesClient(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
         : base(options, auth, cache) {
         _parser = new JsonParser<List<FacilityContract>>();
-    }
-
-    /// <summary>
-    /// Finds facilities based on optional filter criteria.
-    /// </summary>
-    /// <param name="type">Type of facility (e.g., "ESCALATOR", "ELEVATOR").</param>
-    /// <param name="state">State of facility (e.g., "ACTIVE", "INACTIVE").</param>
-    /// <param name="equipmentNumbers">Array of equipment numbers to filter by.</param>
-    /// <param name="stationId">The station id.</param>
-    /// <returns>List of facilities matching the criteria.</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
-    public async Task<List<FacilityContract>> GetFacilitiesAsync(string? type = null, string? state = null, string[]? equipmentNumbers = null, string? stationId = null) {
-        var queryParams = QueryParameters.Create()
-            .Add("type", type)
-            .Add("state", state)
-            .Add("equipmentnumbers", equipmentNumbers)
-            .Add("stationnumber", stationId);
-
-        return await GetAsync("/facilities", _parser, "application/json", queryParams);
+        _transformer = new FacilityTransformer();
     }
 
     /// <summary>
@@ -68,7 +52,8 @@ public class FacilitiesClient : ClientBase {
     /// <param name="query">The query to specify results with.</param>
     /// <returns>List of facilities matching the criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<List<FacilityContract>> GetFacilitiesAsync(FacilitiesQuery query) {
-        return await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters());
+    public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query) {
+        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters())).ToList();
+        return _transformer.Transform(result);
     }
 }

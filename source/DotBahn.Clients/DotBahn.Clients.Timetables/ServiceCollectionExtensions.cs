@@ -17,6 +17,8 @@ namespace DotBahn.Clients.Timetables;
 /// Extension methods for setting up Timetables services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
+    private const string OptionsName = "DotBahn.Timetables";
+
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>
@@ -28,14 +30,14 @@ public static class ServiceCollectionExtensions {
         public IServiceCollection AddDotBahnTimetables(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-            
-            services.Configure(configuration);
-            services.AddOptions<ClientOptions>()
+
+            services.Configure(OptionsName, configuration);
+            services.AddOptions<ClientOptions>(OptionsName)
                     .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
                     .ValidateOnStart();
-            
+
             services.AddHttpClient<TimetablesClient>((sp, http) => {
-                var options = sp.GetRequiredService<IOptions<ClientOptions>>().Value;
+                var options = sp.GetRequiredService<IOptionsSnapshot<ClientOptions>>().Get(OptionsName);
                 http.BaseAddress = options.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
             }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {

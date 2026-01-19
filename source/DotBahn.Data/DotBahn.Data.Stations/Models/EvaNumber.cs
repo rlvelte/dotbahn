@@ -1,3 +1,5 @@
+using DotBahn.Data.Shared.Models;
+
 namespace DotBahn.Data.Stations.Models;
 
 /// <summary>

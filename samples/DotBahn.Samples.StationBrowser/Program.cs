@@ -1,7 +1,12 @@
 using System.Text;
+using DotBahn.Clients.Facilities;
+using DotBahn.Clients.Facilities.Client;
+using DotBahn.Clients.Facilities.Query;
 using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Query;
+using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Authorization;
@@ -29,16 +34,22 @@ services.AddDotBahnAuthorization(opt => {
 services.AddDotBahnStations(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 });
+services.AddDotBahnFacilities(opt => {
+    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
+});
 
 var serviceProvider = services.BuildServiceProvider();
-var client = serviceProvider.GetRequiredService<StationsClient>();
+var stationsClient = serviceProvider.GetRequiredService<StationsClient>();
+var facilitiesClient = serviceProvider.GetRequiredService<FacilitiesClient>();
 
 List<Station> stations = [];
+Dictionary<int, List<Facility>> facilitiesCache = [];
+
 await AnsiConsole.Status()
                  .Spinner(Spinner.Known.Dots)
                  .StartAsync($"Searching for stations matching '{searchName}'...", async _ => {
                      var query = new StationsQuery().WithNames(searchName);
-                     var result = await client.GetStationsAsync(query);
+                     var result = await stationsClient.GetStationsAsync(query);
                      stations.AddRange(result);
                  });
 
@@ -51,8 +62,20 @@ AnsiConsole.MarkupLine($"[{Gruvbox.Green}]Found {stations.Count} station(s)[/]")
 
 var currentIndex = 0;
 while (true) {
+    var currentStation = stations[currentIndex];
+
+    if (!facilitiesCache.TryGetValue(currentStation.Number, out var facilities)) {
+        await AnsiConsole.Status()
+                         .Spinner(Spinner.Known.Dots)
+                         .StartAsync("Loading facilities...", async _ => {
+                             var query = new FacilitiesQuery().AtStation(currentStation.Number);
+                             facilities = (await facilitiesClient.GetFacilitiesAsync(query)).ToList();
+                             facilitiesCache[currentStation.Number] = facilities;
+                         });
+    }
+
     AnsiConsole.Clear();
-    RenderStation(stations[currentIndex], currentIndex, stations.Count);
+    RenderStation(currentStation, facilities ?? [], currentIndex, stations.Count);
     RenderNavigation();
 
     var key = Console.ReadKey(true);
@@ -77,7 +100,7 @@ while (true) {
     }
 }
 
-static void RenderStation(Station station, int index, int total) {
+static void RenderStation(Station station, List<Facility> facilities, int index, int total) {
     var rule = new Rule($"[bold {Gruvbox.Blue}]{Markup.Escape(station.Name)}[/]") {
         Justification = Justify.Center,
         Style = Style.Parse(Gruvbox.Blue)
@@ -88,7 +111,7 @@ static void RenderStation(Station station, int index, int total) {
     AnsiConsole.WriteLine();
 
     var leftPanel = BuildStationInfo(station);
-    var rightPanel = BuildServicesPanel(station.Services);
+    var rightPanel = BuildRightPanel(station.Services, facilities);
 
     var layout = new Columns(leftPanel, rightPanel) {
         Expand = true
@@ -159,24 +182,83 @@ static IRenderable BuildStationInfo(Station station) {
     return new Rows(rows);
 }
 
-static IRenderable BuildServicesPanel(StationServices services) {
+static IRenderable BuildRightPanel(StationServices services, List<Facility> facilities) {
+    var rows = new List<IRenderable>();
+
+    var servicesTable = new Table {
+        Border = TableBorder.Rounded,
+        BorderStyle = Style.Parse(Gruvbox.Gray)
+    };
+    servicesTable.AddColumn(new TableColumn($"[bold {Gruvbox.Blue}]Service[/]").LeftAligned());
+    servicesTable.AddColumn(new TableColumn($"[{Gruvbox.Blue}]?[/]").Centered());
+
+    AddServiceRow(servicesTable, "Parking", services.HasParking);
+    AddServiceRow(servicesTable, "Bicycle Parking", services.HasBicycleParking);
+    AddServiceRow(servicesTable, "Public Facilities", services.HasPublicFacilities);
+    AddServiceRow(servicesTable, "Locker System", services.HasLockerSystem);
+    AddServiceRow(servicesTable, "Step-Free Access", services.HasStepFreeAccess);
+    AddServiceRow(servicesTable, "Stepless Access", services.HasSteplessAccess);
+    AddServiceRow(servicesTable, "Travel Center", services.HasTravelCenter);
+    AddServiceRow(servicesTable, "Travel Necessities", services.HasTravelNecessities);
+    AddServiceRow(servicesTable, "Mobility Service", services.HasMobilityService);
+    AddServiceRow(servicesTable, "WiFi", services.HasWiFi);
+
+    rows.Add(servicesTable);
+
+    if (facilities.Count > 0) {
+        rows.Add(new Text(""));
+        rows.Add(BuildFacilitiesPanel(facilities));
+    }
+
+    return new Rows(rows);
+}
+
+static IRenderable BuildFacilitiesPanel(List<Facility> facilities) {
+    var elevators = facilities.Where(f => f.Type == FacilityType.Elevator).ToList();
+    var escalators = facilities.Where(f => f.Type == FacilityType.Escalator).ToList();
+
     var table = new Table {
         Border = TableBorder.Rounded,
         BorderStyle = Style.Parse(Gruvbox.Gray)
     };
-    table.AddColumn(new TableColumn($"[bold {Gruvbox.Blue}]Service[/]").LeftAligned());
-    table.AddColumn(new TableColumn($"[{Gruvbox.Blue}]?[/]").Centered());
+    table.AddColumn(new TableColumn($"[bold {Gruvbox.Blue}]Facilities[/]").LeftAligned());
+    table.AddColumn(new TableColumn($"[{Gruvbox.Blue}]Status[/]").Centered());
 
-    AddServiceRow(table, "Parking", services.HasParking);
-    AddServiceRow(table, "Bicycle Parking", services.HasBicycleParking);
-    AddServiceRow(table, "Public Facilities", services.HasPublicFacilities);
-    AddServiceRow(table, "Locker System", services.HasLockerSystem);
-    AddServiceRow(table, "Step-Free Access", services.HasStepFreeAccess);
-    AddServiceRow(table, "Stepless Access", services.HasSteplessAccess);
-    AddServiceRow(table, "Travel Center", services.HasTravelCenter);
-    AddServiceRow(table, "Travel Necessities", services.HasTravelNecessities);
-    AddServiceRow(table, "Mobility Service", services.HasMobilityService);
-    AddServiceRow(table, "WiFi", services.HasWiFi);
+    var elevatorsActive = elevators.Count(f => f.State == FacilityState.Active);
+    var escalatorsActive = escalators.Count(f => f.State == FacilityState.Active);
+
+    if (elevators.Count > 0) {
+        var color = elevatorsActive == elevators.Count ? Gruvbox.Green :
+                    elevatorsActive == 0 ? Gruvbox.Red : Gruvbox.Yellow;
+        table.AddRow(
+            $"[{Gruvbox.Fg}]Elevators[/]",
+            $"[{color}]{elevatorsActive}/{elevators.Count}[/]"
+        );
+    }
+
+    if (escalators.Count > 0) {
+        var color = escalatorsActive == escalators.Count ? Gruvbox.Green :
+                    escalatorsActive == 0 ? Gruvbox.Red : Gruvbox.Yellow;
+        table.AddRow(
+            $"[{Gruvbox.Fg}]Escalators[/]",
+            $"[{color}]{escalatorsActive}/{escalators.Count}[/]"
+        );
+    }
+
+    var inactiveFacilities = facilities.Where(f => f.State != FacilityState.Active).ToList();
+    if (inactiveFacilities.Count > 0) {
+        table.AddEmptyRow();
+        table.AddRow($"[{Gruvbox.Red}]Out of service:[/]", "");
+        foreach (var facility in inactiveFacilities.Take(5)) {
+            var typeIcon = facility.Type == FacilityType.Elevator ? "\u21c5" : "\u21f5";
+            var desc = facility.Description ?? $"#{facility.EquipmentNumber}";
+            if (desc.Length > 25) desc = desc[..22] + "...";
+            table.AddRow($"[{Gruvbox.Gray}]{typeIcon} {Markup.Escape(desc)}[/]", "");
+        }
+        if (inactiveFacilities.Count > 5) {
+            table.AddRow($"[{Gruvbox.Gray}]... and {inactiveFacilities.Count - 5} more[/]", "");
+        }
+    }
 
     return table;
 }

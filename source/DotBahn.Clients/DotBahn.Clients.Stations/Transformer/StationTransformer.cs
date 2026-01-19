@@ -1,4 +1,5 @@
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Data.Stations.Models;

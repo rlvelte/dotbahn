@@ -10,4 +10,8 @@
       <ProjectReference Include="..\DotBahn.Data.Shared\DotBahn.Data.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+
 </Project>

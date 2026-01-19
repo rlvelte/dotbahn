@@ -1,4 +1,4 @@
-using DotBahn.Clients.Facilities.Models;
+using DotBahn.Clients.Facilities.Query;
 
 namespace DotBahn.Tests.Facilities.Query;
 

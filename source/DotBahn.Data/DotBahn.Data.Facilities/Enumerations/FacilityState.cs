@@ -1,6 +1,8 @@
-using DotBahn.Modules.Shared.Enumerations;
 
-namespace DotBahn.Clients.Facilities.Enumerations;
+
+using DotBahn.Data.Shared.Enumerations;
+
+namespace DotBahn.Data.Facilities.Enumerations;
 
 /// <summary>
 /// Represents the operational state of a facility.
