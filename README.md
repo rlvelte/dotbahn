@@ -90,5 +90,7 @@ An interactive terminal-based station explorer that allows browsing detailed inf
 dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <your-client-id> <your-client-secret>
 ```
 
+<img src="https://i.imgur.com/ZN9rXW2.png" width=500>
+
 ## Authorization
 You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).
