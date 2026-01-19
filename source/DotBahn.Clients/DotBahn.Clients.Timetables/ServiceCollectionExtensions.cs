@@ -2,6 +2,9 @@ using System.Net;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
+using DotBahn.Clients.Timetables.Transformer;
+using DotBahn.Data.Shared.Transformer;
+using DotBahn.Data.Timetables.Models;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
@@ -40,6 +43,7 @@ public static class ServiceCollectionExtensions {
             });
             
             services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
+            services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
         
             return services;
         }

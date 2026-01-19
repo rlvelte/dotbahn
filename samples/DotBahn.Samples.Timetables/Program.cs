@@ -41,12 +41,9 @@ services.AddDotBahnTimetables(opt => {
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<TimetablesClient>();
 
-var timetable = await client.GetFullChangesAsync(8000013);
+var t = await client.GetTimetableAsync(8000013, DateTime.Now);
+var timetable = await client.GetFullChangesAsync(8000013, t);
 
-Console.WriteLine($"""
-                  {timetable.Station.ToUpper()}
-                  ==========================================================
-                  """);
 foreach (var stop in timetable.Stops) {
     Console.WriteLine(JsonSerializer.Serialize(stop));
 }

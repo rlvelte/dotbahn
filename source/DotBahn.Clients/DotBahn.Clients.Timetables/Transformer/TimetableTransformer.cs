@@ -35,7 +35,6 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
             Messages = contract.Messages?.Select(TransformMessage).ToList() ?? []
         };
     
-
     /// <summary>
     /// Transforms the <see cref="EventContract"/> into its domain model.
     /// </summary>
@@ -184,11 +183,14 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// <param name="change">The changed value.</param>
     /// <typeparam name="T">The type which can be changed.</typeparam>
     //// <returns>Instance with combined values.</returns>
-    private static ChangedValue<T> MergeValue<T>(ChangedValue<T> current, ChangedValue<T> change) 
-        where T : struct => new() {
-        Original = current.Original,
-        Updated = change.HasUpdate ? change.Updated : current.Updated
-    };
+    private static ChangedValue<T> MergeValue<T>(ChangedValue<T> current, ChangedValue<T> change)
+        where T : struct {
+        var hasRealUpdate = change.HasUpdate && !EqualityComparer<T>.Default.Equals(change.Updated!.Value, current.Original);
+        return new ChangedValue<T> {
+            Original = current.Original,
+            Updated = hasRealUpdate ? change.Updated : current.Updated
+        };
+    }
 
     /// <summary>
     /// Merges two <see cref="ChangedRef{T}"/> in a new instance.
@@ -197,11 +199,14 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// <param name="change">The changed value.</param>
     /// <typeparam name="T">The type which can be changed.</typeparam>
     //// <returns>Instance with combined values.</returns>
-    private static ChangedRef<T> MergeRef<T>(ChangedRef<T> current, ChangedRef<T> change) 
-        where T : class => new() {
+    private static ChangedRef<T> MergeRef<T>(ChangedRef<T> current, ChangedRef<T> change)
+        where T : class {
+        var hasRealUpdate = change.HasUpdate && !Equals(change.Updated, current.Original);
+        return new ChangedRef<T> {
             Original = current.Original,
-            Updated = change.HasUpdate ? change.Updated : current.Updated
+            Updated = hasRealUpdate ? change.Updated : current.Updated
         };
+    }
 
     /// <summary>
     /// Merges two <see cref="TimetableMessage"/> in a combined list.
