@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Clients.Facilities.Models;
-using DotBahn.Clients.Shared.Base;
-using DotBahn.Clients.Shared.Models;
+using DotBahn.Clients.Shared.Client;
 using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared.Query;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;

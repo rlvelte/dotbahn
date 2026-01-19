@@ -1,6 +1,6 @@
 using DotBahn.Modules.Shared.Enumerations;
 
-namespace DotBahn.Clients.Stations.Enumerations;
+namespace DotBahn.Data.Stations.Enumerations;
 
 /// <summary>
 /// Represents the logical operator to combine multiple filter criteria in a station query.

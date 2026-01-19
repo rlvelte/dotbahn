@@ -1,4 +1,4 @@
-using DotBahn.Clients.Shared.Base;
+using DotBahn.Clients.Shared.Client;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Clients.Timetables.Transformer;
@@ -19,6 +19,7 @@ namespace DotBahn.Clients.Timetables.Client;
 public class TimetablesClient : ClientBase {
     private readonly IParser<TimetableResponseContract> _parser;
     private readonly ITransformer<Timetable, TimetableResponseContract> _transformer;
+    private readonly IMerger<Timetable> _merger;
 
     /// <summary>
     /// Client for accessing 'Deutsche Bahn Timetables'-API.
@@ -27,11 +28,13 @@ public class TimetablesClient : ClientBase {
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
+    /// <param name="merger">The merger for the target type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, ICache? cache = null) 
+    public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null) 
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
+        _merger = merger;
     }
     
     /// <summary>
@@ -44,6 +47,7 @@ public class TimetablesClient : ClientBase {
         : base(options, auth, cache) {
         _parser = new XmlParser<TimetableResponseContract>();
         _transformer = new TimetableTransformer();
+        _merger = new TimetableTransformer();
     }
 
     /// <summary>
@@ -58,7 +62,7 @@ public class TimetablesClient : ClientBase {
         var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml");
         var changes = _transformer.Transform(response);
         
-        return current != null ? _transformer.Merge(current, changes) : changes;
+        return current != null ? _merger.Merge(current, changes) : changes;
     }
 
     /// <summary>
@@ -73,7 +77,7 @@ public class TimetablesClient : ClientBase {
         var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml");
         var changes = _transformer.Transform(response);
         
-        return current != null ? _transformer.Merge(current, changes) : changes;
+        return current != null ? _merger.Merge(current, changes) : changes;
     }
     
     /// <summary>

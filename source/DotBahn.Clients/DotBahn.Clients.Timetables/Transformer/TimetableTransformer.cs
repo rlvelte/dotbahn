@@ -11,7 +11,7 @@ namespace DotBahn.Clients.Timetables.Transformer;
 /// <summary>
 /// Transforms timetable contracts into domain models and handles merging of model updates.
 /// </summary>
-public class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract> {
+public class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract>, IMerger<Timetable> {
     private const string BahnTimeFormat = "yyMMddHHmm";
 
     #region Transforming 

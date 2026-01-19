@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using DotBahn.Clients.Shared.Models;
-using DotBahn.Clients.Stations.Enumerations;
+using DotBahn.Clients.Shared.Query;
+using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Modules.Shared.Enumerations;
 
-namespace DotBahn.Clients.Stations.Models;
+namespace DotBahn.Clients.Stations.Query;
 
 /// <summary>
 /// Represents the query parameters for searching stations in the Deutsche Bahn StaDa API.
@@ -12,16 +12,14 @@ namespace DotBahn.Clients.Stations.Models;
 /// </summary>
 public sealed partial record StationsQuery {
     /// <summary>
-    /// 
+    /// Matches a single category number (e.g., "1", "5").
     /// </summary>
-    /// <returns></returns>
     [GeneratedRegex(@"^\d+$")]
     private static partial Regex SimpleCategoryRegex();
-    
+
     /// <summary>
-    /// 
+    /// Matches a category range pattern (e.g., "2-4", "1 - 7").
     /// </summary>
-    /// <returns></returns>
     [GeneratedRegex(@"^(\d+)\s*-\s*(\d+)$")]
     private static partial Regex ComplexCategoryRegex();
     

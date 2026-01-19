@@ -43,7 +43,9 @@ public static class ServiceCollectionExtensions {
             });
             
             services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
+            
             services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
+            services.AddSingleton<IMerger<Timetable>, TimetableTransformer>();
         
             return services;
         }

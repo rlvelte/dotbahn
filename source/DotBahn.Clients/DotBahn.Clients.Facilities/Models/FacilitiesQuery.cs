@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using DotBahn.Clients.Facilities.Enumerations;
-using DotBahn.Clients.Shared.Models;
+using DotBahn.Clients.Shared.Query;
 using DotBahn.Modules.Shared.Enumerations;
 
 namespace DotBahn.Clients.Facilities.Models;

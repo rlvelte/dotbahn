@@ -1,4 +1,4 @@
-using DotBahn.Clients.Stations.Models;
+using DotBahn.Clients.Stations.Query;
 
 namespace DotBahn.Tests.Stations.Query;
 

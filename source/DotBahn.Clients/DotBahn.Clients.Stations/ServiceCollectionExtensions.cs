@@ -2,6 +2,9 @@ using System.Net;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Clients.Stations.Transformer;
+using DotBahn.Data.Shared.Transformer;
+using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 using JetBrains.Annotations;
@@ -41,6 +44,8 @@ public static class ServiceCollectionExtensions {
 
             services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
             services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
+            
+            services.AddSingleton<ITransformer<IEnumerable<Station>, StationsResponseContract>, StationTransformer>();
         
             return services;
         }

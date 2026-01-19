@@ -5,6 +5,7 @@
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Data/">
+    <Project Path="source/DotBahn.Data/DotBahn.Data.Stations/DotBahn.Data.Stations.csproj" />
     <Project Path="source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Modules/">
@@ -14,7 +15,7 @@
   <Folder Name="/DotBahn.Samples/">
     <Project Path="samples\DotBahn.Samples.Facilities\DotBahn.Samples.Facilities.csproj" />
     <Project Path="samples\DotBahn.Samples.IceMonitor\DotBahn.Samples.IceMonitor.csproj" />
-    <Project Path="samples\DotBahn.Samples.Stations\DotBahn.Samples.Stations.csproj" />
+    <Project Path="samples\DotBahn.Samples.StationBrowser\DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">
     <Project Path="tests\DotBahn.Tests.Facilities\DotBahn.Tests.Facilities.csproj" />

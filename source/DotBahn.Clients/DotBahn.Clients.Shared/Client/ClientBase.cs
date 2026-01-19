@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
-using DotBahn.Clients.Shared.Models;
 using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared.Query;
 using DotBahn.Clients.Shared.Utilities;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service;
@@ -12,7 +12,7 @@ using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DotBahn.Clients.Shared.Base;
+namespace DotBahn.Clients.Shared.Client;
 
 /// <summary>
 /// Base class for rest clients, providing common functionality for authentication and request caching.

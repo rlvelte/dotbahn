@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotBahn.Data.Shared\DotBahn.Data.Shared.csproj" />
+      <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Shared\DotBahn.Modules.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
