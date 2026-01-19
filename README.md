@@ -77,11 +77,11 @@ var client = new StationsClient(opt, auth);
 ### ICE Monitor
 A terminal-based departure monitor that displays upcoming ICE trains for a given station. Shows train numbers, scheduled and actual departure times, platforms, destinations, and routes. Delays and platform changes are highlighted in real-time. Auto-refreshes every 2 minutes.
 
-<img src="https://i.imgur.com/Fl7myMb.png" width=500>
-
 ```bash
 dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <ClientId> <ClientSecret>
 ```
+
+<img src="https://i.imgur.com/Fl7myMb.png" width=500>
 
 ## Authorization
 You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).
