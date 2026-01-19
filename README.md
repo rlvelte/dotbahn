@@ -75,9 +75,9 @@ var client = new StationsClient(opt, auth);
 
 ## Samples
 ### ICE Monitor
-<img src="https://i.imgur.com/Fl7myMb.png" width=500>
-
 A terminal-based departure monitor that displays upcoming ICE trains for a given station. Shows train numbers, scheduled and actual departure times, platforms, destinations, and routes. Delays and platform changes are highlighted in real-time. Auto-refreshes every 2 minutes.
+
+<img src="https://i.imgur.com/Fl7myMb.png" width=500>
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <ClientId> <ClientSecret>
