@@ -12,6 +12,7 @@
   <Folder Name="/DotBahn.Modules/">
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
+    <Project Path="source\DotBahn.Modules\DotBahn.Modules.Telemetry\DotBahn.Modules.Telemetry.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Samples/">
     <Project Path="samples\DotBahn.Samples.IceMonitor\DotBahn.Samples.IceMonitor.csproj" />
