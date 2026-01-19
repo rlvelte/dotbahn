@@ -1,6 +1,5 @@
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -18,7 +17,6 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="AuthorizationOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        [UsedImplicitly]
         public IServiceCollection AddDotBahnAuthorization(Action<AuthorizationOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
