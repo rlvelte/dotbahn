@@ -117,8 +117,8 @@ static void RenderDepartures(List<TimetableStop> stops) {
     var table = new Table()
         .Border(TableBorder.Rounded)
         .BorderColor(new Color(0x92, 0x83, 0x74))
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Train[/]").Centered())
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Departure[/]").Centered())
+        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Train[/]").LeftAligned())
+        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Departure[/]").LeftAligned())
         .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Platform[/]").Centered())
         .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Destination[/]").LeftAligned())
         .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Via[/]").LeftAligned());
