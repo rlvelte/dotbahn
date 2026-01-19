@@ -84,7 +84,7 @@ dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id
 <img src="https://i.imgur.com/Fl7myMb.png" width=500>
 
 ### Station Browser
-An interactive terminal-based station explorer that allows browsing detailed information about DB stations. Search by name and navigate through results using arrow keys. Displays station category, identifiers (EVA/RIL100), address, coordinates, regional area, and available services such as parking, WiFi, travel center, and accessibility features.
+An interactive terminal-based station explorer that allows browsing detailed information about DB stations. Search by name and navigate through results using arrow keys. Displays station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <your-client-id> <your-client-secret>
