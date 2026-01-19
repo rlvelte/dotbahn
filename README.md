@@ -21,12 +21,13 @@ The currently available clients cover the following APIs:
 ## Table of Contents
 - [Install](#install)
 - [Usage](#usage)
+- [Samples](#samples)
 - [Authorization](#authorization)
 
 
 ## Install
 The easiest way to get started is to install any package you need from [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) or use the versions on [Nuget](https://www.nuget.org/):
-```
+```bash
 dotnet add package DotBahn.Timetables
 dotnet add package DotBahn.Stations
 dotnet add package DotBahn.Facilities
@@ -36,7 +37,7 @@ dotnet add package DotBahn.Facilities
 ## Usage
 ### Dependency Injection (recommended)
 The packages are designed have easy integration with the `ServiceCollection`.
-```
+```csharp
 // Add Authorization
 services.AddDotBahnAuthorization(opt => {
     opt.ClientId = <your-client-id>, 
@@ -50,7 +51,7 @@ services.AddDotBahnStations(opt => {
 ```
 
 You can also use the request caching system to reduce load:
-```
+```csharp
 // Add Cache
 services.AddDotBahnCache(opt => {
     opt.DefaultExpiration = TimeSpan.FromSeconds(...); 
@@ -59,7 +60,7 @@ services.AddDotBahnCache(opt => {
 
 ### Manual Initialization
 You can also use the clients in a more conventional way by creating instances manually and providing the options yourself:
-```
+```csharp
 var options = new ClientOptions {
     BaseEndpoint = new Uri("...")
 };
@@ -72,9 +73,15 @@ var auth = new AuthorizationOptions {
 var client = new StationsClient(opt, auth);
 ```
 
-> [!NOTE]
-> Additional sample projects demonstrating how to use the clients can be found in the `samples/` directory.
+## Samples
+### ICE Monitor
+A terminal-based departure monitor that displays upcoming ICE trains for a given station. Shows train numbers, scheduled and actual departure times, platforms, destinations, and routes. Delays and platform changes are highlighted in real-time. Auto-refreshes every 2 minutes.
 
+```bash
+dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id> <your-client-secret>
+```
+
+<img src="https://i.imgur.com/Fl7myMb.png" width=500>
 
 ## Authorization
 You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).

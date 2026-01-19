@@ -1,7 +1,6 @@
 using System.Net;
 using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Clients.Shared;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;

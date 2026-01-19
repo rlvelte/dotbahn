@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>DotBahn.Timetables</PackageId>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
 
         <Title>DotBahn.Timetables</Title>
         <Authors>Robin L. Velte</Authors>
@@ -25,6 +25,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\DotBahn.Data\DotBahn.Data.Timetables\DotBahn.Data.Timetables.csproj" />
       <ProjectReference Include="..\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
     </ItemGroup>
 
@@ -42,6 +43,10 @@
         <PackagePath></PackagePath>
         <Link>Icon.png</Link>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Transformer\" />
     </ItemGroup>
 
 </Project>

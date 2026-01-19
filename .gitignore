@@ -61,6 +61,10 @@ dlldata.c
 
 # Environment
 *.env
+sample.json
+sample2.json
+sample3.json
+spec.yaml
 
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
@@ -172,6 +176,9 @@ AutoTest.Net/
 
 # Web workbench (sass)
 .sass-cache/
+
+# Claude
+CLAUDE.md
 
 # Installshield output folder
 [Ee]xpress/
