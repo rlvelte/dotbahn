@@ -41,7 +41,7 @@ services.AddDotBahnTimetables(opt => {
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<TimetablesClient>();
 
-var timetable = await client.GetPlannedTimetableAsync(8000261, DateTime.Now);
+var timetable = await client.GetFullChangesAsync(8000013);
 
 Console.WriteLine($"""
                   {timetable.Station.ToUpper()}

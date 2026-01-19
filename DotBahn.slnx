@@ -4,6 +4,9 @@
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
     <Project Path="source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
   </Folder>
+  <Folder Name="/DotBahn.Data/">
+    <Project Path="source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
+  </Folder>
   <Folder Name="/DotBahn.Modules/">
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
@@ -20,6 +23,7 @@
   </Folder>
   <Folder Name="/_Shared/">
     <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <Project Path="source/DotBahn.Data/DotBahn.Data.Shared/DotBahn.Data.Shared.csproj" />
     <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </Folder>
 </Solution>
