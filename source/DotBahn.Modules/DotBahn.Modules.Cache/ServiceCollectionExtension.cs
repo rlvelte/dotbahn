@@ -1,6 +1,5 @@
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,7 +18,6 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        [UsedImplicitly]
         public IServiceCollection AddDotBahnCache(Action<CacheOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);

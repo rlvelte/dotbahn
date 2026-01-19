@@ -7,7 +7,6 @@ using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Timetables.Models;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -26,7 +25,6 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        [UsedImplicitly]
         public IServiceCollection AddDotBahnTimetables(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
@@ -45,7 +43,6 @@ public static class ServiceCollectionExtensions {
             });
             
             services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
-            
             services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
             services.AddSingleton<IMerger<Timetable>, TimetableTransformer>();
         
