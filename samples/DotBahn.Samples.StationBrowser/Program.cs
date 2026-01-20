@@ -2,6 +2,7 @@ using System.Text;
 using DotBahn.Clients.Facilities;
 using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Query;
+using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Query;

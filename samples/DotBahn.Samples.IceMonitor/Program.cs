@@ -3,7 +3,6 @@ using DotBahn.Clients.Timetables.Client;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -37,12 +36,10 @@ if (!int.TryParse(args[0], out var eva)) {
 // Setup DI
 var services = new ServiceCollection();
 services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
-services.AddDotBahnAuthorization(opt => {
-    opt.ClientId = clientId;
-    opt.ApiKey = clientSecret;
-});
 services.AddDotBahnCache(opt => opt.DefaultExpiration = TimeSpan.FromSeconds(30));
 services.AddDotBahnTimetables(opt => {
+    opt.ClientId = clientId;
+    opt.ApiKey = clientSecret;
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 });
 

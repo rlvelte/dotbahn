@@ -27,6 +27,7 @@ public class FacilitiesClient : ClientBase {
     /// <param name="http">The HTTP client used for requests.</param>
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="parser">The parser for this contract type.</param>
+    /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null) 
         : base(http, authorization, cache) {

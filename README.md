@@ -1,21 +1,21 @@
 <img src="https://i.imgur.com/3MfLPSP.png" width=200>
 
-# DotBahn - .NET client for various Deutsche Bahn API's
+# DotBahn - .NET Client for Deutsche Bahn APIs
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Timetables?label=DotBahn.Timetables&style=flat)
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Stations?label=DotBahn.Stations&style=flat)
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
 
-DotBahn is a collection of .NET client libraries and helpers that provide convenient access to various Deutsche Bahn (DB) APIs. The project aims to make it easy to query schedules, station information, and other DB services from .NET applications.
+DotBahn is a collection of .NET client libraries for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly from your .NET applications.
 
-The currently available clients cover the following APIs:
-- **StaDa**: Provides information about DB stations, such as parking facilities, accessibility, and opening hours.
+Available clients:
+- **StaDa**: Station data including parking, accessibility, and opening hours.
 
-- **FaSta**: Provides information about the operational status of elevators and escalators at German railway stations operated by DB InfraGO AG.
+- **FaSta**: Real-time operational status of elevators and escalators at DB InfraGO AG stations.
 
-- **Timetables**: Provides information about current timetable data. Endpoints are available for both the officially scheduled timetable and the real-time deviations from the schedule.
+- **Timetables**: Scheduled departures and arrivals with real-time delay and platform change information.
 
 > [!IMPORTANT]
-> These packages were extracted from a personal project. Ongoing development is driven by my perceived needs rather than a fixed roadmap. Contributions, improvements, and forks are very welcome.
+> This project originated from a personal application. Development follows my own needs rather than a fixed roadmap. Contributions and forks are welcome.
 
 
 ## Table of Contents
@@ -26,7 +26,7 @@ The currently available clients cover the following APIs:
 
 
 ## Install
-The easiest way to get started is to install any package you need from [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) or use the versions on [Nuget](https://www.nuget.org/):
+Install the packages you need from [NuGet](https://www.nuget.org/) or [GitHub Packages](https://docs.github.com/de/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry):
 ```bash
 dotnet add package DotBahn.Timetables
 dotnet add package DotBahn.Stations
@@ -35,22 +35,38 @@ dotnet add package DotBahn.Facilities
 
 
 ## Usage
-### Dependency Injection (recommended)
-The packages are designed have easy integration with the `ServiceCollection`.
+### Dependency Injection (Recommended)
+All packages integrate seamlessly with `ServiceCollection`.
+
 ```csharp
-// Add Authorization
-services.AddDotBahnAuthorization(opt => {
-    opt.ClientId = <your-client-id>, 
-    opt.ApiKey = <your-client-secret>
+// Add Stations/Timetables/Facilities clients
+services.AddDotBahnStations(opt => {
+    opt.ClientId = <your-client-id>;
+    opt.ApiKey = <your-client-secret>;
+    opt.BaseEndpoint = new Uri("...");
 });
 
-// Add Stations Client
-services.AddDotBahnStations(opt => {
+services.AddDotBahnTimetables(opt => {
+    opt.BaseEndpoint = new Uri("...");
+});
+
+services.AddDotBahnFacilities(opt => {
     opt.BaseEndpoint = new Uri("...");
 });
 ```
 
-You can also use the request caching system to reduce load:
+At least one client must include authorization credentials. Alternatively, configure authorization centrally:
+
+```csharp
+// Add central authorization
+services.AddDotBahnAuthorization(opt => {
+    opt.ClientId = clientId;
+    opt.ApiKey = clientSecret;
+});
+```
+
+Enable request caching to reduce API calls:
+
 ```csharp
 // Add Cache
 services.AddDotBahnCache(opt => {
@@ -59,7 +75,7 @@ services.AddDotBahnCache(opt => {
 ```
 
 ### Manual Initialization
-You can also use the clients in a more conventional way by creating instances manually and providing the options yourself:
+Create client instances directly without dependency injection:
 ```csharp
 var options = new ClientOptions {
     BaseEndpoint = new Uri("...")
@@ -75,7 +91,7 @@ var client = new StationsClient(opt, auth);
 
 ## Samples
 ### ICE Monitor
-A terminal-based departure monitor that displays upcoming ICE trains for a given station. Shows train numbers, scheduled and actual departure times, platforms, destinations, and routes. Delays and platform changes are highlighted in real-time. Auto-refreshes every 2 minutes.
+A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes in real time. Refreshes automatically every 2 minutes.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id> <your-client-secret>
@@ -84,7 +100,7 @@ dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id
 <img src="https://i.imgur.com/Z3fKMo5.png" width=500>
 
 ### Station Browser
-An interactive terminal-based station explorer that allows browsing detailed information about DB stations. Search by name and navigate through results using arrow keys. Displays station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
+An interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <your-client-id> <your-client-secret>
@@ -93,4 +109,4 @@ dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <you
 <img src="https://i.imgur.com/XWwBVr2.png" width=500>
 
 ## Authorization
-You need a Deutsche Bahn API Key to use these packages. Information on how to get started is available [here](https://developers.deutschebahn.com/db-api-marketplace/apis/start).
+A Deutsche Bahn API key is required. Register and obtain your credentials at the [DB API Marketplace](https://developers.deutschebahn.com/db-api-marketplace/apis/start).

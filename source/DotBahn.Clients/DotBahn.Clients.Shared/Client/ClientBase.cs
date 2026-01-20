@@ -69,6 +69,7 @@ public abstract class ClientBase {
     /// <returns>The parsed contract.</returns>
     protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
         var url = UriUtil.BuildUrl(relativeUrl, queryParams);
+        
         var raw = await GetContractDataAsync(url, acceptHeader, cancellation);
         return parser.Parse(raw);
     }

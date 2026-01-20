@@ -1,4 +1,5 @@
 using System.Net;
+using DotBahn.Clients.Shared.Extensions;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
@@ -28,15 +29,22 @@ public static class ServiceCollectionExtensions {
         public IServiceCollection AddDotBahnTimetables(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
+            
+            var options = new ClientOptions {
+                BaseEndpoint = null!
+            };
+            
+            configuration(options);
+            services.EnsureAuthorization(options.ClientId, options.ApiKey);
 
             services.Configure(OptionsName, configuration);
             services.AddOptions<ClientOptions>(OptionsName)
-                    .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseUri must be an absolute URI.")
+                    .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseEndpoint must be an absolute URI.")
                     .ValidateOnStart();
 
             services.AddHttpClient<TimetablesClient>((sp, http) => {
-                var options = sp.GetRequiredService<IOptionsSnapshot<ClientOptions>>().Get(OptionsName);
-                http.BaseAddress = options.BaseEndpoint;
+                var opt = sp.GetRequiredService<IOptionsSnapshot<ClientOptions>>().Get(OptionsName);
+                http.BaseAddress = opt.BaseEndpoint;
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
             }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
