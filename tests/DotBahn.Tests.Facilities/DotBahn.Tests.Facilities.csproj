@@ -22,6 +22,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
+      <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
+      <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Facilities\DotBahn.Data.Facilities.csproj" />
     </ItemGroup>
 
 </Project>

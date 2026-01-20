@@ -14,8 +14,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
         <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
         <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
+        <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Facilities\DotBahn.Data.Facilities.csproj" />
+        <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Stations\DotBahn.Data.Stations.csproj" />
         <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
     </ItemGroup>
 </Project>
