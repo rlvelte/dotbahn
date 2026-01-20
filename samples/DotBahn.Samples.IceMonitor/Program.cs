@@ -3,35 +3,43 @@ using DotBahn.Clients.Timetables.Client;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-if (args.Length < 3) {
-    AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.IceMonitor <EVA> <ClientId> <ClientSecret>");
-    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Example: DotBahn.Samples.IceMonitor 8000105 your-client-id your-api-key[/]");
-    return 1;
+string clientId;
+string clientSecret;
+
+var envs = Environment.GetEnvironmentVariables();
+if (envs.Contains("DOTBAHN_CLIENT") && envs.Contains("DOTBAHN_SECRET")) {
+    clientId = envs["DOTBAHN_CLIENT"]?.ToString() ?? throw new InvalidOperationException();
+    clientSecret = envs["DOTBAHN_SECRET"]?.ToString() ?? throw new InvalidOperationException();
+} else {
+    if (args.Length < 3) {
+        AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.IceMonitor <EVA> <ClientId> <ClientSecret>");
+        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Example: DotBahn.Samples.IceMonitor 8000105 your-client-id your-api-key[/]");
+        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]or set environment variables 'DOTBAHN_CLIENT' and 'DOTBAHN_SECRET'[/]");
+        return 1;
+    }
+
+    clientId = args[1];
+    clientSecret = args[2];
 }
+
 
 if (!int.TryParse(args[0], out var eva)) {
     AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Error:[/] EVA must be a valid number.");
     return 1;
 }
 
-var clientId = args[1];
-var clientSecret = args[2];
-
 // Setup DI
 var services = new ServiceCollection();
 services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
-services.AddDotBahnAuthorization(opt => {
-    opt.ClientId = clientId;
-    opt.ApiKey = clientSecret;
-});
 services.AddDotBahnCache(opt => opt.DefaultExpiration = TimeSpan.FromSeconds(30));
 services.AddDotBahnTimetables(opt => {
+    opt.ClientId = clientId;
+    opt.ApiKey = clientSecret;
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 });
 

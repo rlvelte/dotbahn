@@ -179,6 +179,7 @@ AutoTest.Net/
 
 # Claude
 CLAUDE.md
+.claude/
 
 # Installshield output folder
 [Ee]xpress/
