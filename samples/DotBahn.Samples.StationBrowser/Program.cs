@@ -16,15 +16,26 @@ using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-if (args.Length < 3) {
-    AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.StationBrowser <SearchName> <ClientId> <ClientSecret>");
-    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Example: DotBahn.Samples.StationBrowser Berlin your-client-id your-api-key[/]");
-    return 1;
+string clientId;
+string clientSecret;
+
+var envs = Environment.GetEnvironmentVariables();
+if (envs.Contains("DOTBAHN_CLIENT") && envs.Contains("DOTBAHN_SECRET")) {
+    clientId = envs["DOTBAHN_CLIENT"]?.ToString() ?? throw new InvalidOperationException();
+    clientSecret = envs["DOTBAHN_SECRET"]?.ToString() ?? throw new InvalidOperationException();
+} else {
+    if (args.Length < 3) {
+        AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.StationBrowser <SearchName> <ClientId> <ClientSecret>");
+        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Example: DotBahn.Samples.StationBrowser hamburg your-client-id your-api-key[/]");
+        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]or set environment variables 'DOTBAHN_CLIENT' and 'DOTBAHN_SECRET'[/]");
+        return 1;
+    }
+
+    clientId = args[1];
+    clientSecret = args[2];
 }
 
 var searchName = args[0];
-var clientId = args[1];
-var clientSecret = args[2];
 
 var services = new ServiceCollection();
 services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
