@@ -21,6 +21,5 @@
         <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
         <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
         <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Telemetry\DotBahn.Modules.Telemetry.csproj" />
     </ItemGroup>
 </Project>

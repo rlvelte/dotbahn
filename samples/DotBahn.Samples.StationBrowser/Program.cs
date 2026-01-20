@@ -10,7 +10,6 @@ using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -48,11 +47,6 @@ services.AddDotBahnStations(opt => {
 });
 services.AddDotBahnFacilities(opt => {
     opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
-});
-
-services.AddDotBahnTelemetry(opt => {
-    opt.EnableCacheInstrumentation = true;
-    opt.EnableHttpInstrumentation = true;
 });
 
 var serviceProvider = services.BuildServiceProvider();
