@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>DotBahn.Facilities</PackageId>
-        <Version>1.2.2</Version>
+        <Version>1.3.0</Version>
 
         <Title>DotBahn.Facilities</Title>
         <Authors>Robin L. Velte</Authors>
@@ -21,14 +21,21 @@
         <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageIcon>Icon.png</PackageIcon>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\DotBahn.Data\DotBahn.Data.Facilities\DotBahn.Data.Facilities.csproj" />
-        <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-        <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
-        <ProjectReference Include="..\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
+        <ProjectReference Include="..\..\DotBahn.Data\DotBahn.Data.Facilities\DotBahn.Data.Facilities.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\..\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" PrivateAssets="all" />
     </ItemGroup>
+
+    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
       <None Include="..\..\..\Icon.png">
