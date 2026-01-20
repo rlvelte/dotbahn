@@ -81,7 +81,7 @@ A terminal-based departure monitor that displays upcoming ICE trains for a given
 dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id> <your-client-secret>
 ```
 
-<img src="https://i.imgur.com/SBfzi2K.png" width=500>
+<img src="https://i.imgur.com/Z3fKMo5.png" width=500>
 
 ### Station Browser
 An interactive terminal-based station explorer that allows browsing detailed information about DB stations. Search by name and navigate through results using arrow keys. Displays station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
