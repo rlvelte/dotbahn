@@ -1,6 +1,5 @@
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,14 +10,14 @@ namespace DotBahn.Modules.Cache;
 /// Extension methods for setting up cache services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <param name="services">The service collection.</param>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>
         /// Adds the cache system, with options configured via callback.
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        public IServiceCollection AddDotBahnCache(Action<CacheOptions> configuration) {
+        public void AddDotBahnCache(Action<CacheOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
@@ -27,15 +26,11 @@ public static class ServiceCollectionExtensions {
                     .Validate(o => o.DefaultExpiration.TotalSeconds > 1, "DotBahn: Cache 'DefaultExpiration' must be > 1.")
                     .ValidateOnStart();
 
-            services.AddMemoryCache();
             services.AddSingleton<ICache>(sp => {
                 var options = sp.GetRequiredService<IOptions<CacheOptions>>().Value;
-                var cache = sp.GetRequiredService<IMemoryCache>();
                 var logger = sp.GetService<ILogger<InMemoryCache>>();
-                return new InMemoryCache(cache, options, logger);
+                return new InMemoryCache(options, logger);
             });
-        
-            return services;
         }
     }
 }

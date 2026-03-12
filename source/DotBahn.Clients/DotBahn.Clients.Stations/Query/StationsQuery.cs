@@ -7,7 +7,7 @@ using DotBahn.Data.Stations.Enumerations;
 namespace DotBahn.Clients.Stations.Query;
 
 /// <summary>
-/// Represents the query parameters for searching stations in the Deutsche Bahn StaDa API.
+/// Represents the query parameters for searching stations.
 /// Provides fluent methods for convenient building of queries.
 /// </summary>
 public sealed partial record StationsQuery {
@@ -210,12 +210,12 @@ public sealed partial record StationsQuery {
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public QueryParameters ToQueryParameters() => QueryParameters.Create()
-                                                                .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)
-                                                                .Add("category", Categories)
-                                                                .Add("federalstate", State?.GetAssociatedValue())
-                                                                .Add("eva", Eva)
-                                                                .Add("ril", Ril)
-                                                                .Add("logicaloperator", Operator?.GetAssociatedValue())
-                                                                .Add("offset", Offset.ToString())
-                                                                .Add("limit", Limit.ToString());
+        .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)
+        .Add("category", Categories)
+        .Add("federalstate", State?.GetAssociatedValue())
+        .Add("eva", Eva)
+        .Add("ril", Ril)
+        .Add("logicaloperator", Operator?.GetAssociatedValue())
+        .Add("offset", Offset.ToString())
+        .Add("limit", Limit.ToString());
 }

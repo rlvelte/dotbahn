@@ -30,7 +30,7 @@ public class FacilitiesQueryFluentApiTests {
         // Assert
         Assert.Equal(FacilityType.Escalator, query.Type);
         Assert.Null(query.State);
-        Assert.Null(query.EquipmentNumbers);
+        Assert.Empty(query.EquipmentNumbers);
         Assert.Equal("8000105", query.StationId);
     }
 

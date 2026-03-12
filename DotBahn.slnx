@@ -13,14 +13,14 @@
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
     <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
   </Folder>
-  <Folder Name="/DotBahn.Samples/">
-    <Project Path="samples\DotBahn.Samples.IceMonitor\DotBahn.Samples.IceMonitor.csproj" />
-    <Project Path="samples\DotBahn.Samples.StationBrowser\DotBahn.Samples.StationBrowser.csproj" />
-  </Folder>
   <Folder Name="/DotBahn.Tests/">
     <Project Path="tests\DotBahn.Tests.Facilities\DotBahn.Tests.Facilities.csproj" />
     <Project Path="tests\DotBahn.Tests.Stations\DotBahn.Tests.Stations.csproj" />
     <Project Path="tests\DotBahn.Tests.Timetables\DotBahn.Tests.Timetables.csproj" />
+  </Folder>
+  <Folder Name="/_Samples/">
+    <Project Path="samples\DotBahn.Samples.IceMonitor\DotBahn.Samples.IceMonitor.csproj" />
+    <Project Path="samples\DotBahn.Samples.StationBrowser\DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/_Shared/">
     <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />

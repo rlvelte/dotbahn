@@ -11,7 +11,7 @@ using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 
-namespace DotBahn.Clients.Timetables.Client;
+namespace DotBahn.Clients.Timetables;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn Timetables'-API.
@@ -56,12 +56,13 @@ public class TimetablesClient : ClientBase {
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <param name="current">Current timetable on which these changes should apply on.</param>
+    /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>A <see cref="Timetable"/> with full change information.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? current = null) {
-        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml");
+    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? current = null, CancellationToken cancellation = default) {
+        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml", null, cancellation);
         var changes = _transformer.Transform(response);
-        
+
         return current != null ? _merger.Merge(current, changes) : changes;
     }
 
@@ -71,27 +72,29 @@ public class TimetablesClient : ClientBase {
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <param name="current">Current timetable on which these changes should apply on.</param>
+    /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>A <see cref="Timetable"/> with recent change information.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? current = null) {
-        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml");
+    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? current = null, CancellationToken cancellation = default) {
+        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml", null, cancellation);
         var changes = _transformer.Transform(response);
-        
+
         return current != null ? _merger.Merge(current, changes) : changes;
     }
-    
+
     /// <summary>
     /// Gets the timetable for a specific station and time.
     /// </summary>
     /// <param name="eva">The EVA station number.</param>
     /// <param name="dateTime">The date and hour (only YYMMDD/HH are used).</param>
+    /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>A <see cref="Timetable"/> for the specified hour.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime) {
+    public async Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken cancellation = default) {
         var dateStr = dateTime.ToString("yyMMdd");
         var hourStr = dateTime.ToString("HH");
-        
-        var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml");
+
+        var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml", null, cancellation);
         return _transformer.Transform(response);
     }
 }

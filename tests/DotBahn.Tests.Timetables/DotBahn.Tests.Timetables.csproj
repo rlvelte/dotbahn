@@ -24,6 +24,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
     <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Timetables\DotBahn.Data.Timetables.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Shared\DotBahn.Data.Shared.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Shared\DotBahn.Modules.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

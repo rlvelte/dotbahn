@@ -1,5 +1,4 @@
 using DotBahn.Clients.Timetables;
-using DotBahn.Clients.Timetables.Client;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;

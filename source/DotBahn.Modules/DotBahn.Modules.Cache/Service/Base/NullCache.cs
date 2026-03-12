@@ -10,7 +10,8 @@ public class NullCache : ICache {
     }
 
     /// <inheritdoc />
-    public Task SetAsync<T>(string key, T value) {
-        return Task.CompletedTask;
-    }
+    public Task SetAsync<T>(string key, T value) => Task.CompletedTask;
+
+    /// <inheritdoc />
+    public void Dispose() { }
 }

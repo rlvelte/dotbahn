@@ -11,4 +11,10 @@ public record CacheOptions {
     /// Default expiration time for general requests.
     /// </summary>
     public TimeSpan DefaultExpiration { get; set; }
+
+    /// <summary>
+    /// Maximum number of entries the cache may hold. Each entry counts as 1 unit.
+    /// Null (default) means unbounded.
+    /// </summary>
+    public long? SizeLimit { get; set; }
 }

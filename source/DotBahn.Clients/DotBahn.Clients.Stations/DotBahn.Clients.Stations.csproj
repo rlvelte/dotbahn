@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         
         <PackageId>DotBahn.Stations</PackageId>
-        <Version>1.3.1</Version>
+        <Version>1.4.0</Version>
 
         <Title>DotBahn.Stations</Title>
         <Authors>Robin L. Velte</Authors>

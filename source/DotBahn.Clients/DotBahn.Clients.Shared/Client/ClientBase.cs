@@ -10,7 +10,6 @@ using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing.Base;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DotBahn.Clients.Shared.Client;
 
@@ -41,9 +40,13 @@ public abstract class ClientBase {
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
     protected ClientBase(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
-        _http = new HttpClient {
+        _http = new HttpClient(new SocketsHttpHandler {
+            PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        }) {
             BaseAddress = options.BaseEndpoint,
         };
+        
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
         
         _authorization = new ApiKeyAuthorization(auth);
@@ -51,10 +54,7 @@ public abstract class ClientBase {
             return;
         }
 
-        var memoryCache = new MemoryCache(new MemoryCacheOptions {
-            SizeLimit = 1024
-        });
-        _cache = new InMemoryCache(memoryCache, cache);
+        _cache = new InMemoryCache(cache);
     }
 
     /// <summary>

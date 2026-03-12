@@ -12,7 +12,7 @@ using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 
-namespace DotBahn.Clients.Facilities.Client;
+namespace DotBahn.Clients.Facilities;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
@@ -51,10 +51,11 @@ public class FacilitiesClient : ClientBase {
     /// Finds facilities based on optional filter criteria.
     /// </summary>
     /// <param name="query">The query to specify results with.</param>
+    /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>List of facilities matching the criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query) {
-        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters())).ToList();
+    public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default) {
+        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation)).ToList();
         return _transformer.Transform(result);
     }
 }

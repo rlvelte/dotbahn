@@ -1,6 +1,7 @@
 using DotBahn.Clients.Shared.Client;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Clients.Stations.Query;
 using DotBahn.Clients.Stations.Transformer;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Stations.Models;
@@ -11,7 +12,7 @@ using DotBahn.Modules.Cache.Service.Base;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
 
-namespace DotBahn.Clients.Stations.Client;
+namespace DotBahn.Clients.Stations;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
@@ -50,12 +51,13 @@ public class StationsClient : ClientBase {
     /// Searches for stations using a query structure.
     /// </summary>
     /// <param name="query">The query to specify results with.</param>
+    /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>List of stations matching the search criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<IEnumerable<Station>> GetStationsAsync(Query.StationsQuery query) {
-        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters());
+    public async Task<IEnumerable<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
+        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
-        
+
         return _transformer.Transform(response);
     }
 }
