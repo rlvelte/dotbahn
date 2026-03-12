@@ -3,7 +3,7 @@ namespace DotBahn.Modules.Cache.Service.Base;
 /// <summary>
 /// Interface for the caching system
 /// </summary>
-public interface ICache {
+public interface ICache : IDisposable {
     /// <summary>
     /// Gets a value from the cache
     /// </summary>

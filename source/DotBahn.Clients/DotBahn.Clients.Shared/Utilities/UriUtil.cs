@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using DotBahn.Clients.Shared.Query;
 
 namespace DotBahn.Clients.Shared.Utilities;
@@ -12,6 +13,7 @@ internal static class UriUtil {
     /// <param name="relativeUrl">The base relative URL.</param>
     /// <param name="queryParams">Optional query parameters.</param>
     /// <returns>The complete URL with a query string.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static string BuildUrl(string relativeUrl, QueryParameters? queryParams) {
         if (queryParams == null || !queryParams.Any()) {
             return relativeUrl;

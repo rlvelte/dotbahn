@@ -10,14 +10,14 @@ namespace DotBahn.Modules.Authorization;
 /// Extension methods for setting up authorization services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <param name="services">The service collection.</param>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>
         /// Adds the authorization system, with options configured via callback.
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="AuthorizationOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        public IServiceCollection AddDotBahnAuthorization(Action<AuthorizationOptions> configuration) {
+        public void AddDotBahnAuthorization(Action<AuthorizationOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
             
@@ -31,8 +31,6 @@ public static class ServiceCollectionExtensions {
                 var options = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
                 return new ApiKeyAuthorization(options);
             });
-        
-            return services;
         }
     }
 }

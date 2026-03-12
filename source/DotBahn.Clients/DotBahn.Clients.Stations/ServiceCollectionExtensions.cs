@@ -1,7 +1,6 @@
 using System.Net;
 using DotBahn.Clients.Shared.Extensions;
 using DotBahn.Clients.Shared.Options;
-using DotBahn.Clients.Stations.Client;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Clients.Stations.Transformer;
 using DotBahn.Data.Shared.Transformer;
@@ -14,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Clients.Stations;
 
 /// <summary>
-/// Extension methods for setting up StaDa (StationData) services in an <see cref="IServiceCollection"/>.
+/// Extension methods for setting up stada in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Stations";
@@ -26,7 +25,7 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        public IServiceCollection AddDotBahnStations(Action<ClientOptions> configuration) {
+        public void AddDotBahnStations(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
             
@@ -53,8 +52,6 @@ public static class ServiceCollectionExtensions {
             services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
             services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
             services.AddSingleton<ITransformer<IEnumerable<Station>, StationsResponseContract>, StationTransformer>();
-        
-            return services;
         }
     }
 }

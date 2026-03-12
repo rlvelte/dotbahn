@@ -34,7 +34,5 @@ public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
     }
 
     /// <inheritdoc />
-    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) {
-        writer.WriteBooleanValue(value);
-    }
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) => writer.WriteBooleanValue(value);
 }

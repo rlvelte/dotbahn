@@ -1,7 +1,6 @@
 using System.Net;
 using DotBahn.Clients.Shared.Extensions;
 using DotBahn.Clients.Shared.Options;
-using DotBahn.Clients.Timetables.Client;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Clients.Timetables.Transformer;
 using DotBahn.Data.Shared.Transformer;
@@ -14,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Clients.Timetables;
 
 /// <summary>
-/// Extension methods for setting up Timetables services in an <see cref="IServiceCollection"/>.
+/// Extension methods for setting up timetables in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
@@ -26,7 +25,7 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        public IServiceCollection AddDotBahnTimetables(Action<ClientOptions> configuration) {
+        public void AddDotBahnTimetables(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
             
@@ -53,8 +52,6 @@ public static class ServiceCollectionExtensions {
             services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
             services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
             services.AddSingleton<IMerger<Timetable>, TimetableTransformer>();
-        
-            return services;
         }
     }
 }

@@ -5,37 +5,58 @@ using Microsoft.Extensions.Logging;
 namespace DotBahn.Modules.Cache.Service;
 
 /// <summary>
-/// In-memory implementation of the caching system with structured logging
+/// In-memory implementation of the caching system with structured logging.
+/// Owns and manages its own <see cref="MemoryCache"/> instance.
 /// </summary>
-/// <param name="cache">The memory cache to use.</param>
-/// <param name="options">Options for the cache.</param>
-/// <param name="logger">Logger for debug and trace information.</param>
-public class InMemoryCache(IMemoryCache cache, CacheOptions options, ILogger<InMemoryCache>? logger = null) : ICache {
+public sealed class InMemoryCache : ICache {
+    private readonly MemoryCache _cache;
+    private readonly CacheOptions _options;
+    private readonly ILogger<InMemoryCache>? _logger;
+
+    /// <param name="options">Options for the cache.</param>
+    /// <param name="logger">Logger for debug and trace information.</param>
+    public InMemoryCache(CacheOptions options, ILogger<InMemoryCache>? logger = null) {
+        _options = options;
+        _logger = logger;
+        _cache = new MemoryCache(new MemoryCacheOptions {
+            SizeLimit = options.SizeLimit
+        });
+    }
+
     /// <inheritdoc />
     public Task<T?> GetAsync<T>(string key) {
-        if (cache.TryGetValue<T>(key, out var value)) {
-            if (logger != null && logger.IsEnabled(LogLevel.Debug)) {
-                logger.LogDebug("[InMemoryCache] Cache hit for '{Key}'.", key);
+        if (_cache.TryGetValue<T>(key, out var value)) {
+            if (_logger != null && _logger.IsEnabled(LogLevel.Debug)) {
+                _logger.LogDebug("[InMemoryCache] Cache hit for '{Key}'.", key);
             }
             return Task.FromResult(value);
-        } else {
-            if (logger != null && logger.IsEnabled(LogLevel.Debug)) {
-                logger.LogDebug("[InMemoryCache] Cache miss for '{Key}'.", key);
-            }
-            return Task.FromResult<T?>(default);
         }
+
+        if (_logger != null && _logger.IsEnabled(LogLevel.Debug)) {
+            _logger.LogDebug("[InMemoryCache] Cache miss for '{Key}'.", key);
+        }
+        return Task.FromResult<T?>(default);
     }
 
     /// <inheritdoc />
     public Task SetAsync<T>(string key, T value) {
-        cache.Set(key, value, new MemoryCacheEntryOptions {
-            AbsoluteExpirationRelativeToNow = options.DefaultExpiration
-        });
+        var entryOptions = new MemoryCacheEntryOptions {
+            AbsoluteExpirationRelativeToNow = _options.DefaultExpiration
+        };
 
-        if (logger != null && logger.IsEnabled(LogLevel.Debug)) {
-            logger.LogDebug("[InMemoryCache] Set key '{Key}' with expiration {ExpirationSeconds}s.", key, options.DefaultExpiration.TotalSeconds);
+        if (_options.SizeLimit.HasValue) {
+            entryOptions.Size = 1;
+        }
+
+        _cache.Set(key, value, entryOptions);
+
+        if (_logger != null && _logger.IsEnabled(LogLevel.Debug)) {
+            _logger.LogDebug("[InMemoryCache] Set key '{Key}' with expiration {ExpirationSeconds}s.", key, _options.DefaultExpiration.TotalSeconds);
         }
 
         return Task.CompletedTask;
     }
+
+    /// <inheritdoc />
+    public void Dispose() => _cache.Dispose();
 }

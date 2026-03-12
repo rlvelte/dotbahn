@@ -12,7 +12,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
 
         // Assert
         Assert.Single(query.EquipmentNumbers);
-        Assert.Equal("10562421", query.EquipmentNumbers[0]);
+        Assert.Equal("10562421", query.EquipmentNumbers.First());
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
         query.EquipmentNumbers = numbers;
 
         // Assert
-        Assert.Equal(3, query.EquipmentNumbers.Length);
+        Assert.Equal(3, query.EquipmentNumbers.Count());
         Assert.Equal(numbers, query.EquipmentNumbers);
     }
 
@@ -47,7 +47,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
         var query = new FacilitiesQuery { EquipmentNumbers = ["10562421"] };
 
         // Act
-        query.EquipmentNumbers = null;
+        query.EquipmentNumbers = null!;
 
         // Assert
         Assert.Null(query.EquipmentNumbers);
@@ -64,7 +64,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
         // Assert
         Assert.Same(query, result);
         Assert.Single(query.EquipmentNumbers!);
-        Assert.Equal("10562421", query.EquipmentNumbers![0]);
+        Assert.Equal("10562421", query.EquipmentNumbers.First());
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
 
         // Assert
         Assert.Same(query, result);
-        Assert.Equal(3, query.EquipmentNumbers!.Length);
+        Assert.Equal(3, query.EquipmentNumbers.Count());
         Assert.Equal(["10562421", "10562422", "10562423"], query.EquipmentNumbers);
     }
 
@@ -91,7 +91,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
              .WithEquipmentNumbers("10562422", "10562423");
 
         // Assert
-        Assert.Equal(2, query.EquipmentNumbers!.Length);
+        Assert.Equal(2, query.EquipmentNumbers.Count());
         Assert.Equal(["10562422", "10562423"], query.EquipmentNumbers);
     }
 }

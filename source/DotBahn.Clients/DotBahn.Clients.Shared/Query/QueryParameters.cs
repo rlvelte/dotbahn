@@ -54,6 +54,5 @@ public class QueryParameters {
     /// Converts the added parameters into a URL-encoded query string.
     /// </summary>
     /// <returns>A URL-encoded query string (e.g., "key1=value1&amp;key2=value2") or an empty string if no parameters exist.</returns>
-    public string ToQueryString() =>
-        _parameters.Count == 0 ? string.Empty : string.Join("&", _parameters.Select(p => $"{Uri.EscapeDataString(p.Key)}={Uri.EscapeDataString(p.Value)}"));
+    public string ToQueryString() => _parameters.Count == 0 ? string.Empty : string.Join("&", _parameters.Select(p => $"{Uri.EscapeDataString(p.Key)}={Uri.EscapeDataString(p.Value)}"));
 }

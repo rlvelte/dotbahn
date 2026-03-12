@@ -1,5 +1,4 @@
 using System.Net;
-using DotBahn.Clients.Facilities.Client;
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Clients.Facilities.Transformer;
 using DotBahn.Clients.Shared.Extensions;
@@ -14,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Clients.Facilities;
 
 /// <summary>
-/// Extension methods for setting up FaSta (Station Facilities Status) services in an <see cref="IServiceCollection"/>.
+/// Extension methods for setting up fasta in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Facilities";
@@ -26,7 +25,7 @@ public static class ServiceCollectionExtensions {
         /// </summary>
         /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
         /// <returns>The service collection.</returns>
-        public IServiceCollection AddDotBahnFacilities(Action<ClientOptions> configuration) {
+        public void AddDotBahnFacilities(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
             
@@ -52,8 +51,6 @@ public static class ServiceCollectionExtensions {
 
             services.AddSingleton<IParser<IEnumerable<FacilityContract>>, JsonParser<List<FacilityContract>>>();
             services.AddSingleton<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>, FacilityTransformer>();
-            
-            return services;
         }
     }
 }

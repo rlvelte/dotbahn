@@ -17,6 +17,5 @@ public class JsonParser<TContract> : IParser<TContract> where TContract : new() 
     };
 
     /// <inheritdoc />
-    public TContract Parse(string input) => 
-        string.IsNullOrWhiteSpace(input) ? new TContract() : JsonSerializer.Deserialize<TContract>(input, _options)!;
+    public TContract Parse(string input) => string.IsNullOrWhiteSpace(input) ? new TContract() : JsonSerializer.Deserialize<TContract>(input, _options)!;
 }

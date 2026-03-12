@@ -23,7 +23,7 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Equipment numbers to filter by. Optional filter.
     /// </summary>
-    public string[]? EquipmentNumbers { get; set; }
+    public IEnumerable<string> EquipmentNumbers { get; set; } = [];
 
     /// <summary>
     /// The station ID to filter facilities. Optional filter.
@@ -67,8 +67,8 @@ public sealed record FacilitiesQuery {
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public QueryParameters ToQueryParameters() => QueryParameters.Create()
-                                                                 .Add("type", Type?.GetAssociatedValue())
-                                                                 .Add("state", State?.GetAssociatedValue())
-                                                                 .Add("equipmentnumbers", EquipmentNumbers)
-                                                                 .Add("stationnumber", StationId);
+        .Add("type", Type?.GetAssociatedValue())
+        .Add("state", State?.GetAssociatedValue())
+        .Add("equipmentnumbers", EquipmentNumbers)
+        .Add("stationnumber", StationId);
 }
