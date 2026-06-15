@@ -22,7 +22,7 @@ Available clients:
 ## Table of Contents
 - [Install](#install)
 - [Usage](#usage)
-- [API Reference](#documentation)
+- [API Reference](https://rlvelte.github.io/dotbahn/index.html)
 - [Samples](#samples)
 - [Authorization](#authorization)
 
