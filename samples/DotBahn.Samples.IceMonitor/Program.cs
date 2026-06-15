@@ -61,7 +61,9 @@ while (!cts.Token.IsCancellationRequested) {
                     ctx.Status($"{h:HH:mm}\u2026");
                     var data = await client.GetTimetableAsync(eva, h);
                     first ??= data;
-                    foreach (var s in data.Stops) stops[s.Id] = s;
+                    foreach (var s in data.Stops) {
+                        stops[s.Id] = s;
+                    }
                 }
 
                 cached = new Timetable {
@@ -140,7 +142,10 @@ static string FormatTrain(TrainLabel t) =>
 
 static string FormatTime(ChangedValue<DateTime> t) {
     var p = t.Original.ToString("HH:mm");
-    if (!t.HasUpdate) return $"[{Gruvbox.Green}]{p}[/]";
+    if (!t.HasUpdate) {
+        return $"[{Gruvbox.Green}]{p}[/]";
+    }
+
     var a = t.Actual.ToString("HH:mm");
     var d = (int)(t.Actual - t.Original).TotalMinutes;
     return d <= 0
@@ -149,24 +154,34 @@ static string FormatTime(ChangedValue<DateTime> t) {
 }
 
 static string FormatPlatform(ChangedRef<string> p) {
-    if (!p.HasUpdate || p.Updated == p.Original)
+    if (!p.HasUpdate || p.Updated == p.Original) {
         return $"[{Gruvbox.Fg}]{Markup.Escape(p.Original)}[/]";
+    }
+
     return $"[strikethrough {Gruvbox.Gray}]{Markup.Escape(p.Original)}[/] [bold {Gruvbox.Red}]{Markup.Escape(p.Actual)}[/]";
 }
 
 static string FormatDestination(ChangedRef<IEnumerable<string>> p) {
     var planned = p.Original.LastOrDefault() ?? "-";
     var actual = p.Actual.LastOrDefault() ?? "-";
-    if (!p.HasUpdate || planned == actual)
+    if (!p.HasUpdate || planned == actual) {
         return $"[bold {Gruvbox.Fg}]{Markup.Escape(planned)}[/]";
+    }
+
     return $"[strikethrough {Gruvbox.Gray}]{Markup.Escape(planned)}[/] [bold {Gruvbox.Red}]{Markup.Escape(actual)}[/]";
 }
 
 static string FormatVia(ChangedRef<IEnumerable<string>> p) {
-    var stops = p.Actual?.ToList() ?? [];
-    if (stops.Count <= 1) return $"[{Gruvbox.Gray}]-[/]";
+    var stops = p.Actual.ToList();
+    if (stops.Count <= 1) {
+        return $"[{Gruvbox.Gray}]-[/]";
+    }
+
     var via = string.Join(" \u2013 ", stops.Take(Math.Min(3, stops.Count - 1)).Select(Markup.Escape));
-    if (stops.Count > 4) via += " \u2026";
+    if (stops.Count > 4) {
+        via += " \u2026";
+    }
+
     return p.HasUpdate
         ? $"[{Gruvbox.Orange}]{via}[/]"
         : $"[{Gruvbox.Gray}]{via}[/]";

@@ -88,10 +88,16 @@ while (true) {
 
     switch (key.Key) {
         case ConsoleKey.LeftArrow:
-            if (currentIndex > 0) currentIndex--;
+            if (currentIndex > 0) {
+                currentIndex--;
+            }
+
             break;
         case ConsoleKey.RightArrow:
-            if (currentIndex < stations.Count - 1) currentIndex++;
+            if (currentIndex < stations.Count - 1) {
+                currentIndex++;
+            }
+
             break;
         case ConsoleKey.Home:
             currentIndex = 0;
@@ -261,7 +267,10 @@ static IRenderable BuildFacilitiesPanel(List<Facility> facilities) {
     foreach (var facility in inactiveFacilities.Take(5)) {
         var typeIcon = facility.Type == FacilityType.Elevator ? "\u21c5" : "\u21f5";
         var desc = facility.Description ?? $"#{facility.EquipmentNumber}";
-        if (desc.Length > 25) desc = desc[..22] + "...";
+        if (desc.Length > 25) {
+            desc = desc[..22] + "...";
+        }
+
         table.AddRow($"[{Gruvbox.Gray}]{typeIcon} {Markup.Escape(desc)}[/]", "");
     }
     if (inactiveFacilities.Count > 5) {
