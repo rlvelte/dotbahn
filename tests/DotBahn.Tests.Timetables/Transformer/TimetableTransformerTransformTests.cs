@@ -9,16 +9,13 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithBasicContract_ShouldSetStation() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Hamburg Hbf",
             Stops = []
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         Assert.Equal("Hamburg Hbf", result.Station);
         Assert.Empty(result.Stops);
         Assert.Empty(result.Messages);
@@ -26,7 +23,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithStop_ShouldTransformStopData() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Berlin Hbf",
             Stops = [
@@ -41,10 +37,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var stop = Assert.Single(result.Stops);
         Assert.Equal("stop-1", stop.Id);
         Assert.Equal("ICE", stop.Train.Category);
@@ -54,7 +48,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithDeparture_ShouldTransformEvent() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "München Hbf",
             Stops = [
@@ -69,10 +62,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var stop = Assert.Single(result.Stops);
         Assert.NotNull(stop.Departure);
         Assert.Null(stop.Arrival);
@@ -83,7 +74,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithArrival_ShouldTransformEvent() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Köln Hbf",
             Stops = [
@@ -97,10 +87,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var stop = Assert.Single(result.Stops);
         Assert.NotNull(stop.Arrival);
         Assert.Null(stop.Departure);
@@ -110,7 +98,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithChangedValues_ShouldSetUpdatedProperties() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Stuttgart Hbf",
             Stops = [
@@ -126,10 +113,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var departure = result.Stops.First().Departure!;
         Assert.Equal(new DateTime(2025, 1, 19, 10, 0, 0), departure.Time.Original);
         Assert.Equal(new DateTime(2025, 1, 19, 10, 15, 0), departure.Time.Updated);
@@ -141,7 +126,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithoutChangedValues_ShouldNotHaveUpdates() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Düsseldorf Hbf",
             Stops = [
@@ -155,10 +139,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var departure = result.Stops.First().Departure!;
         Assert.False(departure.Time.HasUpdate);
         Assert.False(departure.Platform.HasUpdate);
@@ -168,7 +150,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithChangedStatus_ShouldSetStatusUpdate() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Leipzig Hbf",
             Stops = [
@@ -183,10 +164,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var departure = result.Stops.First().Departure!;
         Assert.Equal(EventStatus.Planned, departure.Status.Original);
         Assert.Equal(EventStatus.Cancelled, departure.Status.Updated);
@@ -195,7 +174,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithDistantEndpoint_ShouldSetDistantEndpoint() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Basel SBB",
             Stops = [
@@ -210,10 +188,8 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         var departure = result.Stops.First().Departure!;
         Assert.NotNull(departure.DistantEndpoint);
         Assert.Equal("Milano Centrale", departure.DistantEndpoint.Original);
@@ -222,7 +198,6 @@ public class TimetableTransformerTransformTests {
 
     [Fact]
     public void Transform_WithMultipleStops_ShouldTransformAll() {
-        // Arrange
         var contract = new TimetableResponseContract {
             Station = "Frankfurt Hbf",
             Stops = [
@@ -232,13 +207,108 @@ public class TimetableTransformerTransformTests {
             ]
         };
 
-        // Act
         var result = _transformer.Transform(contract);
 
-        // Assert
         Assert.Equal(3, result.Stops.Count());
         Assert.Contains(result.Stops, s => s.Id == "stop-a");
         Assert.Contains(result.Stops, s => s.Id == "stop-b");
         Assert.Contains(result.Stops, s => s.Id == "stop-c");
+    }
+
+    [Fact]
+    public void Transform_WithNullContract_ThrowsArgumentNullException() {
+        TimetableResponseContract contract = null!;
+
+        var exception = Assert.Throws<ArgumentNullException>(() => _transformer.Transform(contract));
+        Assert.Equal("contract", exception.ParamName);
+    }
+
+    [Fact]
+    public void Transform_WithNullTripInfo_ShouldUseDefaultValues() {
+        var contract = new TimetableResponseContract {
+            Station = "Hannover Hbf",
+            Stops = [
+                new StopDataContract {
+                    Id = "stop-1",
+                    TripInfo = null
+                }
+            ]
+        };
+
+        var result = _transformer.Transform(contract);
+
+        var stop = Assert.Single(result.Stops);
+        Assert.Equal(string.Empty, stop.Train.Category);
+        Assert.Equal(string.Empty, stop.Train.Number);
+        Assert.Equal(string.Empty, stop.Train.Owner);
+        Assert.Null(stop.Train.Type);
+    }
+
+    [Fact]
+    public void Transform_WithNullPlannedPath_ShouldDefaultToEmptyList() {
+        var contract = new TimetableResponseContract {
+            Station = "Dortmund Hbf",
+            Stops = [
+                new StopDataContract {
+                    Id = "stop-1",
+                    Departure = new EventContract {
+                        PlannedTime = "2501191000",
+                        PlannedPath = null
+                    }
+                }
+            ]
+        };
+
+        var result = _transformer.Transform(contract);
+
+        var departure = result.Stops.First().Departure!;
+        Assert.Empty(departure.Path.Original);
+        Assert.Null(departure.Path.Updated);
+        Assert.False(departure.Path.HasUpdate);
+    }
+
+    [Fact]
+    public void Transform_WithNullWings_ShouldDefaultToEmptyList() {
+        var contract = new TimetableResponseContract {
+            Station = "Bremen Hbf",
+            Stops = [
+                new StopDataContract {
+                    Id = "stop-1",
+                    Departure = new EventContract {
+                        PlannedTime = "2501191000",
+                        Wings = null
+                    }
+                }
+            ]
+        };
+
+        var result = _transformer.Transform(contract);
+
+        var departure = result.Stops.First().Departure!;
+        Assert.Empty(departure.Wings);
+    }
+
+    [Fact]
+    public void Transform_WithChangedStatusNull_ShouldNotSetUpdate() {
+        var contract = new TimetableResponseContract {
+            Station = "Nürnberg Hbf",
+            Stops = [
+                new StopDataContract {
+                    Id = "stop-1",
+                    Departure = new EventContract {
+                        PlannedTime = "2501191000",
+                        PlannedStatus = "p",
+                        ChangedStatus = null
+                    }
+                }
+            ]
+        };
+
+        var result = _transformer.Transform(contract);
+
+        var departure = result.Stops.First().Departure!;
+        Assert.Equal(EventStatus.Planned, departure.Status.Original);
+        Assert.Null(departure.Status.Updated);
+        Assert.False(departure.Status.HasUpdate);
     }
 }

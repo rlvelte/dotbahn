@@ -1,0 +1,79 @@
+using System.Net;
+
+using DotBahn.Clients.Shared.Client;
+using DotBahn.Clients.Shared.Query;
+using DotBahn.Modules.Authorization.Service.Base;
+using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Shared.Parsing.Base;
+using DotBahn.Tests.Shared;
+
+using Moq;
+
+namespace DotBahn.Tests.Timetables.Client;
+
+public class UriUtilTests : ClientTestBase {
+    private readonly Mock<IParser<string>> _parserMock = new();
+
+    public UriUtilTests() {
+        HttpClient.BaseAddress = new Uri("https://api.deutschebahn.com");
+    }
+
+    [Fact]
+    public async Task GetAsync_WithNullQueryParameters_NoQueryStringInUrl() {
+        var client = CreateClient();
+        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
+
+        await client.GetAsync("/test", _parserMock.Object, "application/xml");
+
+        var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
+        Assert.DoesNotContain("?", requestUri);
+    }
+
+    [Fact]
+    public async Task GetAsync_WithEmptyQueryParameters_NoQueryStringInUrl() {
+        var client = CreateClient();
+        var queryParams = QueryParameters.Create();
+        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
+
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+
+        var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
+        Assert.DoesNotContain("?", requestUri);
+    }
+
+    [Fact]
+    public async Task GetAsync_WithQueryParameters_AppendsQueryStringToUrl() {
+        var client = CreateClient();
+        var queryParams = QueryParameters.Create()
+            .Add("key1", "value1")
+            .Add("key2", "value2");
+        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
+
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+
+        var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
+        Assert.Contains("?key1=value1", requestUri);
+        Assert.Contains("&key2=value2", requestUri);
+    }
+
+    [Fact]
+    public async Task GetAsync_WithSpecialCharacters_UrlEncodesParameters() {
+        var client = CreateClient();
+        var queryParams = QueryParameters.Create()
+            .Add("search", "test value");
+        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
+
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+
+        Assert.Single(HttpHandler.SentRequests);
+        var requestUri = HttpHandler.SentRequests[0].RequestUri!.AbsoluteUri;
+        Assert.Contains("%20", requestUri);
+    }
+
+    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object, CacheMock.Object);
+
+    private class TestClientBase(HttpClient http, IAuthorization authorization, ICache? cache) : ClientBase(http, authorization, cache) {
+        public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) =>
+            base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, cancellation);
+    }
+}

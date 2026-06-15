@@ -56,7 +56,7 @@ public class FacilitiesClient : ClientBase {
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
-        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation)).ToList();
+        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false)).ToList();
         return _transformer.Transform(result);
     }
 }

@@ -16,7 +16,7 @@ namespace DotBahn.Clients.Timetables.Transformer;
 public class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract>, IMerger<Timetable> {
     private const string BahnTimeFormat = "yyMMddHHmm";
 
-    #region Transforming 
+    #region Transforming
     /// <inheritdoc />
     public Timetable Transform(in TimetableResponseContract contract) {
         ArgumentNullException.ThrowIfNull(contract);
@@ -51,7 +51,7 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
         }
 
         var time = new ChangedValue<DateTime> {
-            Original = ParseBahnTime(contract.PlannedTime) ?? default(DateTime),
+            Original = ParseBahnTime(contract.PlannedTime) ?? default,
             Updated = ParseBahnTime(contract.ChangedTime)
         };
 
@@ -245,10 +245,10 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     }
 
     /// <summary>
-    /// Parses a pipe separated list to a <see cref="IReadOnlyList{T}"/>
+    /// Parses a pipe-separated list to a <see cref="IReadOnlyList{T}"/>
     /// </summary>
-    /// <param name="list">The list to seperate.</param>
-    /// <returns>A paresd list.</returns>
+    /// <param name="list">The list to separate.</param>
+    /// <returns>A parsed list.</returns>
     private static IReadOnlyList<string>? ParsePipeSeparatedList(string? list) =>
         string.IsNullOrEmpty(list) ? null : list.Split('|', StringSplitOptions.RemoveEmptyEntries);
 }

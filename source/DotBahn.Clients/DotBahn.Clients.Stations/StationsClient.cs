@@ -56,7 +56,7 @@ public class StationsClient : ClientBase {
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<IEnumerable<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
-        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation);
+        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
 
         return _transformer.Transform(response);

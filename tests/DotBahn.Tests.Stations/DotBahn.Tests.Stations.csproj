@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
@@ -14,8 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Stations/DotBahn.Clients.Stations.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
     <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Stations/DotBahn.Data.Stations.csproj" />
     <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Shared/DotBahn.Data.Shared.csproj" />
     <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
+    <ProjectReference Include="..\DotBahn.Tests.Shared\DotBahn.Tests.Shared.csproj" />
   </ItemGroup>
 </Project>

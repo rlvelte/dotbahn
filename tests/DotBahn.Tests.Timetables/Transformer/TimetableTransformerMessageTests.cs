@@ -14,7 +14,6 @@ public class TimetableTransformerMessageTests {
 
     [Fact]
     public void Transform_InternalMessage_SetsInternalTextOnly() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -26,10 +25,8 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         var msg = Assert.Single(stop.Messages);
         Assert.Equal("internal info", msg.InternalText);
         Assert.Null(msg.ExternalText);
@@ -37,7 +34,6 @@ public class TimetableTransformerMessageTests {
 
     [Fact]
     public void Transform_ExternalMessage_SetsExternalTextOnly() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -49,10 +45,8 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         var msg = Assert.Single(stop.Messages);
         Assert.Null(msg.InternalText);
         Assert.Equal("public info", msg.ExternalText);
@@ -60,7 +54,6 @@ public class TimetableTransformerMessageTests {
 
     [Fact]
     public void Transform_DeletedMessage_SetsIsDeletedTrue() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -71,16 +64,13 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         Assert.True(Assert.Single(stop.Messages).IsDeleted);
     }
 
     [Fact]
     public void Transform_NotDeletedMessage_SetsIsDeletedFalse() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -91,16 +81,13 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         Assert.False(Assert.Single(stop.Messages).IsDeleted);
     }
 
     [Fact]
     public void Transform_MessageWithValidityRange_SetsValidFromAndTo() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -112,10 +99,8 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         var msg = Assert.Single(stop.Messages);
         Assert.Equal(new DateTime(2025, 1, 19, 8, 0, 0), msg.ValidFrom);
         Assert.Equal(new DateTime(2025, 1, 19, 22, 0, 0), msg.ValidTo);
@@ -123,19 +108,15 @@ public class TimetableTransformerMessageTests {
 
     [Fact]
     public void Transform_StopWithoutMessages_ReturnsEmptyMessageList() {
-        // Arrange
         var contract = WithStop(new StopDataContract { Id = "s1" });
 
-        // Act
         var stop = _transformer.Transform(contract).Stops.First();
 
-        // Assert
         Assert.Empty(stop.Messages);
     }
 
     [Fact]
     public void Transform_MessageType_ParsedCorrectly() {
-        // Arrange
         var contract = WithStop(new StopDataContract {
             Id = "s1",
             Messages = [new MessageContract {
@@ -145,10 +126,8 @@ public class TimetableTransformerMessageTests {
             }]
         });
 
-        // Act
         var msg = _transformer.Transform(contract).Stops.First().Messages.First();
 
-        // Assert
         Assert.Equal(MessageType.QualityChange, msg.Type);
     }
 }
