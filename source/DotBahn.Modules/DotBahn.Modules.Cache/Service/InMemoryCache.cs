@@ -1,4 +1,5 @@
 using DotBahn.Modules.Cache.Service.Base;
+
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,8 @@ public sealed class InMemoryCache : ICache {
     /// <param name="options">Options for the cache.</param>
     /// <param name="logger">Logger for debug and trace information.</param>
     public InMemoryCache(CacheOptions options, ILogger<InMemoryCache>? logger = null) {
+        ArgumentNullException.ThrowIfNull(options);
+
         _options = options;
         _logger = logger;
         _cache = new MemoryCache(new MemoryCacheOptions {
@@ -29,12 +32,14 @@ public sealed class InMemoryCache : ICache {
             if (_logger != null && _logger.IsEnabled(LogLevel.Debug)) {
                 _logger.LogDebug("[InMemoryCache] Cache hit for '{Key}'.", key);
             }
+
             return Task.FromResult(value);
         }
 
         if (_logger != null && _logger.IsEnabled(LogLevel.Debug)) {
             _logger.LogDebug("[InMemoryCache] Cache miss for '{Key}'.", key);
         }
+
         return Task.FromResult<T?>(default);
     }
 

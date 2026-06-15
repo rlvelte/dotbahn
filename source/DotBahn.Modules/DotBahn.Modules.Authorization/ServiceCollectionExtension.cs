@@ -1,5 +1,6 @@
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -9,7 +10,7 @@ namespace DotBahn.Modules.Authorization;
 /// <summary>
 /// Extension methods for setting up authorization services in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtensions {
+public static class ServiceCollectionExtension {
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>
@@ -20,13 +21,13 @@ public static class ServiceCollectionExtensions {
         public void AddDotBahnAuthorization(Action<AuthorizationOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-            
+
             services.Configure(configuration);
             services.AddOptions<AuthorizationOptions>()
                     .Validate(o => !string.IsNullOrWhiteSpace(o.ClientId), "DotBahn: 'ClientId' can't be null or empty.")
                     .Validate(o => !string.IsNullOrWhiteSpace(o.ApiKey), "DotBahn: 'ApiKey' can't be null or empty.")
                     .ValidateOnStart();
-            
+
             services.TryAddSingleton<IAuthorization>(sp => { // Only add if not present
                 var options = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
                 return new ApiKeyAuthorization(options);

@@ -8,6 +8,7 @@ namespace DotBahn.Modules.Authorization.Service;
 public class ApiKeyAuthorization(AuthorizationOptions configuration) : IAuthorization {
     /// <inheritdoc />
     public void AuthorizeRequest(HttpRequestMessage request) {
+        ArgumentNullException.ThrowIfNull(request);
         request.Headers.Add("DB-Client-Id", configuration.ClientId);
         request.Headers.Add("DB-Api-Key", configuration.ApiKey);
     }

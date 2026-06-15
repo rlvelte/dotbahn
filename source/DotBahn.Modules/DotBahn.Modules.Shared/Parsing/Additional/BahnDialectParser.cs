@@ -18,13 +18,12 @@ public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
         }
 
         if (reader.TokenType == JsonTokenType.String) {
-            var value = reader.GetString()?.Trim().ToLowerInvariant();
-
+            var value = reader.GetString()?.Trim().ToUpperInvariant();
             return value switch {
-                "true" => true,
-                "false" => false,
-                "yes" => true,
-                "no" => false,
+                "TRUE" => true,
+                "FALSE" => false,
+                "YES" => true,
+                "NO" => false,
                 "1" => true,
                 _ => false
             };
@@ -34,5 +33,8 @@ public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
     }
 
     /// <inheritdoc />
-    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) => writer.WriteBooleanValue(value);
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) {
+        ArgumentNullException.ThrowIfNull(writer);
+        writer.WriteBooleanValue(value);
+    }
 }

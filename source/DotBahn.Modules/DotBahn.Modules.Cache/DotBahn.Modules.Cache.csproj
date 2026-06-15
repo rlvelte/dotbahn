@@ -1,19 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AssemblyName>DotBahn.Modules.Cache</AssemblyName>
-    <RootNamespace>DotBahn.Modules.Cache</RootNamespace>
-  </PropertyGroup>
-
+<?xml version='1.0' encoding='utf-8'?>
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\DotBahn.Modules.Shared\DotBahn.Modules.Shared.csproj" />
+    <ProjectReference Include="../DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </ItemGroup>
-
 </Project>

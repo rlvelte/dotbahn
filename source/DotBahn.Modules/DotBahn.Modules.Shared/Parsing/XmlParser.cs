@@ -1,4 +1,6 @@
+using System.Xml;
 using System.Xml.Serialization;
+
 using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Modules.Shared.Parsing;
@@ -9,14 +11,20 @@ namespace DotBahn.Modules.Shared.Parsing;
 /// <typeparam name="TContract">The raw type to deserialize into.</typeparam>
 public class XmlParser<TContract> : IParser<TContract> where TContract : new() {
     private readonly XmlSerializer _serializer = new(typeof(TContract));
+    private readonly XmlReaderSettings _settings = new() {
+        DtdProcessing = DtdProcessing.Prohibit,
+        XmlResolver = null
+    };
 
     /// <inheritdoc />
     public TContract Parse(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
             return new TContract();
         }
-        
-        using var reader = new StringReader(input);
-        return (TContract)_serializer.Deserialize(reader)!;
+
+        using var stringReader = new StringReader(input);
+        using var xmlReader = XmlReader.Create(stringReader, _settings);
+
+        return (TContract)_serializer.Deserialize(xmlReader)!;
     }
 }
