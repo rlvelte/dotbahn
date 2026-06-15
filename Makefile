@@ -1,10 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: help build test coverage pack format clean
+.PHONY: help build test coverage pack format clean docs docs-serve docs-clean
 
 CONFIGURATION 		?= Release
 COVERAGE_DIR  		?= TestResults/coverage-results
 COVERAGE_REPORT_DIR ?= TestResults/coverage-report
 NUPKG_DIR     		?= nupkgs
+DOCFX_DIR     		?= docs
 
 help: ## Show this help
 	@echo "DotBahn — Make targets"
@@ -24,7 +25,6 @@ test: build ## Run all tests with coverage
 		--results-directory ./$(COVERAGE_DIR)
 
 coverage: test ## Generate HTML coverage report
-	dotnet tool install -g dotnet-reportgenerator-globaltool 2>/dev/null || true
 	dotnet reportgenerator \
 		-reports:./$(COVERAGE_DIR)/**/coverage.cobertura.xml \
 		-targetdir:./$(COVERAGE_REPORT_DIR) \
@@ -44,3 +44,12 @@ format: ## Auto-fix all code formatting (style, analyzers, whitespace)
 clean: ## Remove all build artifacts
 	dotnet clean
 	rm -rf ./$(COVERAGE_DIR) ./$(COVERAGE_REPORT_DIR) ./$(NUPKG_DIR)
+
+docs: build ## Build documentation site
+	dotnet docfx $(DOCFX_DIR)/docfx.json
+
+docs-serve: build ## Build and serve documentation locally (http://localhost:8080)
+	dotnet docfx $(DOCFX_DIR)/docfx.json --serve
+
+docs-clean: ## Remove generated documentation artifacts
+	rm -rf $(DOCFX_DIR)/_site $(DOCFX_DIR)/api

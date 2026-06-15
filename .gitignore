@@ -63,8 +63,6 @@ dlldata.c
 
 # Environment (decrypted at runtime, encrypted .enc files are committed)
 *.env
-timetable-definition.json
-dotnet-tools.json
 
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
@@ -73,7 +71,8 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-docs/
+docs/_site/
+docs/api/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt

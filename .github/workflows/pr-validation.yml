@@ -7,7 +7,8 @@ on:
       - '**.md'
       - '.gitignore'
       - 'LICENSE'
-      - 'Icon.png'
+      - 'docs/images/logo-512x512.png'
+      - 'docs/**'
 
 concurrency:
   group: pr-${{ github.event.pull_request.number }}
