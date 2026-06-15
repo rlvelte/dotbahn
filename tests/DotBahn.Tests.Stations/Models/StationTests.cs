@@ -8,13 +8,13 @@ public class StationTests {
     private static Station Make(
         IEnumerable<Ril100Identifier>? ril100 = null,
         IEnumerable<EvaNumber>? evaNumbers = null) => new() {
-        Number = 1,
-        Name = "Test",
-        Category = StationCategory.Category1,
-        Services = new StationServices(),
-        Ril100Identifiers = ril100 ?? [],
-        EvaNumbers = evaNumbers ?? []
-    };
+            Number = 1,
+            Name = "Test",
+            Category = StationCategory.Category1,
+            Services = new StationServices(),
+            Ril100Identifiers = ril100 ?? [],
+            EvaNumbers = evaNumbers ?? []
+        };
 
     // --- PrimaryRil100 ---
 

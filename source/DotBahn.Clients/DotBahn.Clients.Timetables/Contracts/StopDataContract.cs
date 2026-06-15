@@ -11,31 +11,31 @@ public record StopDataContract {
     /// </summary>
     [XmlAttribute("id")]
     public string Id { get; init; } = string.Empty;
-    
+
     /// <summary>
     /// EVA number of the station
     /// </summary>
     [XmlAttribute("eva")]
     public string Eva { get; init; } = string.Empty;
-    
+
     /// <summary>
     /// Trip label information
     /// </summary>
     [XmlElement("tl")]
     public TripInfoContract? TripInfo { get; init; }
-    
+
     /// <summary>
     /// Arrival information
     /// </summary>
     [XmlElement("ar")]
     public EventContract? Arrival { get; init; }
-    
+
     /// <summary>
     /// Departure information
     /// </summary>
     [XmlElement("dp")]
     public EventContract? Departure { get; init; }
-    
+
     /// <summary>
     /// List of messages
     /// </summary>

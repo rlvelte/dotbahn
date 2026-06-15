@@ -1,5 +1,6 @@
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,7 +10,7 @@ namespace DotBahn.Modules.Cache;
 /// <summary>
 /// Extension methods for setting up cache services in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtensions {
+public static class ServiceCollectionExtension {
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
     extension(IServiceCollection services) {
         /// <summary>

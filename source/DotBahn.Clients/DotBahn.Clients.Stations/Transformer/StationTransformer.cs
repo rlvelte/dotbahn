@@ -11,8 +11,10 @@ namespace DotBahn.Clients.Stations.Transformer;
 /// </summary>
 public class StationTransformer : ITransformer<IEnumerable<Station>, StationsResponseContract> {
     /// <inheritdoc />
-    public IEnumerable<Station> Transform(in StationsResponseContract contract) =>
-        contract.Stations.Select(TransformStation);
+    public IEnumerable<Station> Transform(in StationsResponseContract contract) {
+        ArgumentNullException.ThrowIfNull(contract);
+        return contract.Stations.Select(TransformStation);
+    }
 
     /// <summary>
     /// Transforms the <see cref="StationContract"/> into its domain model.

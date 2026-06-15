@@ -24,7 +24,7 @@ public class TimetableStop {
     /// Arrival event, if the train arrives at this station.
     /// </summary>
     public TrainEvent? Arrival { get; init; }
-    
+
     /// <summary>
     /// Whether this is an arrival-only stop (train terminates here).
     /// </summary>
@@ -34,7 +34,7 @@ public class TimetableStop {
     /// Departure event, if the train departs from this station.
     /// </summary>
     public TrainEvent? Departure { get; init; }
-    
+
     /// <summary>
     /// Whether this is a departure-only stop (train originates here).
     /// </summary>
@@ -44,7 +44,7 @@ public class TimetableStop {
     /// Whether this is a through stop (train both arrives and departs).
     /// </summary>
     public bool IsThrough => Arrival != null && Departure != null;
-    
+
     /// <summary>
     /// Messages associated with this stop.
     /// </summary>

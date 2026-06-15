@@ -56,8 +56,8 @@ public class FacilitiesQueryFluentApiTests {
     public void FluentApi_MixedWithObjectInitializer_ShouldCombineBothApproaches() {
         // Arrange & Act
         var query = new FacilitiesQuery {
-                Type = FacilityType.Elevator
-            }.WithState(FacilityState.Active)
+            Type = FacilityType.Elevator
+        }.WithState(FacilityState.Active)
              .AtStation(8002549);
 
         // Assert

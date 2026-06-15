@@ -9,14 +9,14 @@ public class TimetableMessageTests {
         DateTime? validTo = null,
         string? internalText = null,
         string? externalText = null) => new() {
-        Id = "m1",
-        Type = MessageType.Him,
-        Timestamp = DateTime.UtcNow,
-        IsDeleted = isDeleted,
-        ValidTo = validTo,
-        InternalText = internalText,
-        ExternalText = externalText
-    };
+            Id = "m1",
+            Type = MessageType.Him,
+            Timestamp = DateTime.UtcNow,
+            IsDeleted = isDeleted,
+            ValidTo = validTo,
+            InternalText = internalText,
+            ExternalText = externalText
+        };
 
     [Fact]
     public void Text_OnlyExternalText_ReturnsExternal() {

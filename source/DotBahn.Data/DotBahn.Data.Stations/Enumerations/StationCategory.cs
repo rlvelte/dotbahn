@@ -6,6 +6,11 @@ namespace DotBahn.Data.Stations.Enumerations;
 /// </summary>
 public enum StationCategory {
     /// <summary>
+    /// No category information available.
+    /// </summary>
+    None = 0,
+
+    /// <summary>
     /// Major transportation hub with highest passenger traffic.
     /// </summary>
     Category1 = 1,
@@ -39,7 +44,7 @@ public enum StationCategory {
     /// Minor stop with minimal infrastructure.
     /// </summary>
     Category7 = 7,
-    
+
     /// <summary>
     /// There is no further information available.
     /// </summary>

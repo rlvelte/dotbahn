@@ -5,6 +5,11 @@ namespace DotBahn.Data.Timetables.Enumerations;
 /// </summary>
 public enum MessagePriority {
     /// <summary>
+    /// No priority information available.
+    /// </summary>
+    None = 0,
+
+    /// <summary>
     /// High priority message.
     /// </summary>
     High = 1,
@@ -23,7 +28,7 @@ public enum MessagePriority {
     /// Message has been resolved/done.
     /// </summary>
     Done = 4,
-    
+
     /// <summary>
     /// There is no further information available.
     /// </summary>

@@ -54,8 +54,6 @@ Generated\ Files/
 # NUnit
 *.VisualState.xml
 TestResult.xml
-TestResult/
-TestResults/
 nunit-*.xml
 
 # Build Results of an ATL Project
@@ -73,7 +71,8 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-docs/
+docs/_site/
+docs/api/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt

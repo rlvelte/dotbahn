@@ -1,118 +1,109 @@
+using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Timetables;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Modules.Cache;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using DotBahn.Modules.Authorization;
+using DotBahn.Samples.Shared;
+
 using Spectre.Console;
 
-string clientId;
-string clientSecret;
+using static DotBahn.Samples.Shared.ConsoleExtensions;
 
-var envs = Environment.GetEnvironmentVariables();
-if (envs.Contains("DOTBAHN_CLIENT") && envs.Contains("DOTBAHN_SECRET")) {
-    clientId = envs["DOTBAHN_CLIENT"]?.ToString() ?? throw new InvalidOperationException();
-    clientSecret = envs["DOTBAHN_SECRET"]?.ToString() ?? throw new InvalidOperationException();
+string? clientId;
+string? clientSecret;
+
+if (Credentials.TryFromEnvironment(out var envClient, out var envSecret)) {
+    clientId = envClient;
+    clientSecret = envSecret;
 } else {
-    if (args.Length < 3) {
-        AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.IceMonitor <EVA> <ClientId> <ClientSecret>");
-        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Example: DotBahn.Samples.IceMonitor 8000105 your-client-id your-api-key[/]");
-        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]or set environment variables 'DOTBAHN_CLIENT' and 'DOTBAHN_SECRET'[/]");
-        return 1;
-    }
-
-    clientId = args[1];
-    clientSecret = args[2];
+    clientId = args.Length > 1 ? args[1] : null;
+    clientSecret = args.Length > 2 ? args[2] : null;
 }
 
-
-if (!int.TryParse(args[0], out var eva)) {
-    AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Error:[/] EVA must be a valid number.");
+if (clientId == null || clientSecret == null) {
+    AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] provide DOTBAHN_CLIENT / DOTBAHN_SECRET via env or CLI args");
     return 1;
 }
 
-// Setup DI
-var services = new ServiceCollection();
-services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
-services.AddDotBahnCache(opt => opt.DefaultExpiration = TimeSpan.FromSeconds(30));
-services.AddDotBahnTimetables(opt => {
-    opt.ClientId = clientId;
-    opt.ApiKey = clientSecret;
-    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
-});
+if (!int.TryParse(args.Length > 0 ? args[0] : "8098160", out var eva)) {
+    eva = 8098160;
+}
 
-var serviceProvider = services.BuildServiceProvider();
-var client = serviceProvider.GetRequiredService<TimetablesClient>();
+using var client = new TimetablesClient(
+    new ClientOptions {
+        BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1"),
+    },
+    new AuthorizationOptions {
+        ClientId = clientId,
+        ApiKey = clientSecret,
+    });
 
-var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) => {
-    e.Cancel = true;
-    cts.Cancel();
-};
+using var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
 
-Timetable? cachedTimetable = null;
-var lastFetchDate = DateOnly.MinValue;
+Timetable? cached = null;
+var lastFetch = DateOnly.MinValue;
 
 while (!cts.Token.IsCancellationRequested) {
     try {
-        await AnsiConsole.Status()
-                         .Spinner(Spinner.Known.Dots)
-                         .StartAsync("Loading timetable data...", async ctx => {
-                             var today = DateOnly.FromDateTime(DateTime.Now);
+        await StatusAsync("Loading\u2026", async ctx => {
+            var today = DateOnly.FromDateTime(DateTime.Now);
 
-                             if (cachedTimetable == null || lastFetchDate != today) {
-                                 ctx.Status("Fetching scheduled timetable...");
-                                 cachedTimetable = await client.GetTimetableAsync(eva, DateTime.Now);
-                                 lastFetchDate = today;
-                             }
+            if (cached == null || lastFetch != today) {
+                var start = DateTime.Now;
+                var stops = new Dictionary<string, TimetableStop>();
+                Timetable? first = null;
 
-                             ctx.Status("Fetching changes...");
-                             cachedTimetable = await client.GetFullChangesAsync(eva, cachedTimetable);
+                for (var h = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
+                     h < start.AddHours(24);
+                     h = h.AddHours(1)) {
+                    ctx.Status($"{h:HH:mm}\u2026");
+                    var data = await client.GetTimetableAsync(eva, h);
+                    first ??= data;
+                    foreach (var s in data.Stops) stops[s.Id] = s;
+                }
 
-                             var now = DateTime.Now;
-                             var iceStops = cachedTimetable.Stops
-                                                           .Where(s => s.Train.Category?.Equals("ICE", StringComparison.OrdinalIgnoreCase) == true)
-                                                           .Where(s => s.Departure != null)
-                                                           .Where(s => s.Departure!.Status.Actual != EventStatus.Cancelled)
-                                                           .Where(s => s.Departure!.Time.Actual >= now)
-                                                           .OrderBy(s => s.Departure!.Time.Actual)
-                                                           .Take(20)
-                                                           .ToList();
+                cached = new Timetable {
+                    Station = first?.Station ?? $"EVA {eva}",
+                    Stops = stops.Values,
+                    Messages = [],
+                };
+                lastFetch = today;
+            }
 
-                             ctx.Status("Rendering...");
+            ctx.Status("Changes\u2026");
+            cached = await client.GetFullChangesAsync(eva, cached);
 
-                             AnsiConsole.Clear();
-                             RenderHeader(cachedTimetable.Station, eva);
-                             RenderDepartures(iceStops);
-                         });
+            var departures = cached.Stops
+                .Where(s => "ICE".Equals(s.Train.Category, StringComparison.OrdinalIgnoreCase))
+                .Where(s => s.Departure is { Status.Actual: not EventStatus.Cancelled })
+                .Where(s => s.Departure!.Time.Actual >= DateTime.Now)
+                .OrderBy(s => s.Departure!.Time.Actual)
+                .Take(20)
+                .ToList();
 
-        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Next refresh in 2 minutes. Press Ctrl+C to exit.[/]");
+            ctx.Status("Render\u2026");
+            AnsiConsole.Clear();
+            RenderHeader(cached.Station, eva);
+            RenderDepartures(departures);
+        });
+
+        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Next refresh in 2 min. Ctrl+C to exit.[/]");
         await Task.Delay(TimeSpan.FromMinutes(2), cts.Token);
-    } catch (HttpRequestException ex) {
-        AnsiConsole.MarkupLine($"[{Gruvbox.Red}]API Error:[/] {ex.Message}");
-        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Retrying in 30 seconds...[/]");
-        try {
-            await Task.Delay(TimeSpan.FromSeconds(30), cts.Token);
-        } catch (OperationCanceledException) {
-            break;
-        }
     } catch (OperationCanceledException) {
         break;
+    } catch (HttpRequestException ex) {
+        AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Error:[/] {ex.Message}");
+        await Task.Delay(TimeSpan.FromSeconds(30), cts.Token);
     }
 }
 
-AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Goodbye![/]");
 return 0;
 
 static void RenderHeader(string station, int eva) {
-    var rule = new Rule($"[bold {Gruvbox.Blue}]ICE Departures - {Markup.Escape(station)}[/]") {
-        Justification = Justify.Center,
-        Style = Style.Parse(Gruvbox.Blue)
-    };
-    AnsiConsole.Write(rule);
-    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]EVA: {eva} | Updated: {DateTime.Now:HH:mm:ss}[/]");
-    AnsiConsole.WriteLine();
+    AnsiConsole.Write(TitleRule($"ICE Departures \u2013 {Markup.Escape(station)}"));
+    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]EVA {eva} | {DateTime.Now:HH:mm}[/]\n");
 }
 
 static void RenderDepartures(List<TimetableStop> stops) {
@@ -123,104 +114,62 @@ static void RenderDepartures(List<TimetableStop> stops) {
 
     var table = new Table()
         .Border(TableBorder.Rounded)
-        .BorderColor(new Color(0x92, 0x83, 0x74))
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Train[/]").LeftAligned())
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Departure[/]").LeftAligned())
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Platform[/]").Centered())
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Destination[/]").LeftAligned())
-        .AddColumn(new TableColumn($"[bold {Gruvbox.Fg}]Via[/]").LeftAligned());
+        .BorderColor(BorderColor)
+        .AddColumn("[bold]Train[/]")
+        .AddColumn("[bold]Departure[/]")
+        .AddColumn("[bold]Platf.[/]")
+        .AddColumn("[bold]Destination[/]")
+        .AddColumn("[bold]Via[/]");
 
     foreach (var stop in stops) {
-        var departure = stop.Departure!;
-
-        var trainDisplay = FormatTrain(stop.Train);
-        var timeDisplay = FormatTime(departure.Time);
-        var platformDisplay = FormatPlatform(departure.Platform);
-        var destinationDisplay = FormatDestination(departure.Path);
-        var viaDisplay = FormatVia(departure.Path);
-
-        table.AddRow(trainDisplay, timeDisplay, platformDisplay, destinationDisplay, viaDisplay);
+        var dep = stop.Departure!;
+        table.AddRow(
+            FormatTrain(stop.Train),
+            FormatTime(dep.Time),
+            FormatPlatform(dep.Platform),
+            FormatDestination(dep.Path),
+            FormatVia(dep.Path));
     }
 
     AnsiConsole.Write(table);
-    AnsiConsole.WriteLine();
-    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Showing {stops.Count} ICE departure(s)[/]");
+    AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Showing {stops.Count} ICE departure(s)[/]\n");
 }
 
-static string FormatTrain(TrainLabel train) {
-    return $"[bold {Gruvbox.Fg}]{Markup.Escape(train.DisplayName)}[/]";
+static string FormatTrain(TrainLabel t) =>
+    $"[bold {Gruvbox.Fg}]{Markup.Escape(t.DisplayName)}[/]";
+
+static string FormatTime(ChangedValue<DateTime> t) {
+    var p = t.Original.ToString("HH:mm");
+    if (!t.HasUpdate) return $"[{Gruvbox.Green}]{p}[/]";
+    var a = t.Actual.ToString("HH:mm");
+    var d = (int)(t.Actual - t.Original).TotalMinutes;
+    return d <= 0
+        ? $"[{Gruvbox.Green}]{a}[/]"
+        : $"[strikethrough {Gruvbox.Gray}]{p}[/] [bold {Gruvbox.Red}]{a} (+{d})[/]";
 }
 
-static string FormatTime(ChangedValue<DateTime> time) {
-    var planned = time.Original.ToString("HH:mm");
-
-    if (!time.HasUpdate) {
-        return $"[{Gruvbox.Green}]{planned}[/]";
-    }
-
-    var actual = time.Actual.ToString("HH:mm");
-    var delay = (int)(time.Actual - time.Original).TotalMinutes;
-
-    if (delay <= 0) {
-        return $"[{Gruvbox.Green}]{actual}[/]";
-    }
-
-    var delayText = $"+{delay}";
-    return $"[strikethrough {Gruvbox.Gray}]{planned}[/] [bold {Gruvbox.Red}]{actual}[/] [{Gruvbox.Red}]({delayText})[/]";
+static string FormatPlatform(ChangedRef<string> p) {
+    if (!p.HasUpdate || p.Updated == p.Original)
+        return $"[{Gruvbox.Fg}]{Markup.Escape(p.Original)}[/]";
+    return $"[strikethrough {Gruvbox.Gray}]{Markup.Escape(p.Original)}[/] [bold {Gruvbox.Red}]{Markup.Escape(p.Actual)}[/]";
 }
 
-static string FormatPlatform(ChangedRef<string> platform) {
-    var planned = platform.Original;
-
-    if (!platform.HasUpdate || platform.Updated == platform.Original) {
-        return $"[{Gruvbox.Fg}]{Markup.Escape(planned)}[/]";
-    }
-
-    var actual = platform.Actual;
+static string FormatDestination(ChangedRef<IEnumerable<string>> p) {
+    var planned = p.Original.LastOrDefault() ?? "-";
+    var actual = p.Actual.LastOrDefault() ?? "-";
+    if (!p.HasUpdate || planned == actual)
+        return $"[bold {Gruvbox.Fg}]{Markup.Escape(planned)}[/]";
     return $"[strikethrough {Gruvbox.Gray}]{Markup.Escape(planned)}[/] [bold {Gruvbox.Red}]{Markup.Escape(actual)}[/]";
 }
 
-static string FormatDestination(ChangedRef<IEnumerable<string>> path) {
-    var plannedPath = path.Original.ToList();
-    var actualPath = path.Actual.ToList();
-
-    var plannedDest = plannedPath.Count > 0 ? plannedPath[^1] : "-";
-    var actualDest = actualPath.Count > 0 ? actualPath[^1] : "-";
-
-    if (!path.HasUpdate || plannedDest == actualDest) {
-        return $"[bold {Gruvbox.Fg}]{Markup.Escape(plannedDest)}[/]";
-    }
-
-    return $"[strikethrough {Gruvbox.Gray}]{Markup.Escape(plannedDest)}[/] [bold {Gruvbox.Red}]{Markup.Escape(actualDest)}[/]";
+static string FormatVia(ChangedRef<IEnumerable<string>> p) {
+    var stops = p.Actual?.ToList() ?? [];
+    if (stops.Count <= 1) return $"[{Gruvbox.Gray}]-[/]";
+    var via = string.Join(" \u2013 ", stops.Take(Math.Min(3, stops.Count - 1)).Select(Markup.Escape));
+    if (stops.Count > 4) via += " \u2026";
+    return p.HasUpdate
+        ? $"[{Gruvbox.Orange}]{via}[/]"
+        : $"[{Gruvbox.Gray}]{via}[/]";
 }
 
-static string FormatVia(ChangedRef<IEnumerable<string>> path) {
-    var actualPath = path.Actual?.ToList() ?? [];
-    if (actualPath.Count <= 1) {
-        return $"[{Gruvbox.Gray}]-[/]";
-    }
-    
-    var viaStops = actualPath.Take(Math.Min(3, actualPath.Count - 1)).ToList();
-    var viaText = string.Join(" - ", viaStops.Select(Markup.Escape));
 
-    if (actualPath.Count > 4) {
-        viaText += " ...";
-    }
-    
-    if (path.HasUpdate) {
-        return $"[{Gruvbox.Orange}]{viaText}[/]";
-    }
-
-    return $"[{Gruvbox.Gray}]{viaText}[/]";
-}
-
-internal static class Gruvbox {
-    public const string Fg = "#ebdbb2";
-    public const string Red = "#fb4934";
-    public const string Green = "#b8bb26";
-    public const string Yellow = "#fabd2f";
-    public const string Blue = "#83a598";
-    public const string Aqua = "#8ec07c";
-    public const string Orange = "#fe8019";
-    public const string Gray = "#928374";
-}

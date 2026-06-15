@@ -30,13 +30,13 @@ public class TimetablesClient : ClientBase {
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="merger">The merger for the target type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null) 
+    public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
         _merger = merger;
     }
-    
+
     /// <summary>
     /// Client for accessing 'Deutsche Bahn Timetables'-API.
     /// </summary>

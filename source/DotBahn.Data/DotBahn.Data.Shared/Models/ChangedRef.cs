@@ -9,7 +9,7 @@ public class ChangedRef<T> where T : class {
     /// The original value.
     /// </summary>
     public required T Original { get; init; }
-    
+
     /// <summary>
     /// The updated value, if available.
     /// </summary>
@@ -19,7 +19,7 @@ public class ChangedRef<T> where T : class {
     /// Indicates if there is an updated value.
     /// </summary>
     public bool HasUpdate => Updated != null;
-    
+
     /// <summary>
     /// Gets the currently active value.
     /// </summary>

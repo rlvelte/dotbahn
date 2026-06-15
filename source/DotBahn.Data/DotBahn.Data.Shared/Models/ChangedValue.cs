@@ -9,7 +9,7 @@ public class ChangedValue<T> where T : struct {
     /// The original value.
     /// </summary>
     public required T Original { get; init; }
-    
+
     /// <summary>
     /// The updated value, if available.
     /// </summary>
@@ -19,7 +19,7 @@ public class ChangedValue<T> where T : struct {
     /// Indicates if there is an updated value.
     /// </summary>
     public bool HasUpdate => Updated.HasValue;
-    
+
     /// <summary>
     /// Gets the currently active value.
     /// </summary>

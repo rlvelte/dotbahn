@@ -1,6 +1,7 @@
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBahn.Clients.Shared.Extensions;
@@ -12,7 +13,7 @@ public static class AuthorizationHelper {
     private static string? _registeredClientId;
     private static string? _registeredApiKey;
     private static readonly Lock Lock = new();
-    
+
     /// <param name="services">The service collection.</param>
     extension(IServiceCollection services) {
         /// <summary>
@@ -32,13 +33,13 @@ public static class AuthorizationHelper {
                     if (_registeredClientId != clientId || _registeredApiKey != apiKey) {
                         throw new InvalidOperationException("DotBahn: Conflicting authorization credentials detected. Remove credentials from subsequent client registrations.");
                     }
-                    
+
                     return;
                 }
-                    
+
                 _registeredClientId = clientId;
                 _registeredApiKey = apiKey;
-                
+
                 services.AddSingleton<IAuthorization>(_ => new ApiKeyAuthorization(new AuthorizationOptions {
                     ClientId = clientId!,
                     ApiKey = apiKey!

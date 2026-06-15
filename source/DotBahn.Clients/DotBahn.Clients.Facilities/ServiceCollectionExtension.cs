@@ -1,4 +1,5 @@
 using System.Net;
+
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Clients.Facilities.Transformer;
 using DotBahn.Clients.Shared.Extensions;
@@ -7,15 +8,16 @@ using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace DotBahn.Clients.Facilities;
 
 /// <summary>
-/// Extension methods for setting up fasta in an <see cref="IServiceCollection"/>.
+/// Extension methods for setting up FaSta in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtensions {
+public static class ServiceCollectionExtension {
     private const string OptionsName = "DotBahn.Facilities";
 
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
@@ -28,11 +30,11 @@ public static class ServiceCollectionExtensions {
         public void AddDotBahnFacilities(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-            
+
             var options = new ClientOptions {
                 BaseEndpoint = null!
             };
-            
+
             configuration(options);
             services.EnsureAuthorization(options.ClientId, options.ApiKey);
 
