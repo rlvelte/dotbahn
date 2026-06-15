@@ -6,10 +6,8 @@ namespace DotBahn.Tests.Stations.Query;
 public class StationsQueryTests {
     [Fact]
     public void Constructor_ShouldInitializeWithDefaultValues() {
-        // Arrange & Act
         var query = new StationsQuery();
 
-        // Assert
         Assert.Null(query.Names);
         Assert.Null(query.Categories);
         Assert.Null(query.State);
@@ -22,7 +20,6 @@ public class StationsQueryTests {
 
     [Fact]
     public void ObjectInitializer_ShouldSetAllProperties() {
-        // Arrange & Act
         var query = new StationsQuery {
             Names = ["Hamburg"],
             Categories = "1-3",
@@ -34,7 +31,6 @@ public class StationsQueryTests {
             Limit = 50
         };
 
-        // Assert
         Assert.Equal(["Hamburg*"], query.Names);
         Assert.Equal("1-3", query.Categories);
         Assert.Equal(FederalState.Hamburg, query.State);
