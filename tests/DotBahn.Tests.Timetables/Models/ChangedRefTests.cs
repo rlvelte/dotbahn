@@ -3,32 +3,14 @@ using DotBahn.Data.Shared.Models;
 namespace DotBahn.Tests.Timetables.Models;
 
 public class ChangedRefTests {
-    [Fact]
-    public void Actual_WithNoUpdate_ReturnsOriginal() {
-        // Arrange
-        var changed = new ChangedRef<string> { Original = "original" };
+    [Theory]
+    [InlineData("original", null, "original", false)]  // no update → original
+    [InlineData("original", "updated", "updated", true)] // has update → updated
+    [InlineData("x", null, "x", false)]                 // null updated → falls back to original
+    public void Actual_ReturnsExpectedValue(string original, string? updated, string expected, bool hasUpdate) {
+        var changed = new ChangedRef<string> { Original = original, Updated = updated };
 
-        // Assert
-        Assert.Equal("original", changed.Actual);
-        Assert.False(changed.HasUpdate);
-    }
-
-    [Fact]
-    public void Actual_WithUpdate_ReturnsUpdated() {
-        // Arrange
-        var changed = new ChangedRef<string> { Original = "original", Updated = "updated" };
-
-        // Assert
-        Assert.Equal("updated", changed.Actual);
-        Assert.True(changed.HasUpdate);
-    }
-
-    [Fact]
-    public void HasUpdate_WhenUpdatedIsNull_ReturnsFalse() {
-        // Arrange
-        var changed = new ChangedRef<string> { Original = "x", Updated = null };
-
-        // Assert
-        Assert.False(changed.HasUpdate);
+        Assert.Equal(expected, changed.Actual);
+        Assert.Equal(hasUpdate, changed.HasUpdate);
     }
 }

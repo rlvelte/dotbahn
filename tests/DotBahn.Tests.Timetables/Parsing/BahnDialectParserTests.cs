@@ -10,22 +10,13 @@ public class BahnDialectParserTests {
         Converters = { new BahnDialectJsonConverter() }
     };
 
-    [Fact]
-    public void Read_JsonTrue_ReturnsTrue() {
-        // Act
-        var result = JsonSerializer.Deserialize<bool>("true", _options);
+    [Theory]
+    [InlineData("true", true)]
+    [InlineData("false", false)]
+    public void Read_BooleanLiteral_ReturnsCorrectValue(string json, bool expected) {
+        var result = JsonSerializer.Deserialize<bool>(json, _options);
 
-        // Assert
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void Read_JsonFalse_ReturnsFalse() {
-        // Act
-        var result = JsonSerializer.Deserialize<bool>("false", _options);
-
-        // Assert
-        Assert.False(result);
+        Assert.Equal(expected, result);
     }
 
     [Theory]
@@ -35,10 +26,8 @@ public class BahnDialectParserTests {
     [InlineData("\"YES\"")]
     [InlineData("\"1\"")]
     public void Read_TruthyString_ReturnsTrue(string json) {
-        // Act
         var result = JsonSerializer.Deserialize<bool>(json, _options);
 
-        // Assert
         Assert.True(result);
     }
 
@@ -51,10 +40,8 @@ public class BahnDialectParserTests {
     [InlineData("\"\"")]
     [InlineData("\"anything\"")]
     public void Read_FalsyString_ReturnsFalse(string json) {
-        // Act
         var result = JsonSerializer.Deserialize<bool>(json, _options);
 
-        // Assert
         Assert.False(result);
     }
 
@@ -62,21 +49,22 @@ public class BahnDialectParserTests {
     public void Read_UnexpectedTokenType_ThrowsJsonException() =>
         Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<bool>("42", _options));
 
-    [Fact]
-    public void Write_TrueValue_WritesJsonTrue() {
-        // Act
-        var result = JsonSerializer.Serialize(true, _options);
+    [Theory]
+    [InlineData(true, "true")]
+    [InlineData(false, "false")]
+    public void Write_BooleanValue_WritesCorrectJson(bool value, string expected) {
+        var result = JsonSerializer.Serialize(value, _options);
 
-        // Assert
-        Assert.Equal("true", result);
+        Assert.Equal(expected, result);
     }
 
-    [Fact]
-    public void Write_FalseValue_WritesJsonFalse() {
-        // Act
-        var result = JsonSerializer.Serialize(false, _options);
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Write_ThenRead_RoundTripsBooleanValue(bool value) {
+        var json = JsonSerializer.Serialize(value, _options);
+        var result = JsonSerializer.Deserialize<bool>(json, _options);
 
-        // Assert
-        Assert.Equal("false", result);
+        Assert.Equal(value, result);
     }
 }
