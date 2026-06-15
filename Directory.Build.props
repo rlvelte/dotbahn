@@ -4,9 +4,7 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -14,14 +12,13 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysisLevel>latest-All</AnalysisLevel>
     <AnalysisMode>All</AnalysisMode>
-
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup>
-    <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
@@ -32,11 +29,11 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(IsPackable) == 'true' And $(IsTestProject) != 'true'">
+  <ItemGroup>
     <PackageReference Include="MinVer" PrivateAssets="all" />
   </ItemGroup>
 
-  <PropertyGroup Condition="$(IsPackable) == 'true' And $(IsTestProject) != 'true'">
+  <PropertyGroup>
     <Authors>Robin L. Velte</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -44,11 +41,16 @@
     <RepositoryUrl>https://github.com/rlvelte/dotbahn</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>db;bahn;client;deutschebahn;api</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
     <PackageIcon>Icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(IsPackable) == 'true' And $(IsTestProject) != 'true'">
+  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)docs/images/logo-512x512.png" Pack="True" PackagePath="Icon.png" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="True" PackagePath="" />
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="True" PackagePath="" />
   </ItemGroup>
 
 </Project>

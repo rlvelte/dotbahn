@@ -3,8 +3,6 @@
   <PropertyGroup>
     <PackageId>DotBahn.Stations</PackageId>
     <Description>.NET client for DB StaDa API.</Description>
-    <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
   <ItemGroup>

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <PackageId>DotBahn.Timetables</PackageId>
     <Description>.NET client for DB Timetables API.</Description>
-    <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
   <ItemGroup>

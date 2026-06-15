@@ -3,8 +3,6 @@
   <PropertyGroup>
     <PackageId>DotBahn.Facilities</PackageId>
     <Description>.NET client for DB FaSta API.</Description>
-    <PackageOutputPath>$(ProjectDir)../../../nupkgs</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
   <ItemGroup>
