@@ -1,75 +1,108 @@
-using DotBahn.Data.Shared.Enumerations;
+using System.Text.Json.Serialization;
 
 namespace DotBahn.Data.Stations.Enumerations;
 
 /// <summary>
 /// Represents the federal states of Germany.
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<FederalState>))]
 public enum FederalState {
-    /// <summary>State of Baden-Württemberg.</summary>
-    [AssociatedValue("Baden-Württemberg")]
+    /// <summary>
+    /// State of Baden-Württemberg.
+    /// </summary>
+    [JsonStringEnumMemberName("Baden-Württemberg")]
     BadenWuerttemberg,
 
-    /// <summary>State of Bavaria.</summary>
-    [AssociatedValue("Bayern")]
+    /// <summary>
+    /// State of Bavaria.
+    /// </summary>
+    [JsonStringEnumMemberName("Bayern")]
     Bavaria,
 
-    /// <summary>State of Berlin.</summary>
-    [AssociatedValue("Berlin")]
+    /// <summary>
+    /// State of Berlin.
+    /// </summary>
+    [JsonStringEnumMemberName("Berlin")]
     Berlin,
 
-    /// <summary>State of Brandenburg.</summary>
-    [AssociatedValue("Brandenburg")]
+    /// <summary>
+    /// State of Brandenburg.
+    /// </summary>
+    [JsonStringEnumMemberName("Brandenburg")]
     Brandenburg,
 
-    /// <summary>State of Bremen.</summary>
-    [AssociatedValue("Bremen")]
+    /// <summary>
+    /// State of Bremen.
+    /// </summary>
+    [JsonStringEnumMemberName("Bremen")]
     Bremen,
 
-    /// <summary>State of Hamburg.</summary>
-    [AssociatedValue("Hamburg")]
+    /// <summary>
+    /// State of Hamburg.
+    /// </summary>
+    [JsonStringEnumMemberName("Hamburg")]
     Hamburg,
 
-    /// <summary>State of Hesse.</summary>
-    [AssociatedValue("Hessen")]
+    /// <summary>
+    /// State of Hesse.
+    /// </summary>
+    [JsonStringEnumMemberName("Hessen")]
     Hesse,
 
-    /// <summary>State of Mecklenburg-Vorpommern.</summary>
-    [AssociatedValue("Mecklenburg-Vorpommern")]
+    /// <summary>
+    /// State of Mecklenburg-Vorpommern.
+    /// </summary>
+    [JsonStringEnumMemberName("Mecklenburg-Vorpommern")]
     MecklenburgVorpommern,
 
-    /// <summary>State of Lower Saxony.</summary>
-    [AssociatedValue("Niedersachsen")]
+    /// <summary>
+    /// State of Lower Saxony.
+    /// </summary>
+    [JsonStringEnumMemberName("Niedersachsen")]
     LowerSaxony,
 
-    /// <summary>State of North Rhine-Westphalia.</summary>
-    [AssociatedValue("Nordrhein-Westfalen")]
+    /// <summary>
+    /// State of North Rhine-Westphalia.
+    /// </summary>
+    [JsonStringEnumMemberName("Nordrhein-Westfalen")]
     NorthRhineWestphalia,
 
-    /// <summary>State of Rhineland-Palatinate.</summary>
-    [AssociatedValue("Rheinland-Pfalz")]
+    /// <summary>
+    /// State of Rhineland-Palatinate.
+    /// </summary>
+    [JsonStringEnumMemberName("Rheinland-Pfalz")]
     RhinelandPalatinate,
 
-    /// <summary>State of Saarland.</summary>
-    [AssociatedValue("Saarland")]
+    /// <summary>
+    /// State of Saarland.
+    /// </summary>
+    [JsonStringEnumMemberName("Saarland")]
     Saarland,
 
-    /// <summary>State of Saxony.</summary>
-    [AssociatedValue("Sachsen")]
+    /// <summary>
+    /// State of Saxony.
+    /// </summary>
+    [JsonStringEnumMemberName("Sachsen")]
     Saxony,
 
-    /// <summary>State of Saxony-Anhalt.</summary>
-    [AssociatedValue("Sachsen-Anhalt")]
+    /// <summary>
+    /// State of Saxony-Anhalt.
+    /// </summary>
+    [JsonStringEnumMemberName("Sachsen-Anhalt")]
     SaxonyAnhalt,
 
-    /// <summary>State of Schleswig-Holstein.</summary>
-    [AssociatedValue("Schleswig-Holstein")]
+    /// <summary>
+    /// State of Schleswig-Holstein.
+    /// </summary>
+    [JsonStringEnumMemberName("Schleswig-Holstein")]
     SchleswigHolstein,
 
-    /// <summary>State of Thuringia.</summary>
-    [AssociatedValue("Thüringen")]
+    /// <summary>
+    /// State of Thuringia.
+    /// </summary>
+    [JsonStringEnumMemberName("Thüringen")]
     Thuringia,
-    
+
     /// <summary>
     /// There is no further information available.
     /// </summary>

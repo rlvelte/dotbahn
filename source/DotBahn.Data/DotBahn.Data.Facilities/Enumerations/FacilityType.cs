@@ -1,23 +1,24 @@
-using DotBahn.Data.Shared.Enumerations;
+using System.Text.Json.Serialization;
 
 namespace DotBahn.Data.Facilities.Enumerations;
 
 /// <summary>
 /// Represents the type of facility in a station.
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<FacilityType>))]
 public enum FacilityType {
     /// <summary>
     /// Elevator facility.
     /// </summary>
-    [AssociatedValue("ELEVATOR")]
+    [JsonStringEnumMemberName("ELEVATOR")]
     Elevator,
-    
+
     /// <summary>
     /// Escalator facility.
     /// </summary>
-    [AssociatedValue("ESCALATOR")]
+    [JsonStringEnumMemberName("ESCALATOR")]
     Escalator,
-    
+
     /// <summary>
     /// There is no further information available.
     /// </summary>

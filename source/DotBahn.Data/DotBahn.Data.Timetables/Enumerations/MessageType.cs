@@ -1,59 +1,60 @@
-using DotBahn.Data.Shared.Enumerations;
+using System.Text.Json.Serialization;
 
 namespace DotBahn.Data.Timetables.Enumerations;
 
 /// <summary>
 /// Type of timetable message.
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<MessageType>))]
 public enum MessageType {
     /// <summary>
-    /// A HIM message (generated through the Hafas Information Manager).
+    /// A HIM message.
     /// </summary>
-    [AssociatedValue("h")]
+    [JsonStringEnumMemberName("h")]
     Him,
 
     /// <summary>
     /// A message about a quality change.
     /// </summary>
-    [AssociatedValue("q")]
+    [JsonStringEnumMemberName("q")]
     QualityChange,
 
     /// <summary>
     /// A free text message.
     /// </summary>
-    [AssociatedValue("f")]
+    [JsonStringEnumMemberName("f")]
     Free,
 
     /// <summary>
     /// A message about the cause of a delay.
     /// </summary>
-    [AssociatedValue("d")]
+    [JsonStringEnumMemberName("d")]
     CauseOfDelay,
 
     /// <summary>
     /// An IBIS message (generated from IRIS-AP).
     /// </summary>
-    [AssociatedValue("i")]
+    [JsonStringEnumMemberName("i")]
     Ibis,
 
     /// <summary>
     /// An IBIS message (generated from IRIS-AP) not yet assigned to a train.
     /// </summary>
-    [AssociatedValue("u")]
+    [JsonStringEnumMemberName("u")]
     UnassignedIbis,
 
     /// <summary>
     /// A major disruption.
     /// </summary>
-    [AssociatedValue("r")]
+    [JsonStringEnumMemberName("r")]
     Disruption,
 
     /// <summary>
     /// A connection message.
     /// </summary>
-    [AssociatedValue("c")]
+    [JsonStringEnumMemberName("c")]
     Connection,
-    
+
     /// <summary>
     /// There is no further information available.
     /// </summary>

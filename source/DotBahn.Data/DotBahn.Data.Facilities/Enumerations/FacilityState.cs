@@ -1,28 +1,28 @@
 
-
-using DotBahn.Data.Shared.Enumerations;
+using System.Text.Json.Serialization;
 
 namespace DotBahn.Data.Facilities.Enumerations;
 
 /// <summary>
 /// Represents the operational state of a facility.
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<FacilityState>))]
 public enum FacilityState {
     /// <summary>
     /// Facility is active and operational.
     /// </summary>
-    [AssociatedValue("ACTIVE")]
+    [JsonStringEnumMemberName("ACTIVE")]
     Active,
-    
+
     /// <summary>
     /// Facility is inactive or out of service.
     /// </summary>
-    [AssociatedValue("INACTIVE")]
+    [JsonStringEnumMemberName("INACTIVE")]
     Inactive,
-    
+
     /// <summary>
     /// Facility state is unknown or not specified.
     /// </summary>
-    [AssociatedValue("UNKNOWN")]
+    [JsonStringEnumMemberName("UNKNOWN")]
     Unknown
 }

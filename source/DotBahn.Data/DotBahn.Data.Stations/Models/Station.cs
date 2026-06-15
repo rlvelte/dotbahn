@@ -50,7 +50,7 @@ public class Station {
     /// <summary>
     /// Primary RIL 100 identifier for the station.
     /// </summary>
-    public Ril100Identifier? PrimaryRil100 => 
+    public Ril100Identifier? PrimaryRil100 =>
         Ril100Identifiers.FirstOrDefault(r => r.IsMain) ?? Ril100Identifiers.FirstOrDefault();
 
     /// <summary>
@@ -62,6 +62,6 @@ public class Station {
     /// <summary>
     /// Primary geographic coordinates of the station.
     /// </summary>
-    public Coordinates? Coordinates => 
+    public Coordinates? Coordinates =>
         PrimaryEva?.Coordinates;
 }
