@@ -34,7 +34,7 @@ coverage: test ## Generate HTML coverage report
 	@echo "Coverage report: file://$(PWD)/$(COVERAGE_REPORT_DIR)/index.html"
 
 pack: build ## Build NuGet packages
-	dotnet pack --no-build --configuration $(CONFIGURATION) \
+	dotnet pack --no-restore --configuration $(CONFIGURATION) \
 		--output ./$(NUPKG_DIR)
 
 format: ## Auto-fix all code formatting (style, analyzers, whitespace)

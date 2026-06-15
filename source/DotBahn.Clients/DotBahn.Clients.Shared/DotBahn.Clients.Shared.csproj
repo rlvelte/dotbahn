@@ -1,5 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
     <ProjectReference Include="../../DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
