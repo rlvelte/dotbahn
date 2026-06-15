@@ -67,6 +67,19 @@ public abstract class ClientBase : IDisposable {
 
     /// <inheritdoc />
     public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed and unmanaged resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing) {
+        if (!disposing) {
+            return;
+        }
+
         _http.Dispose();
         _cache?.Dispose();
     }
