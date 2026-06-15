@@ -3,8 +3,10 @@ using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
 using DotBahn.Data.Timetables.Models;
 using DotBahn.Modules.Cache;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Spectre.Console;
 
 string clientId;
@@ -45,7 +47,7 @@ services.AddDotBahnTimetables(opt => {
 var serviceProvider = services.BuildServiceProvider();
 var client = serviceProvider.GetRequiredService<TimetablesClient>();
 
-var cts = new CancellationTokenSource();
+using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => {
     e.Cancel = true;
     cts.Cancel();
@@ -199,19 +201,15 @@ static string FormatVia(ChangedRef<IEnumerable<string>> path) {
     if (actualPath.Count <= 1) {
         return $"[{Gruvbox.Gray}]-[/]";
     }
-    
+
     var viaStops = actualPath.Take(Math.Min(3, actualPath.Count - 1)).ToList();
     var viaText = string.Join(" - ", viaStops.Select(Markup.Escape));
 
     if (actualPath.Count > 4) {
         viaText += " ...";
     }
-    
-    if (path.HasUpdate) {
-        return $"[{Gruvbox.Orange}]{viaText}[/]";
-    }
 
-    return $"[{Gruvbox.Gray}]{viaText}[/]";
+    return path.HasUpdate ? $"[{Gruvbox.Orange}]{viaText}[/]" : $"[{Gruvbox.Gray}]{viaText}[/]";
 }
 
 internal static class Gruvbox {

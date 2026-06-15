@@ -1,23 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <AssemblyName>DotBahn.Samples.IceMonitor</AssemblyName>
-        <RootNamespace>DotBahn.Samples.IceMonitor</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Spectre.Console" Version="0.50.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Timetables\DotBahn.Data.Timetables.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-        <ProjectReference Include="..\..\source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Timetables/DotBahn.Clients.Timetables.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
+  </ItemGroup>
 </Project>

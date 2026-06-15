@@ -1,4 +1,5 @@
 using System.Text;
+
 using DotBahn.Clients.Facilities;
 using DotBahn.Clients.Facilities.Query;
 using DotBahn.Clients.Stations;
@@ -8,8 +9,10 @@ using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Authorization;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
@@ -40,12 +43,8 @@ services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
     opt.ApiKey = clientSecret;
 });
-services.AddDotBahnStations(opt => {
-    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
-});
-services.AddDotBahnFacilities(opt => {
-    opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
-});
+services.AddDotBahnStations(opt => opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/"));
+services.AddDotBahnFacilities(opt => opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/"));
 
 var serviceProvider = services.BuildServiceProvider();
 var stationsClient = serviceProvider.GetRequiredService<StationsClient>();
@@ -181,11 +180,13 @@ static IRenderable BuildStationInfo(Station station) {
         rows.Add(new Text(""));
     }
 
-    if (station.Ril100Identifiers.Count() > 1) {
-        rows.Add(new Markup($"[{Gruvbox.Gray}]RIL100 Identifiers:[/]"));
-        foreach (var ril in station.Ril100Identifiers) {
-            rows.Add(new Markup($"  [{Gruvbox.Fg}]{Markup.Escape(ril.Identifier)}{(ril.IsMain ? " (main)" : "")}[/]"));
-        }
+    if (station.Ril100Identifiers.Count() <= 1) {
+        return new Rows(rows);
+    }
+
+    rows.Add(new Markup($"[{Gruvbox.Gray}]RIL100 Identifiers:[/]"));
+    foreach (var ril in station.Ril100Identifiers) {
+        rows.Add(new Markup($"  [{Gruvbox.Fg}]{Markup.Escape(ril.Identifier)}{(ril.IsMain ? " (main)" : "")}[/]"));
     }
 
     return new Rows(rows);
@@ -214,10 +215,12 @@ static IRenderable BuildRightPanel(StationServices services, List<Facility> faci
 
     rows.Add(servicesTable);
 
-    if (facilities.Count > 0) {
-        rows.Add(new Text(""));
-        rows.Add(BuildFacilitiesPanel(facilities));
+    if (facilities.Count <= 0) {
+        return new Rows(rows);
     }
+
+    rows.Add(new Text(""));
+    rows.Add(BuildFacilitiesPanel(facilities));
 
     return new Rows(rows);
 }
@@ -255,18 +258,20 @@ static IRenderable BuildFacilitiesPanel(List<Facility> facilities) {
     }
 
     var inactiveFacilities = facilities.Where(f => f.State != FacilityState.Active).ToList();
-    if (inactiveFacilities.Count > 0) {
-        table.AddEmptyRow();
-        table.AddRow($"[{Gruvbox.Red}]Out of service:[/]", "");
-        foreach (var facility in inactiveFacilities.Take(5)) {
-            var typeIcon = facility.Type == FacilityType.Elevator ? "\u21c5" : "\u21f5";
-            var desc = facility.Description ?? $"#{facility.EquipmentNumber}";
-            if (desc.Length > 25) desc = desc[..22] + "...";
-            table.AddRow($"[{Gruvbox.Gray}]{typeIcon} {Markup.Escape(desc)}[/]", "");
-        }
-        if (inactiveFacilities.Count > 5) {
-            table.AddRow($"[{Gruvbox.Gray}]... and {inactiveFacilities.Count - 5} more[/]", "");
-        }
+    if (inactiveFacilities.Count <= 0) {
+        return table;
+    }
+
+    table.AddEmptyRow();
+    table.AddRow($"[{Gruvbox.Red}]Out of service:[/]", "");
+    foreach (var facility in inactiveFacilities.Take(5)) {
+        var typeIcon = facility.Type == FacilityType.Elevator ? "\u21c5" : "\u21f5";
+        var desc = facility.Description ?? $"#{facility.EquipmentNumber}";
+        if (desc.Length > 25) desc = desc[..22] + "...";
+        table.AddRow($"[{Gruvbox.Gray}]{typeIcon} {Markup.Escape(desc)}[/]", "");
+    }
+    if (inactiveFacilities.Count > 5) {
+        table.AddRow($"[{Gruvbox.Gray}]... and {inactiveFacilities.Count - 5} more[/]", "");
     }
 
     return table;
@@ -306,11 +311,7 @@ static void AddServiceRow(Table table, string name, bool available) {
 static void RenderPositionBar(int index, int total) {
     var segments = new StringBuilder();
     for (var i = 0; i < total; i++) {
-        if (i == index) {
-            segments.Append($"[{Gruvbox.Blue}]\u2588[/]");
-        } else {
-            segments.Append($"[{Gruvbox.Gray}]\u2591[/]");
-        }
+        segments.Append(i == index ? $"[{Gruvbox.Blue}]\u2588[/]" : $"[{Gruvbox.Gray}]\u2591[/]");
     }
     AnsiConsole.MarkupLine(segments.ToString());
 }
