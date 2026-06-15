@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+
 using DotBahn.Clients.Shared.Query;
 using DotBahn.Data.Shared.Enumerations;
 using DotBahn.Data.Stations.Enumerations;
+using DotBahn.Data.Stations.Json;
 
 namespace DotBahn.Clients.Stations.Query;
 
@@ -22,26 +24,27 @@ public sealed partial record StationsQuery {
     /// </summary>
     [GeneratedRegex(@"^(\d+)\s*-\s*(\d+)$")]
     private static partial Regex ComplexCategoryRegex();
-    
+
     /// <summary>
     /// Strings to search for station names.
     /// The wildcards '*' (indicating an arbitrary number of characters) and '?' (indicating one single character) can be used in the search pattern.
     /// </summary>
-    public string[]? Names { get;
+    public string[]? Names {
+        get;
         set {
             if (value == null || value.Length == 0) {
                 throw new ArgumentException("At least one name is required.", nameof(value));
             }
 
             field = value.Select(n => n.Contains('*') || n.Contains('?') ? n : n + "*").ToArray();
-        } 
+        }
     }
 
     /// <summary>
     /// Filter by station category.
     /// The category must be between 1 and 7, otherwise a parameter exception is returned.
     /// </summary>
-    public string? Categories { 
+    public string? Categories {
         get;
         set {
             if (string.IsNullOrWhiteSpace(value)) {
@@ -50,39 +53,38 @@ public sealed partial record StationsQuery {
 
             var parts = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             var normalized = new List<string>();
-            
+
             foreach (var part in parts) {
                 var trimmedPart = part.Trim();
-                
+
                 if (trimmedPart.Contains('-')) {
                     var rangeMatch = ComplexCategoryRegex().Match(trimmedPart);
                     if (!rangeMatch.Success) {
                         throw new ArgumentException($"Invalid category range: {part}", nameof(value));
                     }
-                    
+
                     var start = int.Parse(rangeMatch.Groups[1].Value);
                     var end = int.Parse(rangeMatch.Groups[2].Value);
                     if (start < 1 || start > 7 || end < 1 || end > 7 || start > end) {
                         throw new ArgumentException($"Category range out of bounds: {part}", nameof(value));
                     }
-                    
+
                     normalized.Add($"{start}-{end}");
-                }
-                else {
+                } else {
                     var singleMatch = SimpleCategoryRegex().Match(trimmedPart);
                     if (!singleMatch.Success) {
                         throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
                     }
-                    
+
                     var parsed = int.Parse(trimmedPart);
                     if (parsed is < 1 or > 7) {
                         throw new ArgumentException($"Category must be between 1 and 7: {part}", nameof(value));
                     }
-                    
+
                     normalized.Add(parsed.ToString());
                 }
             }
-        
+
             field = string.Join(',', normalized);
         }
     }
@@ -204,7 +206,7 @@ public sealed partial record StationsQuery {
         Limit = limit;
         return this;
     }
-    
+
     /// <summary>
     /// Converts the query into <see cref="QueryParameters"/> for API calls.
     /// </summary>
@@ -212,10 +214,10 @@ public sealed partial record StationsQuery {
     public QueryParameters ToQueryParameters() => QueryParameters.Create()
         .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)
         .Add("category", Categories)
-        .Add("federalstate", State?.GetAssociatedValue())
+        .Add("federalstate", EnumMapper.Format(State, StationsJsonContext.Default.FederalState))
         .Add("eva", Eva)
         .Add("ril", Ril)
-        .Add("logicaloperator", Operator?.GetAssociatedValue())
+        .Add("logicaloperator", EnumMapper.Format(Operator, StationsJsonContext.Default.LogicalOperator))
         .Add("offset", Offset.ToString())
         .Add("limit", Limit.ToString());
 }

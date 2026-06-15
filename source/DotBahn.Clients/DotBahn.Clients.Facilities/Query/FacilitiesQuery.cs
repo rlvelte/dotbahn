@@ -1,6 +1,8 @@
 using System.ComponentModel;
+
 using DotBahn.Clients.Shared.Query;
 using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Data.Facilities.Json;
 using DotBahn.Data.Shared.Enumerations;
 
 namespace DotBahn.Clients.Facilities.Query;
@@ -67,8 +69,8 @@ public sealed record FacilitiesQuery {
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public QueryParameters ToQueryParameters() => QueryParameters.Create()
-        .Add("type", Type?.GetAssociatedValue())
-        .Add("state", State?.GetAssociatedValue())
+        .Add("type", EnumMapper.Format(Type, FacilitiesJsonContext.Default.FacilityType))
+        .Add("state", EnumMapper.Format(State, FacilitiesJsonContext.Default.FacilityState))
         .Add("equipmentnumbers", EquipmentNumbers)
         .Add("stationnumber", StationId);
 }

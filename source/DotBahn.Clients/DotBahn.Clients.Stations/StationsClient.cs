@@ -29,7 +29,7 @@ public class StationsClient : ClientBase {
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    public StationsClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null) 
+    public StationsClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -55,6 +55,7 @@ public class StationsClient : ClientBase {
     /// <returns>List of stations matching the search criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<IEnumerable<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
+        ArgumentNullException.ThrowIfNull(query);
         var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
 

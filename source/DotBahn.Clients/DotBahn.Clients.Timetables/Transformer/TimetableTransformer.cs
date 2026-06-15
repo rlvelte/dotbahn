@@ -1,9 +1,11 @@
 using System.Globalization;
+
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Data.Shared.Enumerations;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Timetables.Enumerations;
+using DotBahn.Data.Timetables.Json;
 using DotBahn.Data.Timetables.Models;
 
 namespace DotBahn.Clients.Timetables.Transformer;
@@ -16,11 +18,14 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
 
     #region Transforming 
     /// <inheritdoc />
-    public Timetable Transform(in TimetableResponseContract contract) => new() {
+    public Timetable Transform(in TimetableResponseContract contract) {
+        ArgumentNullException.ThrowIfNull(contract);
+        return new Timetable {
             Station = contract.Station,
             Stops = contract.Stops.Select(TransformStop),
             Messages = []
         };
+    }
 
     /// <summary>
     /// Transforms the <see cref="StopDataContract"/> into its domain model.
@@ -28,13 +33,13 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// <param name="contract">The contract to transform.</param>
     /// <returns>The transformed model.</returns>
     private static TimetableStop TransformStop(StopDataContract contract) => new() {
-            Id = contract.Id,
-            Train = TransformTrainLabel(contract.TripInfo),
-            Arrival = TransformEvent(contract.Arrival),
-            Departure = TransformEvent(contract.Departure),
-            Messages = contract.Messages?.Select(TransformMessage).ToList() ?? []
-        };
-    
+        Id = contract.Id,
+        Train = TransformTrainLabel(contract.TripInfo),
+        Arrival = TransformEvent(contract.Arrival),
+        Departure = TransformEvent(contract.Departure),
+        Messages = contract.Messages?.Select(TransformMessage).ToList() ?? []
+    };
+
     /// <summary>
     /// Transforms the <see cref="EventContract"/> into its domain model.
     /// </summary>
@@ -44,28 +49,28 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
         if (contract == null) {
             return null;
         }
-        
+
         var time = new ChangedValue<DateTime> {
             Original = ParseBahnTime(contract.PlannedTime) ?? default(DateTime),
             Updated = ParseBahnTime(contract.ChangedTime)
         };
-        
+
         var platform = new ChangedRef<string> {
             Original = contract.PlannedPlatform ?? string.Empty,
             Updated = contract.ChangedPlatform
         };
 
-        var changedStatus = EnumExtensions.FromAssociatedValue(contract.ChangedStatus, EventStatus.Unknown);
+        var changedStatus = EnumMapper.Parse(contract.ChangedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus);
         var status = new ChangedValue<EventStatus> {
-            Original = EnumExtensions.FromAssociatedValue(contract.PlannedStatus, EventStatus.Unknown),
+            Original = EnumMapper.Parse(contract.PlannedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus),
             Updated = changedStatus != EventStatus.Unknown ? changedStatus : null
         };
-        
+
         var path = new ChangedRef<IEnumerable<string>> {
             Original = ParsePipeSeparatedList(contract.PlannedPath) ?? [],
             Updated = ParsePipeSeparatedList(contract.ChangedPath)
         };
-        
+
         var distantEndpoint = new ChangedRef<string> {
             Original = contract.PlannedDistantEndpoint ?? string.Empty,
             Updated = contract.ChangedDistantEndpoint
@@ -88,14 +93,14 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// <param name="contract">The contract to transform.</param>
     /// <returns>The transformed model.</returns>
     private static TrainLabel TransformTrainLabel(TripInfoContract? contract) => new() {
-            Category = contract?.Category ?? string.Empty,
-            Number = contract?.Number ?? string.Empty,
-            Owner = contract?.Owner ?? string.Empty,
-            Type = string.IsNullOrEmpty(contract?.TripType) 
+        Category = contract?.Category ?? string.Empty,
+        Number = contract?.Number ?? string.Empty,
+        Owner = contract?.Owner ?? string.Empty,
+        Type = string.IsNullOrEmpty(contract?.TripType)
                 ? null
-                : EnumExtensions.FromAssociatedValue(contract.TripType, TripType.Passenger),
-            FilterFlags = contract?.FilterFlags
-        };
+                : EnumMapper.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
+        FilterFlags = contract?.FilterFlags
+    };
 
     /// <summary>
     /// Transforms the <see cref="MessageContract"/> into its domain model.
@@ -103,27 +108,29 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// <param name="contract">The contract to transform.</param>
     /// <returns>The transformed model.</returns>
     private static TimetableMessage TransformMessage(MessageContract contract) => new() {
-            Id = contract.Id ?? string.Empty,
-            Type = EnumExtensions.FromAssociatedValue(contract.Type, MessageType.Him),
-            Timestamp = ParseBahnTime(contract.Timestamp) ?? new DateTime(),
-            Code = int.TryParse(contract.Code, out var code) ? code : null,
-            Category = contract.Category,
-            ExternalCategory = contract.ExternalCategory,
-            Priority = int.TryParse(contract.Priority, out var priority) ? (MessagePriority)priority : null,
-            Owner = contract.Owner,
-            ValidFrom = ParseBahnTime(contract.ValidFrom),
-            ValidTo = ParseBahnTime(contract.ValidTo),
-            InternalText = contract.IsInternal == "1" ? contract.Text : null,
-            ExternalText = contract.IsInternal != "1" ? contract.Text : null,
-            ExternalLink = null,
-            IsDeleted = contract.IsDeleted == "1",
-            AffectedTrips = []
-        };
+        Id = contract.Id ?? string.Empty,
+        Type = EnumMapper.Parse(contract.Type, MessageType.Him, TimetableJsonContext.Default.MessageType),
+        Timestamp = ParseBahnTime(contract.Timestamp) ?? new DateTime(),
+        Code = int.TryParse(contract.Code, out var code) ? code : null,
+        Category = contract.Category,
+        ExternalCategory = contract.ExternalCategory,
+        Priority = int.TryParse(contract.Priority, out var priority) ? (MessagePriority)priority : null,
+        Owner = contract.Owner,
+        ValidFrom = ParseBahnTime(contract.ValidFrom),
+        ValidTo = ParseBahnTime(contract.ValidTo),
+        InternalText = contract.IsInternal == "1" ? contract.Text : null,
+        ExternalText = contract.IsInternal != "1" ? contract.Text : null,
+        ExternalLink = null,
+        IsDeleted = contract.IsDeleted == "1",
+        AffectedTrips = []
+    };
     #endregion
-    
+
     #region Merging
     /// <inheritdoc />
     public Timetable Merge(Timetable current, in Timetable changes) {
+        ArgumentNullException.ThrowIfNull(current);
+        ArgumentNullException.ThrowIfNull(changes);
         var stops = current.Stops.ToDictionary(s => s.Id);
         foreach (var change in changes.Stops) {
             if (stops.TryGetValue(change.Id, out var existing)) {
@@ -216,7 +223,7 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     //// <returns>Instance with combined values.</returns>
     private static IEnumerable<TimetableMessage> MergeMessages(IEnumerable<TimetableMessage> current, IEnumerable<TimetableMessage> change) {
         var messages = current.ToList();
-        
+
         var existing = messages.Select(m => m.Id).ToHashSet();
         return messages.Concat(change.Where(m => !existing.Contains(m.Id)));
     }
@@ -242,6 +249,6 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     /// </summary>
     /// <param name="list">The list to seperate.</param>
     /// <returns>A paresd list.</returns>
-    private static IReadOnlyList<string>? ParsePipeSeparatedList(string? list) => 
+    private static IReadOnlyList<string>? ParsePipeSeparatedList(string? list) =>
         string.IsNullOrEmpty(list) ? null : list.Split('|', StringSplitOptions.RemoveEmptyEntries);
 }

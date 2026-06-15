@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+
 using DotBahn.Clients.Shared.Query;
 
 namespace DotBahn.Clients.Shared.Utilities;
@@ -18,7 +19,7 @@ internal static class UriUtil {
         if (queryParams == null || !queryParams.Any()) {
             return relativeUrl;
         }
-        
+
         var queryString = queryParams.ToQueryString();
         return string.IsNullOrEmpty(queryString) ? relativeUrl : $"{relativeUrl}?{queryString}";
     }

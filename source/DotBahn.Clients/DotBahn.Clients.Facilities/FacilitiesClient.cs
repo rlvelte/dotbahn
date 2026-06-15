@@ -29,12 +29,12 @@ public class FacilitiesClient : ClientBase {
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null) 
+    public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
     }
-    
+
     /// <summary>
     /// Client for accessing 'Deutsche Bahn FaSta'-API.
     /// </summary>
@@ -55,6 +55,7 @@ public class FacilitiesClient : ClientBase {
     /// <returns>List of facilities matching the criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
     public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default) {
+        ArgumentNullException.ThrowIfNull(query);
         var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation)).ToList();
         return _transformer.Transform(result);
     }

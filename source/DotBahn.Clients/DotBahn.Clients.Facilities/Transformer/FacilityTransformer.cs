@@ -1,5 +1,6 @@
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Data.Facilities.Json;
 using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Shared.Enumerations;
 using DotBahn.Data.Shared.Models;
@@ -22,9 +23,9 @@ public class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerab
     /// <returns>The transformed model.</returns>
     private static Facility TransformFacility(FacilityContract contract) => new() {
         EquipmentNumber = contract.EquipmentNumber,
-        Type = EnumExtensions.FromAssociatedValue(contract.Type, FacilityType.Unknown),
+        Type = EnumMapper.Parse(contract.Type, FacilityType.Unknown, FacilitiesJsonContext.Default.FacilityType),
         Description = contract.Description,
-        State = EnumExtensions.FromAssociatedValue(contract.State, FacilityState.Unknown),
+        State = EnumMapper.Parse(contract.State, FacilityState.Unknown, FacilitiesJsonContext.Default.FacilityState),
         StateExplanation = contract.StateExplanation,
         StationNumber = contract.StationNumber,
         Coordinates = TransformCoordinates(contract.Longitude!.Value, contract.Latitude!.Value),
@@ -38,7 +39,7 @@ public class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerab
     /// <param name="latitude">The latitude value.</param>
     /// <returns>The transformed coordinates.</returns>
     private static Coordinates TransformCoordinates(double longitude, double latitude) => new() {
-            Longitude = longitude,
-            Latitude = latitude 
+        Longitude = longitude,
+        Latitude = latitude
     };
 }

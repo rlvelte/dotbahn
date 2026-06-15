@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Shared.Query;
 using DotBahn.Clients.Shared.Utilities;
@@ -16,10 +17,11 @@ namespace DotBahn.Clients.Shared.Client;
 /// <summary>
 /// Base class for rest clients, providing common functionality for authentication and request caching.
 /// </summary>
-public abstract class ClientBase {
+public abstract class ClientBase : IDisposable {
     private readonly HttpClient _http;
     private readonly IAuthorization _authorization;
     private readonly ICache? _cache;
+    private readonly bool _ownsHttpClient;
 
     /// <summary>
     /// Base class for rest clients, providing common functionality for authentication and request caching.
@@ -28,6 +30,8 @@ public abstract class ClientBase {
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     protected ClientBase(HttpClient http, IAuthorization authorization, ICache? cache) {
+        ArgumentNullException.ThrowIfNull(http);
+        ArgumentNullException.ThrowIfNull(authorization);
         _http = http;
         _authorization = authorization;
         _cache = cache;
@@ -40,21 +44,45 @@ public abstract class ClientBase {
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
     protected ClientBase(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(auth);
         _http = new HttpClient(new SocketsHttpHandler {
             PooledConnectionLifetime = TimeSpan.FromMinutes(2),
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
         }) {
             BaseAddress = options.BaseEndpoint,
         };
-        
+
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
-        
+
         _authorization = new ApiKeyAuthorization(auth);
+        _ownsHttpClient = true;
+
         if (cache == null) {
             return;
         }
 
         _cache = new InMemoryCache(cache);
+    }
+
+    /// <inheritdoc />
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed resources held by this instance.
+    /// </summary>
+    /// <param name="disposing">Whether to release managed resources.</param>
+    protected virtual void Dispose(bool disposing) {
+        if (disposing) {
+            if (_ownsHttpClient) {
+                _http.Dispose();
+            }
+
+            (_cache as IDisposable)?.Dispose();
+        }
     }
 
     /// <summary>
@@ -68,9 +96,10 @@ public abstract class ClientBase {
     /// <param name="cancellation">Optional cancellation token.</param>
     /// <returns>The parsed contract.</returns>
     protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
+        ArgumentNullException.ThrowIfNull(parser);
         var url = UriUtil.BuildUrl(relativeUrl, queryParams);
-        
-        var raw = await GetContractDataAsync(url, acceptHeader, cancellation);
+
+        var raw = await GetContractDataAsync(url, acceptHeader, cancellation).ConfigureAwait(false);
         return parser.Parse(raw);
     }
 
@@ -86,15 +115,15 @@ public abstract class ClientBase {
         var requestUri = BuildRequestUri(url);
 
         if (_cache != null) {
-            var cachedData = await _cache.GetAsync<string>(requestUri.ToString());
+            var cachedData = await _cache.GetAsync<string>(requestUri.ToString()).ConfigureAwait(false);
             if (cachedData != null) {
                 return cachedData;
             }
         }
 
-        var responseData = await ExecuteHttpRequestAsync(requestUri, acceptHeader, cancellation);
+        var responseData = await ExecuteHttpRequestAsync(requestUri, acceptHeader, cancellation).ConfigureAwait(false);
         if (_cache != null) {
-            await _cache.SetAsync(requestUri.ToString(), responseData);
+            await _cache.SetAsync(requestUri.ToString(), responseData).ConfigureAwait(false);
         }
 
         return responseData;
@@ -103,15 +132,9 @@ public abstract class ClientBase {
     /// <summary>
     /// Builds the complete request URI from relative URL.
     /// </summary>
-    private Uri BuildRequestUri(string relativeUrl) {
+    private static Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
-        
-        if (_http.BaseAddress == null) {
-            return new Uri(path, UriKind.RelativeOrAbsolute);
-        }
-        
-        var url = _http.BaseAddress.ToString();
-        return new Uri(url.EndsWith('/') ? _http.BaseAddress : new Uri(url + "/"), path);
+        return new Uri(path, UriKind.RelativeOrAbsolute);
     }
 
     /// <summary>
@@ -120,30 +143,29 @@ public abstract class ClientBase {
     private async Task<string> ExecuteHttpRequestAsync(Uri requestUri, string acceptHeader, CancellationToken cancellationToken) {
         using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
-        
+
         _authorization.AuthorizeRequest(request);
-        
-        using var response = await _http.SendAsync(request, cancellationToken);
-        return await ProcessResponseAsync(response);
+
+        using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 
     /// <summary>
-    /// Processes the response from the server and chack status.
+    /// Processes the response from the server and checks status.
     /// </summary>
     /// <param name="response">The response the client got.</param>
     /// <returns>The response content, if available.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) {
-        return response.StatusCode switch {
-            HttpStatusCode.Unauthorized => 
+    private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) =>
+        response.StatusCode switch {
+            HttpStatusCode.Unauthorized =>
                 throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
             HttpStatusCode.BadRequest =>
                 throw new HttpRequestException("Bad request.", null, response.StatusCode),
-            
+
             HttpStatusCode.NotFound => string.Empty,
-            _ => await ReadSuccessResponseAsync(response)
+            _ => await ReadSuccessResponseAsync(response).ConfigureAwait(false)
         };
-    }
 
     /// <summary>
     /// Ensures a successful request and reads the response content.
@@ -152,6 +174,6 @@ public abstract class ClientBase {
     /// <returns>The content of the response.</returns>
     private static async Task<string> ReadSuccessResponseAsync(HttpResponseMessage response) {
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
     }
 }

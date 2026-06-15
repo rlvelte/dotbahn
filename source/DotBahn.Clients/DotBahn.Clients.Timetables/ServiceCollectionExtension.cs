@@ -1,4 +1,5 @@
 using System.Net;
+
 using DotBahn.Clients.Shared.Extensions;
 using DotBahn.Clients.Shared.Options;
 using DotBahn.Clients.Timetables.Contracts;
@@ -7,13 +8,14 @@ using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Timetables.Models;
 using DotBahn.Modules.Shared.Parsing;
 using DotBahn.Modules.Shared.Parsing.Base;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace DotBahn.Clients.Timetables;
 
 /// <summary>
-/// Extension methods for setting up timetables in an <see cref="IServiceCollection"/>.
+/// Extension methods for setting up Timetables in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtension {
     private const string OptionsName = "DotBahn.Timetables";
