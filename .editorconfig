@@ -15,7 +15,14 @@ indent_size = 2
 indent_size = 2
 
 [*.cs]
-# Ordering
+max_line_length = off
+csharp_prefer_braces = true:error
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = true
 
@@ -45,45 +52,47 @@ dotnet_style_readonly_field = true:error
 
 # Modern C# features
 csharp_prefer_simple_default_expression = true:error
-csharp_prefer_braces = true:silent
 csharp_prefer_static_local_function = true:warning
 csharp_prefer_index_operator = true:silent
 csharp_prefer_range_operator = true:silent
 
-# Style preferences
-csharp_new_line_before_open_brace = none
-csharp_new_line_before_else = false
-csharp_new_line_before_catch = false
-csharp_new_line_before_finally = false
-csharp_new_line_before_members_in_object_initializers = true
-csharp_new_line_before_members_in_anonymous_types = true
+# Suppressed analyzer rules
+dotnet_diagnostic.CA1716.severity = none       # "Shared" in namespace (DotBahn.Data.Shared.* etc) — intentional naming
+dotnet_diagnostic.CA1848.severity = none       # InMemoryCache.cs — LogDebug string interpolation, not perf-critical
+dotnet_diagnostic.CA1816.severity = none       # no finalizers anywhere in codebase, SuppressFinalize unnecessary
+dotnet_diagnostic.CA1305.severity = none       # string.ToString / string.Format without IFormatProvider — culture-invariant
+dotnet_diagnostic.CA1307.severity = none       # string ops without StringComparison — culture-invariant by design
+dotnet_diagnostic.CA1819.severity = none       # properties returning arrays in DTOs / contracts
+dotnet_diagnostic.CA1859.severity = none       # interface-typed locals — DI polymorphism is intentional
 
-# Suppressed
-dotnet_diagnostic.CA1716.severity = none
-dotnet_diagnostic.CA1848.severity = none
-dotnet_diagnostic.CA1707.severity = none
-dotnet_diagnostic.CA1002.severity = none
-dotnet_diagnostic.CA1063.severity = none
-dotnet_diagnostic.CA1816.severity = none
-dotnet_diagnostic.CA1305.severity = none
-dotnet_diagnostic.CA1307.severity = none
-dotnet_diagnostic.CA1819.severity = none
-dotnet_diagnostic.CA1859.severity = none
-dotnet_diagnostic.CA2007.severity = none
-dotnet_diagnostic.IDE0034.severity = none
+# Samples
+[samples/**/*.cs]
+csharp_prefer_braces = false                   # IceMonitor/StationBrowser Program.cs — single-statement bodies
+dotnet_diagnostic.CA2007.severity = none       # Program.cs — sample entry points, no sync context
 
-# File-level suppressions
+[tests/**/*.cs]
+csharp_prefer_braces = false                   # single-statement if/foreach in test methods
+dotnet_diagnostic.CA1707.severity = none       # test method names: GetAsync_BuildsCorrectUrl_ReturnsXxx etc.
+dotnet_diagnostic.CA1515.severity = none       # MockHttpHandler, ClientTestBase — must be public for xUnit
+dotnet_diagnostic.CA2000.severity = none       # ClientTestBase, *ClientTests — HttpClient shared across test methods
+dotnet_diagnostic.CA1063.severity = none       # ClientTestBase.Dispose() — test fixture, no subclass chain
+dotnet_diagnostic.CA1002.severity = none       # MockHttpHandler.SentRequests — List<HttpRequestMessage> test property
+dotnet_diagnostic.CA1054.severity = none       # ClientTestBase.AssertRequest(string relativeUrl) — test helper
+dotnet_diagnostic.CA1822.severity = none       # CreateClient/CreateClientWithOptions() in test classes
+dotnet_diagnostic.CA1852.severity = none       # TestClientBase nested class in ClientBaseTests, UriUtilTests
+dotnet_diagnostic.CA1861.severity = none       # QueryParametersTests — constant array passed to Add()
+
+# File-level
 [**/ServiceCollectionExtension.cs]
-dotnet_diagnostic.CA1034.severity = none
+dotnet_diagnostic.CA1034.severity = none       # C# 14 extension() creates nested public types
 
 [**/AuthorizationHelper.cs]
-dotnet_diagnostic.CA1034.severity = none
+dotnet_diagnostic.CA1034.severity = none       # extension(IServiceCollection) creates nested public types
 
 [source/DotBahn.Clients/DotBahn.Clients.Shared/Client/ClientBase.cs]
-dotnet_diagnostic.CA1054.severity = none
-dotnet_diagnostic.CA2000.severity = none
+dotnet_diagnostic.CA1054.severity = none       # GetAsync(string relativeUrl) — relative URL as string is intentional
+dotnet_diagnostic.CA2000.severity = none       # Options constructor creates owned HttpClient, disposed in Dispose()
 
-# Test overrides
-[**/tests/**/*.cs]
-dotnet_diagnostic.CA1707.severity = none
-dotnet_diagnostic.CA1515.severity = none
+# Contracts
+[**/Contracts/*Contract.cs]
+dotnet_diagnostic.CA1002.severity = none       # StopDataContract.Messages, TimetableResponseContract.Stops etc.

@@ -16,7 +16,7 @@ help: ## Show this help
 	@echo "  CONFIGURATION   Build configuration (default: Release)"
 	@echo ""
 
-build:format ## Build all projects (Release)
+build: ## Build all projects (Release)
 	dotnet build --configuration $(CONFIGURATION)
 
 test: build ## Run all tests with coverage
