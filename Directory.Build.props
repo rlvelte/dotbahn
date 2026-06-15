@@ -1,15 +1,12 @@
 <Project>
   <PropertyGroup>
-    <!-- Target framework default -->
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <!-- ── Central Package Management ── -->
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <!-- ── Builds ── -->
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -18,7 +15,6 @@
     <AnalysisLevel>latest-All</AnalysisLevel>
     <AnalysisMode>All</AnalysisMode>
 
-    <!-- ── SourceLink ── -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -52,7 +48,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsPackable) == 'true' And $(IsTestProject) != 'true'">
-    <None Include="$(MSBuildThisFileDirectory)Icon.png" Pack="True" PackagePath="" />
+    <None Include="$(MSBuildThisFileDirectory)docs/images/logo-512x512.png" Pack="True" PackagePath="Icon.png" />
   </ItemGroup>
 
 </Project>
