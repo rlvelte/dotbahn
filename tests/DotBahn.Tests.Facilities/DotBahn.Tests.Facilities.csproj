@@ -1,29 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <IsPackable>false</IsPackable>
-        <AssemblyName>DotBahn.Tests.Facilities</AssemblyName>
-        <RootNamespace>DotBahn.Tests.Facilities</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.4"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
-        <PackageReference Include="xunit" Version="2.9.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Using Include="Xunit"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
-      <ProjectReference Include="..\..\source\DotBahn.Clients\DotBahn.Clients.Shared\DotBahn.Clients.Shared.csproj" />
-      <ProjectReference Include="..\..\source\DotBahn.Data\DotBahn.Data.Facilities\DotBahn.Data.Facilities.csproj" />
-    </ItemGroup>
-
+<?xml version='1.0' encoding='utf-8'?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Facilities/DotBahn.Clients.Facilities.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Facilities/DotBahn.Data.Facilities.csproj" />
+  </ItemGroup>
 </Project>

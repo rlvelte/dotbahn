@@ -81,7 +81,7 @@ public class InMemoryCacheTests {
     [Fact]
     public void Dispose_DoesNotThrow() {
         // Arrange
-        var cache = new InMemoryCache(DefaultOptions());
+        using var cache = new InMemoryCache(DefaultOptions());
 
         // Act + Assert
         Assert.Null(Record.Exception(() => cache.Dispose()));

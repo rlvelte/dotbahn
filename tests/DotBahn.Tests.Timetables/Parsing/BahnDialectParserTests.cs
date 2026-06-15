@@ -1,4 +1,5 @@
 using System.Text.Json;
+
 using DotBahn.Modules.Shared.Parsing.Additional;
 
 namespace DotBahn.Tests.Timetables.Parsing;
@@ -58,10 +59,8 @@ public class BahnDialectParserTests {
     }
 
     [Fact]
-    public void Read_UnexpectedTokenType_ThrowsJsonException() {
-        // Act + Assert
+    public void Read_UnexpectedTokenType_ThrowsJsonException() =>
         Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<bool>("42", _options));
-    }
 
     [Fact]
     public void Write_TrueValue_WritesJsonTrue() {

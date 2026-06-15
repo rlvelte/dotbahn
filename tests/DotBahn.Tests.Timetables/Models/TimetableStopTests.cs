@@ -1,5 +1,5 @@
-using DotBahn.Data.Timetables.Models;
 using DotBahn.Data.Shared.Models;
+using DotBahn.Data.Timetables.Models;
 
 namespace DotBahn.Tests.Timetables.Models;
 
