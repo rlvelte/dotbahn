@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/3MfLPSP.png" width=200>
+<img src="docs/images/logo-128x128.png" width=200>
 
 # DotBahn - .NET Client for Deutsche Bahn APIs
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Timetables?label=DotBahn.Timetables&style=flat)
