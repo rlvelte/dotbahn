@@ -15,7 +15,7 @@ namespace DotBahn.Clients.Stations;
 /// <summary>
 /// Extension methods for setting up stada in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtensions {
+public static class ServiceCollectionExtension {
     private const string OptionsName = "DotBahn.Stations";
 
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
@@ -28,11 +28,11 @@ public static class ServiceCollectionExtensions {
         public void AddDotBahnStations(Action<ClientOptions> configuration) {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
-            
+
             var options = new ClientOptions {
                 BaseEndpoint = null!
             };
-            
+
             configuration(options);
             services.EnsureAuthorization(options.ClientId, options.ApiKey);
 
