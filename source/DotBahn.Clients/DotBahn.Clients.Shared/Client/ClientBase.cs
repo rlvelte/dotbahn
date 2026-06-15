@@ -21,7 +21,6 @@ public abstract class ClientBase : IDisposable {
     private readonly HttpClient _http;
     private readonly IAuthorization _authorization;
     private readonly ICache? _cache;
-    private readonly bool _ownsHttpClient;
 
     /// <summary>
     /// Base class for rest clients, providing common functionality for authentication and request caching.
@@ -32,6 +31,7 @@ public abstract class ClientBase : IDisposable {
     protected ClientBase(HttpClient http, IAuthorization authorization, ICache? cache) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
+
         _http = http;
         _authorization = authorization;
         _cache = cache;
@@ -46,6 +46,7 @@ public abstract class ClientBase : IDisposable {
     protected ClientBase(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
+
         _http = new HttpClient(new SocketsHttpHandler {
             PooledConnectionLifetime = TimeSpan.FromMinutes(2),
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
@@ -56,7 +57,6 @@ public abstract class ClientBase : IDisposable {
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
 
         _authorization = new ApiKeyAuthorization(auth);
-        _ownsHttpClient = true;
 
         if (cache == null) {
             return;
@@ -67,22 +67,8 @@ public abstract class ClientBase : IDisposable {
 
     /// <inheritdoc />
     public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases managed resources held by this instance.
-    /// </summary>
-    /// <param name="disposing">Whether to release managed resources.</param>
-    protected virtual void Dispose(bool disposing) {
-        if (disposing) {
-            if (_ownsHttpClient) {
-                _http.Dispose();
-            }
-
-            (_cache as IDisposable)?.Dispose();
-        }
+        _http.Dispose();
+        _cache?.Dispose();
     }
 
     /// <summary>
@@ -97,8 +83,8 @@ public abstract class ClientBase : IDisposable {
     /// <returns>The parsed contract.</returns>
     protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(parser);
-        var url = UriUtil.BuildUrl(relativeUrl, queryParams);
 
+        var url = UriUtil.BuildUrl(relativeUrl, queryParams);
         var raw = await GetContractDataAsync(url, acceptHeader, cancellation).ConfigureAwait(false);
         return parser.Parse(raw);
     }
@@ -130,11 +116,13 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Builds the complete request URI from relative URL.
+    /// Builds the complete request URI from relative URL and the configured base address.
     /// </summary>
-    private static Uri BuildRequestUri(string relativeUrl) {
+    private Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
-        return new Uri(path, UriKind.RelativeOrAbsolute);
+        var baseUrl = (_http.BaseAddress?.AbsoluteUri ?? "").TrimEnd('/');
+
+        return baseUrl.Length > 0 ? new Uri($"{baseUrl}/{path}") : new Uri(path, UriKind.Relative);
     }
 
     /// <summary>

@@ -18,8 +18,13 @@
     <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
     <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
   </Folder>
+  <Folder Name="/_Docs/">
+    <File Path="docs\docfx.json" />
+    <File Path="docs\toc.yml" />
+  </Folder>
   <Folder Name="/_Samples/">
     <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
+    <Project Path="samples/DotBahn.Samples.Shared/DotBahn.Samples.Shared.csproj" />
     <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/_Shared/">

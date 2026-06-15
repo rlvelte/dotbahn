@@ -9,6 +9,7 @@ using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Stations.Enumerations;
 using DotBahn.Data.Stations.Models;
 using DotBahn.Modules.Authorization;
+using DotBahn.Samples.Shared;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,13 +17,14 @@ using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
+using static DotBahn.Samples.Shared.ConsoleExtensions;
+
 string clientId;
 string clientSecret;
 
-var envs = Environment.GetEnvironmentVariables();
-if (envs.Contains("DOTBAHN_CLIENT") && envs.Contains("DOTBAHN_SECRET")) {
-    clientId = envs["DOTBAHN_CLIENT"]?.ToString() ?? throw new InvalidOperationException();
-    clientSecret = envs["DOTBAHN_SECRET"]?.ToString() ?? throw new InvalidOperationException();
+if (Credentials.TryFromEnvironment(out var envClient, out var envSecret)) {
+    clientId = envClient;
+    clientSecret = envSecret;
 } else {
     if (args.Length < 3) {
         AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Usage:[/] DotBahn.Samples.StationBrowser <SearchName> <ClientId> <ClientSecret>");
@@ -53,13 +55,11 @@ var facilitiesClient = serviceProvider.GetRequiredService<FacilitiesClient>();
 List<Station> stations = [];
 Dictionary<int, List<Facility>> facilitiesCache = [];
 
-await AnsiConsole.Status()
-                 .Spinner(Spinner.Known.Dots)
-                 .StartAsync($"Searching for stations matching '{searchName}'...", async _ => {
-                     var query = new StationsQuery().WithNames(searchName);
-                     var result = await stationsClient.GetStationsAsync(query);
-                     stations.AddRange(result);
-                 });
+await StatusAsync($"Searching for stations matching '{searchName}'...", async _ => {
+    var query = new StationsQuery().WithNames(searchName);
+    var result = await stationsClient.GetStationsAsync(query);
+    stations.AddRange(result);
+});
 
 if (stations.Count == 0) {
     AnsiConsole.MarkupLine($"[{Gruvbox.Yellow}]No stations found matching '{Markup.Escape(searchName)}'[/]");
@@ -73,13 +73,11 @@ while (true) {
     var currentStation = stations[currentIndex];
 
     if (!facilitiesCache.TryGetValue(currentStation.Number, out var facilities)) {
-        await AnsiConsole.Status()
-                         .Spinner(Spinner.Known.Dots)
-                         .StartAsync("Loading facilities...", async _ => {
-                             var query = new FacilitiesQuery().AtStation(currentStation.Number);
-                             facilities = (await facilitiesClient.GetFacilitiesAsync(query)).ToList();
-                             facilitiesCache[currentStation.Number] = facilities;
-                         });
+        await StatusAsync("Loading facilities...", async _ => {
+            var query = new FacilitiesQuery().AtStation(currentStation.Number);
+            facilities = (await facilitiesClient.GetFacilitiesAsync(query)).ToList();
+            facilitiesCache[currentStation.Number] = facilities;
+        });
     }
 
     AnsiConsole.Clear();
@@ -103,16 +101,12 @@ while (true) {
             break;
         case ConsoleKey.Escape:
         case ConsoleKey.Q:
-            AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Goodbye![/]");
             return 0;
     }
 }
 
 static void RenderStation(Station station, List<Facility> facilities, int index, int total) {
-    var rule = new Rule($"[bold {Gruvbox.Blue}]{Markup.Escape(station.Name)}[/]") {
-        Justification = Justify.Center,
-        Style = Style.Parse(Gruvbox.Blue)
-    };
+    var rule = TitleRule(Markup.Escape(station.Name));
 
     AnsiConsole.Write(rule);
     RenderPositionBar(index, total);
@@ -197,7 +191,7 @@ static IRenderable BuildRightPanel(StationServices services, List<Facility> faci
 
     var servicesTable = new Table {
         Border = TableBorder.Rounded,
-        BorderStyle = Style.Parse(Gruvbox.Gray)
+        BorderStyle = GrayStyle
     };
     servicesTable.AddColumn(new TableColumn($"[bold {Gruvbox.Blue}]Service[/]").LeftAligned());
     servicesTable.AddColumn(new TableColumn($"[{Gruvbox.Blue}]?[/]").Centered());
@@ -231,7 +225,7 @@ static IRenderable BuildFacilitiesPanel(List<Facility> facilities) {
 
     var table = new Table {
         Border = TableBorder.Rounded,
-        BorderStyle = Style.Parse(Gruvbox.Gray)
+        BorderStyle = GrayStyle
     };
     table.AddColumn(new TableColumn($"[bold {Gruvbox.Blue}]Facilities[/]").LeftAligned());
     table.AddColumn(new TableColumn($"[{Gruvbox.Blue}]Status[/]").Centered());
@@ -318,20 +312,7 @@ static void RenderPositionBar(int index, int total) {
 
 static void RenderNavigation() {
     AnsiConsole.WriteLine();
-    var rule = new Rule() {
-        Style = Style.Parse(Gruvbox.Gray)
-    };
+    var rule = SeparatorRule();
     AnsiConsole.Write(rule);
     AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Navigation: [{Gruvbox.Fg}]\u2190[/] Previous | [{Gruvbox.Fg}]\u2192[/] Next | [{Gruvbox.Fg}]Home[/] First | [{Gruvbox.Fg}]End[/] Last | [{Gruvbox.Fg}]Q/Esc[/] Quit[/]");
-}
-
-internal static class Gruvbox {
-    public const string Fg = "#ebdbb2";
-    public const string Red = "#fb4934";
-    public const string Green = "#b8bb26";
-    public const string Yellow = "#fabd2f";
-    public const string Blue = "#83a598";
-    public const string Aqua = "#8ec07c";
-    public const string Orange = "#fe8019";
-    public const string Gray = "#928374";
 }
