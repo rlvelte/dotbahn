@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/DotBahn.Clients/">
-    <Project Path="source\DotBahn.Clients\DotBahn.Clients.Facilities\DotBahn.Clients.Facilities.csproj" />
-    <Project Path="source\DotBahn.Clients\DotBahn.Clients.Stations\DotBahn.Clients.Stations.csproj" />
-    <Project Path="source\DotBahn.Clients\DotBahn.Clients.Timetables\DotBahn.Clients.Timetables.csproj" />
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Facilities/DotBahn.Clients.Facilities.csproj" />
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Stations/DotBahn.Clients.Stations.csproj" />
+    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Timetables/DotBahn.Clients.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Data/">
     <Project Path="source/DotBahn.Data/DotBahn.Data.Facilities/DotBahn.Data.Facilities.csproj" />
@@ -10,17 +10,17 @@
     <Project Path="source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Modules/">
-    <Project Path="source\DotBahn.Modules\DotBahn.Modules.Authorization\DotBahn.Modules.Authorization.csproj" />
-    <Project Path="source\DotBahn.Modules\DotBahn.Modules.Cache\DotBahn.Modules.Cache.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
+    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
   </Folder>
   <Folder Name="/DotBahn.Tests/">
-    <Project Path="tests\DotBahn.Tests.Facilities\DotBahn.Tests.Facilities.csproj" />
-    <Project Path="tests\DotBahn.Tests.Stations\DotBahn.Tests.Stations.csproj" />
-    <Project Path="tests\DotBahn.Tests.Timetables\DotBahn.Tests.Timetables.csproj" />
+    <Project Path="tests/DotBahn.Tests.Facilities/DotBahn.Tests.Facilities.csproj" />
+    <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
+    <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
   </Folder>
   <Folder Name="/_Samples/">
-    <Project Path="samples\DotBahn.Samples.IceMonitor\DotBahn.Samples.IceMonitor.csproj" />
-    <Project Path="samples\DotBahn.Samples.StationBrowser\DotBahn.Samples.StationBrowser.csproj" />
+    <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
+    <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/_Shared/">
     <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />

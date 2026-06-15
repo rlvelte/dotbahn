@@ -1,0 +1,23 @@
+<Project>
+  <!-- ── Central Package Versions ── -->
+  <!-- All NuGet package versions defined here, consumed by any .csproj + Directory.Build.props -->
+
+  <ItemGroup>
+    <!-- ── Runtime dependencies ── -->
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.1" />
+    <PackageVersion Include="Spectre.Console" Version="0.50.0" />
+
+    <!-- ── Build tooling ── -->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="MinVer" Version="6.0.0" />
+
+    <!-- ── Testing ── -->
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+</Project>
