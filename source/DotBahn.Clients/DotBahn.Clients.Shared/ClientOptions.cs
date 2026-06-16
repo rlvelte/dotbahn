@@ -11,14 +11,4 @@ public record ClientOptions {
     /// The base endpoint for API requests.
     /// </summary>
     public required Uri BaseEndpoint { get; set; }
-
-    /// <summary>
-    /// The Client ID for authentication. If not set, uses shared authorization.
-    /// </summary>
-    public string? ClientId { get; set; }
-
-    /// <summary>
-    /// The API key for authentication. If not set, uses shared authorization.
-    /// </summary>
-    public string? ApiKey { get; set; }
 }

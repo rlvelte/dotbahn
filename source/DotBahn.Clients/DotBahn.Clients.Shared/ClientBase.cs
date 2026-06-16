@@ -47,12 +47,7 @@ public abstract class ClientBase : IDisposable {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
 
-        _http = new HttpClient(new SocketsHttpHandler {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(2),
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-        }) {
-            BaseAddress = options.BaseEndpoint,
-        };
+        _http = new HttpClient(); //TODO: REFACTOR
 
         _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
 
@@ -88,16 +83,16 @@ public abstract class ClientBase : IDisposable {
     /// Sends a GET request to the specified relative URL and parses the response.
     /// </summary>
     /// <typeparam name="TContract">The type of the contract to parse.</typeparam>
-    /// <param name="relativeUrl">The relative URL for the request.</param>
+    /// <param name="relative">The relative URL for the request.</param>
     /// <param name="parser">The parser used to convert the raw response to the contract.</param>
     /// <param name="acceptHeader">The value for the Accept header.</param>
     /// <param name="queryParams">Optional query parameters.</param>
     /// <param name="cancellation">Optional cancellation token.</param>
     /// <returns>The parsed contract.</returns>
-    protected async Task<TContract> GetAsync<TContract>(string relativeUrl, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
+    protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
-        var url = UriUtil.BuildUrl(relativeUrl, queryParams);
+        var url = UriUtil.BuildUrl(relative, queryParams);
         var raw = await GetContractDataAsync(url, acceptHeader, cancellation).ConfigureAwait(false);
         return parser.Parse(raw);
     }
