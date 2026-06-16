@@ -38,11 +38,12 @@ public class FacilitiesClient : ClientBase, IFacilitiesClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn FaSta'-API.
     /// </summary>
+    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    public FacilitiesClient(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(options, auth, cache) {
+    public FacilitiesClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+        : base(http, options, auth, cache) {
         _parser = new JsonParser<List<FacilityContract>>();
         _transformer = new FacilityTransformer();
     }

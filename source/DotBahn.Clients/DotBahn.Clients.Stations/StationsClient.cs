@@ -38,11 +38,12 @@ public class StationsClient : ClientBase, IStationsClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn StaDa'-API.
     /// </summary>
+    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    public StationsClient(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(options, auth, cache) {
+    public StationsClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+        : base(http, options, auth, cache) {
         _parser = new JsonParser<StationsResponseContract>();
         _transformer = new StationTransformer();
     }

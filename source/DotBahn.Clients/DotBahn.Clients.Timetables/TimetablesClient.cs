@@ -40,11 +40,12 @@ public class TimetablesClient : ClientBase, ITimetablesClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn Timetables'-API.
     /// </summary>
+    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    public TimetablesClient(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(options, auth, cache) {
+    public TimetablesClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+        : base(http, options, auth, cache) {
         _parser = new XmlParser<TimetableResponseContract>();
         _transformer = new TimetableTransformer();
         _merger = new TimetableMerger();

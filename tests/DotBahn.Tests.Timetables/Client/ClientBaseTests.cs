@@ -44,7 +44,8 @@ public class ClientBaseTests : ClientTestBase {
     }
 
     [Fact]
-    public void Constructor_OptionsConstructor_CreatesOwnHttpClient() {
+    public void Constructor_OptionsConstructor_StoresAndConfiguresHttpClient() {
+        var http = new HttpClient();
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
@@ -53,28 +54,45 @@ public class ClientBaseTests : ClientTestBase {
             ApiKey = "test-key"
         };
 
-        var client = new TestClientBase(options, auth, null);
+        var client = new TestClientBase(http, options, auth, null);
 
         Assert.NotNull(client);
+        Assert.Same(http, client.HttpClient);
+        Assert.Equal(options.BaseEndpoint, http.BaseAddress);
+    }
+
+    [Fact]
+    public void Constructor_OptionsConstructor_WithNullHttp_ThrowsArgumentNullException() {
+        var options = new ClientOptions {
+            BaseEndpoint = new Uri("https://api.deutschebahn.com")
+        };
+        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+            ClientId = "test-client",
+            ApiKey = "test-key"
+        };
+
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, options, auth, null));
     }
 
     [Fact]
     public void Constructor_OptionsConstructor_WithNullOptions_ThrowsArgumentNullException() {
+        var http = new HttpClient();
         var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, auth, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, auth, null));
     }
 
     [Fact]
     public void Constructor_OptionsConstructor_WithNullAuth_ThrowsArgumentNullException() {
+        var http = new HttpClient();
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(options, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, options, null!, null));
     }
 
 
@@ -242,7 +260,8 @@ public class ClientBaseTests : ClientTestBase {
     }
 
     [Fact]
-    public void Dispose_OptionsMode_DisposesOwnedHttpClient() {
+    public void Dispose_OptionsMode_DoesNotDisposeProvidedHttpClient() {
+        var http = new HttpClient();
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
@@ -251,10 +270,12 @@ public class ClientBaseTests : ClientTestBase {
             ApiKey = "test-key"
         };
 
-        var client = new TestClientBase(options, auth, null);
-
-        Assert.NotNull(client);
+        var client = new TestClientBase(http, options, auth, null);
         client.Dispose();
+
+        // HttpClient is owned by the caller — dispose should not close it
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("still-alive");
+        Assert.NotNull(http);
     }
 
     [Fact]
@@ -276,10 +297,13 @@ public class ClientBaseTests : ClientTestBase {
             : base(http, authorization, cache) { }
 
         public TestClientBase(
+            HttpClient http,
             ClientOptions options,
             DotBahn.Modules.Authorization.AuthorizationOptions auth,
             DotBahn.Modules.Cache.CacheOptions? cache)
-            : base(options, auth, cache) { }
+            : base(http, options, auth, cache) { }
+
+        public new HttpClient HttpClient => base.HttpClient;
 
         public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) =>
             base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, cancellation);

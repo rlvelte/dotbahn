@@ -14,23 +14,28 @@ namespace DotBahn.Clients.Shared;
 
 /// <summary>
 /// Base class for rest clients, providing common functionality for authentication and request caching.
+/// The HttpClient is owned by the caller (or IHttpClientFactory) — this class does not dispose it.
 /// </summary>
 public abstract class ClientBase : IDisposable {
-    private readonly HttpClient _http;
     private readonly IAuthorization _authorization;
     private readonly ICache? _cache;
 
     /// <summary>
+    /// Gets the <see cref="HttpClient"/> used for HTTP requests.
+    /// </summary>
+    protected HttpClient HttpClient { get; }
+
+    /// <summary>
     /// Base class for rest clients, providing common functionality for authentication and request caching.
     /// </summary>
-    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     protected ClientBase(HttpClient http, IAuthorization authorization, ICache? cache) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
 
-        _http = http;
+        HttpClient = http;
         _authorization = authorization;
         _cache = cache;
     }
@@ -38,17 +43,19 @@ public abstract class ClientBase : IDisposable {
     /// <summary>
     /// Base class for rest clients, providing common functionality for authentication and request caching.
     /// </summary>
+    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    protected ClientBase(ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
+    protected ClientBase(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null) {
+        ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
 
-        _http = new HttpClient(); //TODO: REFACTOR
+        http.BaseAddress = options.BaseEndpoint;
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
 
-        _http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
-
+        HttpClient = http;
         _authorization = new ApiKeyAuthorization(auth);
 
         if (cache == null) {
@@ -60,21 +67,8 @@ public abstract class ClientBase : IDisposable {
 
     /// <inheritdoc />
     public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases managed and unmanaged resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    protected virtual void Dispose(bool disposing) {
-        if (!disposing) {
-            return;
-        }
-
-        _http.Dispose();
         _cache?.Dispose();
+        HttpClient.Dispose();
     }
 
     /// <summary>
@@ -126,7 +120,7 @@ public abstract class ClientBase : IDisposable {
     /// </summary>
     private Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
-        var baseUrl = (_http.BaseAddress?.AbsoluteUri ?? "").TrimEnd('/');
+        var baseUrl = (HttpClient.BaseAddress?.AbsoluteUri ?? "").TrimEnd('/');
 
         return baseUrl.Length > 0 ? new Uri($"{baseUrl}/{path}") : new Uri(path, UriKind.Relative);
     }
@@ -140,7 +134,7 @@ public abstract class ClientBase : IDisposable {
 
         _authorization.AuthorizeRequest(request);
 
-        using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 
