@@ -1,4 +1,4 @@
-using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared;
 using DotBahn.Clients.Timetables;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;

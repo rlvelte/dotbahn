@@ -3,13 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Spectre.Console" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <ProjectReference Include="../DotBahn.Samples.Shared/DotBahn.Samples.Shared.csproj" />
     <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Stations/DotBahn.Clients.Stations.csproj" />
     <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Facilities/DotBahn.Clients.Facilities.csproj" />
     <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Facilities/DotBahn.Data.Facilities.csproj" />
