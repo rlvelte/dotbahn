@@ -11,27 +11,25 @@ namespace DotBahn.Modules.Cache;
 /// Extension methods for setting up cache services in an <see cref="IServiceCollection"/>.
 /// </summary>
 public static class ServiceCollectionExtension {
+    /// <summary>
+    /// Adds the cache system, with options configured via callback.
+    /// </summary>
+    /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
     /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
-    extension(IServiceCollection services) {
-        /// <summary>
-        /// Adds the cache system, with options configured via callback.
-        /// </summary>
-        /// <param name="configuration">Delegate to configure <see cref="CacheOptions"/>. Can use the service provider.</param>
-        /// <returns>The service collection.</returns>
-        public void AddDotBahnCache(Action<CacheOptions> configuration) {
-            ArgumentNullException.ThrowIfNull(services);
-            ArgumentNullException.ThrowIfNull(configuration);
+    /// <returns>The service collection.</returns>
+    public static void AddDotBahnCache(this IServiceCollection services, Action<CacheOptions> configuration) {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
 
-            services.Configure(configuration);
-            services.AddOptions<CacheOptions>()
-                    .Validate(o => o.DefaultExpiration.TotalSeconds > 1, "DotBahn: Cache 'DefaultExpiration' must be > 1.")
-                    .ValidateOnStart();
+        services.Configure(configuration);
+        services.AddOptions<CacheOptions>()
+                .Validate(o => o.DefaultExpiration.TotalSeconds > 1, "DotBahn: Cache 'DefaultExpiration' must be > 1.")
+                .ValidateOnStart();
 
-            services.AddSingleton<ICache>(sp => {
-                var options = sp.GetRequiredService<IOptions<CacheOptions>>().Value;
-                var logger = sp.GetService<ILogger<InMemoryCache>>();
-                return new InMemoryCache(options, logger);
-            });
-        }
+        services.AddSingleton<ICache>(sp => {
+            var options = sp.GetRequiredService<IOptions<CacheOptions>>().Value;
+            var logger = sp.GetService<ILogger<InMemoryCache>>();
+            return new InMemoryCache(options, logger);
+        });
     }
 }

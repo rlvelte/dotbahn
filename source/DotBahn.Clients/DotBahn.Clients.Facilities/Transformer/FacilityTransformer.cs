@@ -13,8 +13,11 @@ namespace DotBahn.Clients.Facilities.Transformer;
 /// </summary>
 public class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> {
     /// <inheritdoc />
-    public IEnumerable<Facility> Transform(in IEnumerable<FacilityContract> contract) =>
-        contract.Where(c => c is { Longitude: not null, Latitude: not null }).Select(TransformFacility);
+    public IEnumerable<Facility> Transform(in IEnumerable<FacilityContract> contracts) {
+        ArgumentNullException.ThrowIfNull(contracts);
+        return contracts.Where(c => c is { Longitude: not null, Latitude: not null })
+                        .Select(TransformFacility);
+    }
 
     /// <summary>
     /// Transforms the <see cref="FacilityContract"/> into its domain model.

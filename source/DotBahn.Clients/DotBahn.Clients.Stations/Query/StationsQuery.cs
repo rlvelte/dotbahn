@@ -36,7 +36,7 @@ public sealed partial record StationsQuery {
                 throw new ArgumentException("At least one name is required.", nameof(value));
             }
 
-            field = value.Select(n => n.Contains('*') || n.Contains('?') ? n : n + "*").ToArray();
+            field = [.. value.Select(n => n.Contains('*') || n.Contains('?') ? n : n + "*")];
         }
     }
 
@@ -117,9 +117,14 @@ public sealed partial record StationsQuery {
 
     /// <summary>
     /// The maximum number of hits to be returned by that query.
-    /// If 'limit' is set greater than 10000, it will be reset to 10000 internally and only 10000 hits will be returned.
+    /// If 'limit' is set greater than 10_000, it will be reset to 10_000 internally and only these hits will be returned.
     /// </summary>
     public int? Limit { get; set; } = 10000;
+
+    /// <summary>
+    /// Creates a new empty <see cref="StationsQuery"/> for fluent building.
+    /// </summary>
+    public static StationsQuery Create() => new();
 
     /// <summary>
     /// Sets the station names or fragments to search for.

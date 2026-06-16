@@ -1,4 +1,4 @@
-using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared;
 using DotBahn.Clients.Timetables;
 using DotBahn.Data.Shared.Models;
 using DotBahn.Data.Timetables.Enumerations;
@@ -30,7 +30,8 @@ if (!int.TryParse(args.Length > 0 ? args[0] : "8098160", out var eva)) {
     eva = 8098160;
 }
 
-using var client = new TimetablesClient(
+using var http = new HttpClient();
+using var client = new TimetablesClient(http,
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1"),
     },

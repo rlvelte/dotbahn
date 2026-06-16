@@ -1,11 +1,11 @@
 using System.Net;
 
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Clients.Stations;
 using DotBahn.Clients.Stations.Contracts;
 using DotBahn.Clients.Stations.Query;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Stations.Models;
-using DotBahn.Modules.Shared.Parsing.Base;
 using DotBahn.Tests.Shared;
 
 using Moq;

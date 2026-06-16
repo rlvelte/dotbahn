@@ -8,7 +8,7 @@ namespace DotBahn.Data.Stations.Models;
 /// </summary>
 public class Station {
     /// <summary>
-    /// Unique station number assigned by DB Station & Service.
+    /// Unique station number assigned by DB Station &amp; Service.
     /// </summary>
     public required int Number { get; init; }
 

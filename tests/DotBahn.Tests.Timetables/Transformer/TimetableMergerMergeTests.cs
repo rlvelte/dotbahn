@@ -5,15 +5,15 @@ using DotBahn.Data.Timetables.Models;
 
 namespace DotBahn.Tests.Timetables.Transformer;
 
-public class TimetableTransformerMergeTests {
-    private readonly TimetableTransformer _transformer = new();
+public class TimetableMergerMergeTests {
+    private readonly TimetableMerger _merger = new();
 
     [Fact]
     public void Merge_WithNoChanges_ShouldReturnCurrent() {
         var current = CreateTimetable("Hamburg Hbf", [CreateStop("stop-1")]);
         var changes = CreateTimetable("Hamburg Hbf", []);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         Assert.Equal("Hamburg Hbf", result.Station);
         Assert.Single(result.Stops);
@@ -24,7 +24,7 @@ public class TimetableTransformerMergeTests {
         var current = CreateTimetable("Berlin Hbf", [CreateStop("stop-1")]);
         var changes = CreateTimetable("Berlin Hbf", [CreateStop("stop-2")]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         Assert.Equal(2, result.Stops.Count());
         Assert.Contains(result.Stops, s => s.Id == "stop-1");
@@ -40,7 +40,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithDepartureUpdate("stop-1", "2501191015", "6")
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var stop = Assert.Single(result.Stops);
         Assert.Equal("stop-1", stop.Id);
@@ -59,7 +59,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithDepartureUpdate("stop-1", "2501191230", null)
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var departure = result.Stops.First().Departure!;
         Assert.Equal(new DateTime(2025, 1, 19, 12, 0, 0), departure.Time.Original);
@@ -75,7 +75,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithDeparture("stop-1", "2501191400", "10")
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var departure = result.Stops.First().Departure!;
         Assert.Equal(new DateTime(2025, 1, 19, 14, 15, 0), departure.Time.Updated);
@@ -92,7 +92,7 @@ public class TimetableTransformerMergeTests {
             CreateMessage("msg-3")
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         Assert.Equal(3, result.Messages.Count());
         Assert.Contains(result.Messages, m => m.Id == "msg-1");
@@ -105,7 +105,7 @@ public class TimetableTransformerMergeTests {
         var current = CreateTimetable("Leipzig Hbf", []);
         var changes = CreateTimetable("Other Station", []);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         Assert.Equal("Leipzig Hbf", result.Station);
     }
@@ -125,7 +125,7 @@ public class TimetableTransformerMergeTests {
             }
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var stop = Assert.Single(result.Stops);
         Assert.Equal("ICE", stop.Train.Category);
@@ -140,7 +140,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithDeparture("stop-1", "2501191600", "12")
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var stop = Assert.Single(result.Stops);
         Assert.NotNull(stop.Departure);
@@ -156,7 +156,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithWings("stop-1", "2501191000", "5", ["A", "B"])
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var wings = result.Stops.First().Departure!.Wings;
         Assert.Equal(2, wings.Count());
@@ -174,7 +174,7 @@ public class TimetableTransformerMergeTests {
             CreateStopWithWings("stop-1", "2501191000", "5", [])
         ]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var wings = result.Stops.First().Departure!.Wings;
         Assert.Single(wings);
@@ -206,7 +206,7 @@ public class TimetableTransformerMergeTests {
             }
         }]);
 
-        var result = _transformer.Merge(current, changes);
+        var result = _merger.Merge(current, changes);
 
         var platform = result.Stops.First().Departure!.Platform;
         Assert.Equal("5", platform.Original);

@@ -1,8 +1,10 @@
 using System.Text;
 
 using DotBahn.Clients.Facilities;
+using DotBahn.Clients.Facilities.Interfaces;
 using DotBahn.Clients.Facilities.Query;
 using DotBahn.Clients.Stations;
+using DotBahn.Clients.Stations.Interfaces;
 using DotBahn.Clients.Stations.Query;
 using DotBahn.Data.Facilities.Enumerations;
 using DotBahn.Data.Facilities.Models;
@@ -49,8 +51,8 @@ services.AddDotBahnStations(opt => opt.BaseEndpoint = new Uri("https://apis.deut
 services.AddDotBahnFacilities(opt => opt.BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/"));
 
 var serviceProvider = services.BuildServiceProvider();
-var stationsClient = serviceProvider.GetRequiredService<StationsClient>();
-var facilitiesClient = serviceProvider.GetRequiredService<FacilitiesClient>();
+var stationsClient = serviceProvider.GetRequiredService<IStationsClient>();
+var facilitiesClient = serviceProvider.GetRequiredService<IFacilitiesClient>();
 
 List<Station> stations = [];
 Dictionary<int, List<Facility>> facilitiesCache = [];

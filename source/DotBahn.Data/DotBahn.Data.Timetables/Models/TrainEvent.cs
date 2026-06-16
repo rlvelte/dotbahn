@@ -34,7 +34,7 @@ public class TrainEvent {
     /// For departure, the path indicates stations after the current station (the last element is the trip's destination).
     /// The current station is never included in the path.
     /// </summary>
-    public required ChangedRef<IEnumerable<string>> Path { get; init; }
+    public ChangedRef<IEnumerable<string>> Path { get; init; } = new() { Original = [] };
 
     /// <summary>
     /// Wing train IDs. A list of trip IDs for coupled trains (train portions).

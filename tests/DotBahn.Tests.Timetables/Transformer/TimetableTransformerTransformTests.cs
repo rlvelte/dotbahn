@@ -220,7 +220,7 @@ public class TimetableTransformerTransformTests {
         TimetableResponseContract contract = null!;
 
         var exception = Assert.Throws<ArgumentNullException>(() => _transformer.Transform(contract));
-        Assert.Equal("contract", exception.ParamName);
+        Assert.Equal("contracts", exception.ParamName);
     }
 
     [Fact]

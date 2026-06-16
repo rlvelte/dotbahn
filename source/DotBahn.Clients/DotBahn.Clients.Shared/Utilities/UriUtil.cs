@@ -11,16 +11,16 @@ internal static class UriUtil {
     /// <summary>
     /// Builds a URL with query parameters.
     /// </summary>
-    /// <param name="relativeUrl">The base relative URL.</param>
+    /// <param name="relative">The base relative URL.</param>
     /// <param name="queryParams">Optional query parameters.</param>
     /// <returns>The complete URL with a query string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static string BuildUrl(string relativeUrl, QueryParameters? queryParams) {
+    internal static string BuildUrl(string relative, QueryParameters? queryParams) {
         if (queryParams == null || !queryParams.Any()) {
-            return relativeUrl;
+            return relative;
         }
 
         var queryString = queryParams.ToQueryString();
-        return string.IsNullOrEmpty(queryString) ? relativeUrl : $"{relativeUrl}?{queryString}";
+        return string.IsNullOrEmpty(queryString) ? relative : $"{relative}?{queryString}";
     }
 }

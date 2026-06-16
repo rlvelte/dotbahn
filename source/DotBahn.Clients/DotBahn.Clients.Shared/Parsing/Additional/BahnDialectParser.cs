@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Modules.Shared.Parsing.Additional;
+namespace DotBahn.Clients.Shared.Parsing.Additional;
 
 /// <summary>
 /// Converts dialect in the contracts to real types (e.g. 'yes' as 'true').

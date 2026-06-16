@@ -58,7 +58,7 @@ public class InMemoryCacheTests {
         });
         await cache.SetAsync("key", "value");
 
-        await Task.Delay(150);
+        await Task.Delay(150, TestContext.Current.CancellationToken);
 
         Assert.Null(await cache.GetAsync<string>("key"));
     }
