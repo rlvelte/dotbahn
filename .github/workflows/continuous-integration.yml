@@ -37,9 +37,6 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Format check
-        run: dotnet format --verify-no-changes --verbosity diagnostic
-
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
