@@ -16,7 +16,7 @@ public class FacilitiesQueryFluentApiTests {
         // Assert
         Assert.Equal(FacilityType.Elevator, query.Type);
         Assert.Equal(FacilityState.Active, query.State);
-        Assert.Equal(["10562421", "10562422"], query.EquipmentNumbers!);
+        Assert.Equal(["10562421", "10562422"], query.EquipmentNumbers);
         Assert.Equal("8002549", query.StationId);
     }
 

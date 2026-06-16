@@ -63,7 +63,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
 
         // Assert
         Assert.Same(query, result);
-        Assert.Single(query.EquipmentNumbers!);
+        Assert.Single(query.EquipmentNumbers);
         Assert.Equal("10562421", query.EquipmentNumbers.First());
     }
 

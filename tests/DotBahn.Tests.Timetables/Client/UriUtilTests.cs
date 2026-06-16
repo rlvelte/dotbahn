@@ -1,10 +1,10 @@
 using System.Net;
 
-using DotBahn.Clients.Shared.Client;
+using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Clients.Shared.Query;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
-using DotBahn.Modules.Shared.Parsing.Base;
 using DotBahn.Tests.Shared;
 
 using Moq;
@@ -23,7 +23,7 @@ public class UriUtilTests : ClientTestBase {
         var client = CreateClient();
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", _parserMock.Object, "application/xml");
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
         Assert.DoesNotContain("?", requestUri);
@@ -35,7 +35,7 @@ public class UriUtilTests : ClientTestBase {
         var queryParams = QueryParameters.Create();
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams, TestContext.Current.CancellationToken);
 
         var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
         Assert.DoesNotContain("?", requestUri);
@@ -49,7 +49,7 @@ public class UriUtilTests : ClientTestBase {
             .Add("key2", "value2");
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams, TestContext.Current.CancellationToken);
 
         var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
         Assert.Contains("?key1=value1", requestUri);
@@ -63,7 +63,7 @@ public class UriUtilTests : ClientTestBase {
             .Add("search", "test value");
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams);
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams, TestContext.Current.CancellationToken);
 
         Assert.Single(HttpHandler.SentRequests);
         var requestUri = HttpHandler.SentRequests[0].RequestUri!.AbsoluteUri;

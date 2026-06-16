@@ -1,10 +1,10 @@
 using System.Net;
 
-using DotBahn.Clients.Shared.Client;
+using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Clients.Shared.Query;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
-using DotBahn.Modules.Shared.Parsing.Base;
 using DotBahn.Tests.Shared;
 
 using Moq;
@@ -45,7 +45,7 @@ public class ClientBaseTests : ClientTestBase {
 
     [Fact]
     public void Constructor_OptionsConstructor_CreatesOwnHttpClient() {
-        var options = new DotBahn.Clients.Shared.Options.ClientOptions {
+        var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
         var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
@@ -70,7 +70,7 @@ public class ClientBaseTests : ClientTestBase {
 
     [Fact]
     public void Constructor_OptionsConstructor_WithNullAuth_ThrowsArgumentNullException() {
-        var options = new DotBahn.Clients.Shared.Options.ClientOptions {
+        var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
 
@@ -84,7 +84,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test/path", parser, "application/xml");
+        await client.GetAsync("/test/path", parser, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         AssertRequest(HttpMethod.Get, "/test/path", "application/xml");
     }
@@ -96,7 +96,7 @@ public class ClientBaseTests : ClientTestBase {
         var queryParams = QueryParameters.Create().Add("key1", "value1").Add("key2", "value2");
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", parser, "application/xml", queryParams);
+        await client.GetAsync("/test", parser, "application/xml", queryParams, TestContext.Current.CancellationToken);
 
         var request = HttpHandler.SentRequests[0];
         Assert.Contains("key1=value1", request.RequestUri?.ToString());
@@ -109,7 +109,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>", "application/json");
 
-        await client.GetAsync("/test", parser, "application/json");
+        await client.GetAsync("/test", parser, "application/json", cancellation: TestContext.Current.CancellationToken);
 
         AssertRequest(HttpMethod.Get, "/test", "application/json");
     }
@@ -120,7 +120,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", parser, "application/xml");
+        await client.GetAsync("/test", parser, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         AuthorizationMock.Verify(a => a.AuthorizeRequest(It.IsAny<HttpRequestMessage>()), Times.Once);
     }
@@ -133,7 +133,7 @@ public class ClientBaseTests : ClientTestBase {
         parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(expectedContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response>data</response>");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml");
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         Assert.Equal(expectedContract, result);
     }
@@ -142,7 +142,7 @@ public class ClientBaseTests : ClientTestBase {
     public async Task GetAsync_WithNullParser_ThrowsArgumentNullException() {
         var client = CreateClient();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetAsync("/test", null!, "application/xml"));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetAsync("/test", null!, "application/xml", cancellation: TestContext.Current.CancellationToken));
     }
 
 
@@ -156,7 +156,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>();
         parserMock.Setup(p => p.Parse(cachedData)).Returns("parsed-cached");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml");
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         Assert.Equal("parsed-cached", result);
         Assert.Empty(HttpHandler.SentRequests);
@@ -175,7 +175,7 @@ public class ClientBaseTests : ClientTestBase {
 
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response>data</response>");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml");
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         Assert.Equal("parsed-response", result);
         Assert.Single(HttpHandler.SentRequests);
@@ -191,7 +191,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", parserMock, "application/xml");
+        await client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         cacheMock.Verify(c => c.GetAsync<string>(It.Is<string>(k => k.Contains("/test"))), Times.Once);
     }
@@ -203,7 +203,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.Unauthorized, "");
 
-        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml"));
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.Unauthorized, ex.StatusCode);
         Assert.Contains("not authorized", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -214,7 +214,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.BadRequest, "");
 
-        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml"));
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
         Assert.Contains("Bad request", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -226,7 +226,7 @@ public class ClientBaseTests : ClientTestBase {
         parserMock.Setup(p => p.Parse("")).Returns("");
         HttpHandler.RespondWith(HttpStatusCode.NotFound, "");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml");
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
 
         Assert.Equal("", result);
         parserMock.Verify(p => p.Parse(""), Times.Once);
@@ -238,12 +238,12 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.InternalServerError, "");
 
-        await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml"));
+        await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
     }
 
     [Fact]
     public void Dispose_OptionsMode_DisposesOwnedHttpClient() {
-        var options = new DotBahn.Clients.Shared.Options.ClientOptions {
+        var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
         var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
@@ -276,7 +276,7 @@ public class ClientBaseTests : ClientTestBase {
             : base(http, authorization, cache) { }
 
         public TestClientBase(
-            DotBahn.Clients.Shared.Options.ClientOptions options,
+            ClientOptions options,
             DotBahn.Modules.Authorization.AuthorizationOptions auth,
             DotBahn.Modules.Cache.CacheOptions? cache)
             : base(options, auth, cache) { }

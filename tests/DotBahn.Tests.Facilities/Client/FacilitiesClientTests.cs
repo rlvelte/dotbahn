@@ -3,10 +3,10 @@ using System.Net;
 using DotBahn.Clients.Facilities;
 using DotBahn.Clients.Facilities.Contracts;
 using DotBahn.Clients.Facilities.Query;
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Data.Facilities.Enumerations;
 using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Shared.Transformer;
-using DotBahn.Modules.Shared.Parsing.Base;
 using DotBahn.Tests.Shared;
 
 using Moq;

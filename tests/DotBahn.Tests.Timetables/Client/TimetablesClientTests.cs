@@ -1,10 +1,10 @@
 using System.Net;
 
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Clients.Timetables;
 using DotBahn.Clients.Timetables.Contracts;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Data.Timetables.Models;
-using DotBahn.Modules.Shared.Parsing.Base;
 using DotBahn.Tests.Shared;
 
 using Moq;
@@ -26,7 +26,7 @@ public class TimetablesClientTests : ClientTestBase {
         private readonly Timetable _result;
         public StubTransformer(Timetable result) => _result = result;
         public int TransformCallCount { get; private set; }
-        public Timetable Transform(in TimetableResponseContract contract) {
+        public Timetable Transform(in TimetableResponseContract contracts) {
             TransformCallCount++;
             return _result;
         }
@@ -51,7 +51,7 @@ public class TimetablesClientTests : ClientTestBase {
 
         var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
-        var result = await client.GetFullChangesAsync(TestEva);
+        var result = await client.GetFullChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
@@ -71,7 +71,7 @@ public class TimetablesClientTests : ClientTestBase {
 
         var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
-        var result = await client.GetFullChangesAsync(TestEva, currentTimetable);
+        var result = await client.GetFullChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
         Assert.Same(mergedTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
@@ -88,7 +88,7 @@ public class TimetablesClientTests : ClientTestBase {
 
         var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
-        var result = await client.GetRecentChangesAsync(TestEva);
+        var result = await client.GetRecentChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
@@ -108,7 +108,7 @@ public class TimetablesClientTests : ClientTestBase {
 
         var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
-        var result = await client.GetRecentChangesAsync(TestEva, currentTimetable);
+        var result = await client.GetRecentChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
         Assert.Same(mergedTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
@@ -125,7 +125,7 @@ public class TimetablesClientTests : ClientTestBase {
 
         var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, new StubMerger(_defaultTimetable), CacheMock.Object);
-        var result = await client.GetTimetableAsync(TestEva, dateTime);
+        var result = await client.GetTimetableAsync(TestEva, dateTime, TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
