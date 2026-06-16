@@ -19,19 +19,20 @@
     <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
     <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/_Configuration/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
   <Folder Name="/_Docs/">
-    <File Path="docs\docfx.json" />
-    <File Path="docs\toc.yml" />
+    <File Path="docs/docfx.json" />
+    <File Path="docs/toc.yml" />
   </Folder>
   <Folder Name="/_Samples/">
     <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
-    <Project Path="samples/DotBahn.Samples.Shared/DotBahn.Samples.Shared.csproj" />
     <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/_Shared/">
     <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
     <Project Path="source/DotBahn.Data/DotBahn.Data.Shared/DotBahn.Data.Shared.csproj" />
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Shared/DotBahn.Modules.Shared.csproj" />
   </Folder>
 </Solution>

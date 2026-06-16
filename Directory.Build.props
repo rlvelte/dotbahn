@@ -1,56 +1,63 @@
 <Project>
+  <!-- General -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <AnalysisLevel>latest-All</AnalysisLevel>
-    <AnalysisMode>All</AnalysisMode>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- Nukpg -->
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
+  </PropertyGroup>
+
+  <!-- SNupkg -->
+  <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <!-- Package information -->
+  <PropertyGroup>
+    <Authors>Robin L. Velte</Authors>
+    <PackageProjectUrl>https://github.com/rlvelte/dotbahn</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rlvelte/dotbahn</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>db;bahn;client;deutschebahn;api;rest;http;dotnet;net10;stations;facilities;timetables;client-library</PackageTags>
+    <Copyright>Copyright (c) Robin L. Velte 2026</Copyright>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(IsPackable)' != 'false'">
+    <None Include="$(MSBuildThisFileDirectory)docs/images/logo-512x512.png" Pack="True" PackagePath="icon.png" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="True" PackagePath="" />
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="True" PackagePath="" />
+  </ItemGroup>
+
+
+  <!-- MiVer versioning -->
   <PropertyGroup>
     <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MinVer" PrivateAssets="all" />
+  </ItemGroup>
 
+  <!-- GitHub -->
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MinVer" PrivateAssets="all" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <Authors>Robin L. Velte</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/rlvelte/dotbahn</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/rlvelte/dotbahn</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>db;bahn;client;deutschebahn;api</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
-    <PackageIcon>Icon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)docs/images/logo-512x512.png" Pack="True" PackagePath="Icon.png" />
-    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="True" PackagePath="" />
-    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="True" PackagePath="" />
-  </ItemGroup>
-
 </Project>
