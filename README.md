@@ -43,8 +43,6 @@ All packages integrate seamlessly with `ServiceCollection`.
 ```csharp
 // Add Stations/Timetables/Facilities clients
 services.AddDotBahnStations(opt => {
-    opt.ClientId = <your-client-id>;
-    opt.ApiKey = <your-client-secret>;
     opt.BaseEndpoint = new Uri("...");
 });
 
@@ -55,12 +53,8 @@ services.AddDotBahnTimetables(opt => {
 services.AddDotBahnFacilities(opt => {
     opt.BaseEndpoint = new Uri("...");
 });
-```
 
-At least one client must include authorization credentials. Alternatively, configure authorization centrally:
-
-```csharp
-// Add central authorization
+// Configure authorization (required for API access)
 services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
     opt.ApiKey = clientSecret;
