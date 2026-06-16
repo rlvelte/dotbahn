@@ -9,7 +9,7 @@ public interface ITransformer<out TModel, TContract> {
     /// <summary>
     /// Transform the contract into the domain model.
     /// </summary>
-    /// <param name="contract">The contract data to transform.</param>
+    /// <param name="contracts">The contract data to transform.</param>
     /// <returns>The transformed object.</returns>
-    TModel Transform(in TContract contract);
+    TModel Transform(in TContract contracts);
 }

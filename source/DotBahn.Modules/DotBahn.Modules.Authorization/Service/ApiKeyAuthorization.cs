@@ -9,7 +9,7 @@ public class ApiKeyAuthorization(AuthorizationOptions configuration) : IAuthoriz
     /// <inheritdoc />
     public void AuthorizeRequest(HttpRequestMessage request) {
         ArgumentNullException.ThrowIfNull(request);
-        request.Headers.Add("DB-Client-Id", configuration.ClientId);
-        request.Headers.Add("DB-Api-Key", configuration.ApiKey);
+        request.Headers.Add(configuration.HeaderNameClientId, configuration.ClientId);
+        request.Headers.Add(configuration.HeaderNameApiKey, configuration.ApiKey);
     }
 }

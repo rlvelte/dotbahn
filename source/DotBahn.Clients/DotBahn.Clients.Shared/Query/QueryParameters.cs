@@ -4,7 +4,7 @@ namespace DotBahn.Clients.Shared.Query;
 /// Helper class for building query string parameters in a fluent way.
 /// </summary>
 public class QueryParameters {
-    private readonly Dictionary<string, string> _parameters = new();
+    private readonly Dictionary<string, string> _parameters = [];
 
     /// <summary>
     /// Creates a new instance of <see cref="QueryParameters"/>.

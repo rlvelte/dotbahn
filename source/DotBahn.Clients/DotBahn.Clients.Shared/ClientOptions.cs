@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace DotBahn.Clients.Shared.Options;
+namespace DotBahn.Clients.Shared;
 
 /// <summary>
 /// Options for a client.

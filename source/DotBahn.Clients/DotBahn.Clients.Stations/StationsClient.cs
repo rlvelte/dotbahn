@@ -1,6 +1,8 @@
-using DotBahn.Clients.Shared.Client;
-using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Parsing;
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Clients.Stations.Contracts;
+using DotBahn.Clients.Stations.Interfaces;
 using DotBahn.Clients.Stations.Query;
 using DotBahn.Clients.Stations.Transformer;
 using DotBahn.Data.Shared.Transformer;
@@ -9,15 +11,13 @@ using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
-using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Stations;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
-public class StationsClient : ClientBase {
+public class StationsClient : ClientBase, IStationsClient {
     private readonly IParser<StationsResponseContract> _parser;
     private readonly ITransformer<IEnumerable<Station>, StationsResponseContract> _transformer;
 
@@ -47,18 +47,11 @@ public class StationsClient : ClientBase {
         _transformer = new StationTransformer();
     }
 
-    /// <summary>
-    /// Searches for stations using a query structure.
-    /// </summary>
-    /// <param name="query">The query to specify results with.</param>
-    /// <param name="cancellation">Token to cancel the request.</param>
-    /// <returns>List of stations matching the search criteria.</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<IEnumerable<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
         var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
-
-        return _transformer.Transform(response);
+        return [.. _transformer.Transform(response)];
     }
 }

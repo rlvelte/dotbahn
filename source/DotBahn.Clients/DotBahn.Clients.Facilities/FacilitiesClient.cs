@@ -1,23 +1,23 @@
 using DotBahn.Clients.Facilities.Contracts;
+using DotBahn.Clients.Facilities.Interfaces;
 using DotBahn.Clients.Facilities.Query;
 using DotBahn.Clients.Facilities.Transformer;
-using DotBahn.Clients.Shared.Client;
-using DotBahn.Clients.Shared.Options;
+using DotBahn.Clients.Shared;
+using DotBahn.Clients.Shared.Parsing;
+using DotBahn.Clients.Shared.Parsing.Base;
 using DotBahn.Data.Facilities.Models;
 using DotBahn.Data.Shared.Transformer;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service.Base;
-using DotBahn.Modules.Shared.Parsing;
-using DotBahn.Modules.Shared.Parsing.Base;
 
 namespace DotBahn.Clients.Facilities;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public class FacilitiesClient : ClientBase {
+public class FacilitiesClient : ClientBase, IFacilitiesClient {
     private readonly IParser<IEnumerable<FacilityContract>> _parser;
     private readonly ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> _transformer;
 
@@ -47,16 +47,10 @@ public class FacilitiesClient : ClientBase {
         _transformer = new FacilityTransformer();
     }
 
-    /// <summary>
-    /// Finds facilities based on optional filter criteria.
-    /// </summary>
-    /// <param name="query">The query to specify results with.</param>
-    /// <param name="cancellation">Token to cancel the request.</param>
-    /// <returns>List of facilities matching the criteria.</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    public async Task<IEnumerable<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default) {
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
         var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false)).ToList();
-        return _transformer.Transform(result);
+        return [.. _transformer.Transform(result)];
     }
 }

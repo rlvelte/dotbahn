@@ -1,9 +1,9 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-using DotBahn.Modules.Shared.Parsing.Base;
+using DotBahn.Clients.Shared.Parsing.Base;
 
-namespace DotBahn.Modules.Shared.Parsing;
+namespace DotBahn.Clients.Shared.Parsing;
 
 /// <summary>
 /// Generic XML parser implementation.
