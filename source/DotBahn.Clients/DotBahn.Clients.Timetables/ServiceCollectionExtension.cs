@@ -17,16 +17,21 @@ namespace DotBahn.Clients.Timetables;
 public static class ServiceCollectionExtension {
     private const string OptionsName = "DotBahn.Timetables";
 
+    private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
+
     /// <summary>
-    /// Adds the Timetables client using HttpClientFactory, with options configured via callback.
+    /// Adds the Timetables client using HttpClientFactory.
+    /// The <see cref="ClientOptions.BaseEndpoint"/> defaults to <c>https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1</c>
+    /// and can be overridden in the optional delegate.
     /// </summary>
     /// <param name="services">The service collection to add this service to.</param>
-    /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
+    /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
     /// <returns>The service collection.</returns>
-    public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions> configuration) {
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddDotBahnClient<ITimetablesClient, TimetablesClient>(OptionsName, configuration);
+    public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
+        services.AddDotBahnClient<ITimetablesClient, TimetablesClient>(OptionsName, opts => {
+            opts.BaseEndpoint = DefaultTimetablesEndpoint;
+            configuration?.Invoke(opts);
+        });
 
         services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
         services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();

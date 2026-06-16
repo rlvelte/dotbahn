@@ -30,6 +30,7 @@ public class TimetablesClient : ClientBase, ITimetablesClient {
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="merger">The merger for the target type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
+    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
     public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;

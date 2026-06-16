@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -15,25 +14,25 @@ public static class ServiceCollectionExtensions {
     /// <typeparam name="TImplementation">The concrete client implementation.</typeparam>
     /// <param name="services">The service collection to add this service to.</param>
     /// <param name="optionsName">The named options name for this client.</param>
-    /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>.</param>
+    /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. When null, defaults are used (typically set by the wrapping extension method).</param>
     /// <returns>The service collection.</returns>
-    public static IServiceCollection AddDotBahnClient<TClient, TImplementation>(this IServiceCollection services, string optionsName, Action<ClientOptions> configuration)
+    public static IServiceCollection AddDotBahnClient<TClient, TImplementation>(this IServiceCollection services, string optionsName, Action<ClientOptions>? configuration = null)
         where TClient : class
         where TImplementation : ClientBase, TClient {
-        ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(optionsName);
 
-        services.Configure(optionsName, configuration);
+        if (configuration != null) {
+            services.Configure(optionsName, configuration);
+        }
+
         services.AddOptions<ClientOptions>(optionsName)
-                .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseEndpoint must be an absolute URI.")
+                .Validate(o => o.BaseEndpoint?.IsAbsoluteUri == true, "DotBahn: BaseEndpoint must be an absolute URI.")
                 .ValidateOnStart();
 
         services.AddHttpClient<TClient, TImplementation>((sp, http) => {
-            var opt = sp.GetRequiredService<IOptionsSnapshot<ClientOptions>>().Get(optionsName);
+            var opt = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(optionsName);
             http.BaseAddress = opt.BaseEndpoint;
             http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
-        }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
         });
 
         services.AddTransient<TImplementation>(sp => (TImplementation)sp.GetRequiredService<TClient>());

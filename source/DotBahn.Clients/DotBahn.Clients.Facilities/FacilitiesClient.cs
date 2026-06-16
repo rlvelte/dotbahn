@@ -29,6 +29,7 @@ public class FacilitiesClient : ClientBase, IFacilitiesClient {
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
+    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
     public FacilitiesClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;

@@ -7,7 +7,7 @@ public class TimetableStop {
     /// <summary>
     /// Unique stop identifier consisting of:
     /// <list type="bullet">
-    ///   <item><description>A daily trip ID that uniquely identifies a trip within one day (may be negative)</description></item>
+    ///   <item><description>A daily trip ID that uniquely identifies a trip within one day (maybe negative)</description></item>
     ///   <item><description>A 6-digit date specifier (YYMMdd) indicating the planned departure date from the start station</description></item>
     ///   <item><description>An index indicating the position of the stop within the trip</description></item>
     /// </list>

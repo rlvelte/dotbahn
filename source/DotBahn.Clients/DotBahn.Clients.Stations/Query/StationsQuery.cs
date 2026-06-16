@@ -122,6 +122,11 @@ public sealed partial record StationsQuery {
     public int? Limit { get; set; } = 10000;
 
     /// <summary>
+    /// Creates a new empty <see cref="StationsQuery"/> for fluent building.
+    /// </summary>
+    public static StationsQuery Create() => new();
+
+    /// <summary>
     /// Sets the station names or fragments to search for.
     /// Appends a trailing '*' automatically if no wildcard is present.
     /// </summary>

@@ -17,16 +17,21 @@ namespace DotBahn.Clients.Facilities;
 public static class ServiceCollectionExtension {
     private const string OptionsName = "DotBahn.Facilities";
 
+    private static readonly Uri DefaultFacilitiesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
+
     /// <summary>
-    /// Adds the FaSta client using HttpClientFactory, with options configured via callback.
+    /// Adds the FaSta client using HttpClientFactory.
+    /// The <see cref="ClientOptions.BaseEndpoint"/> defaults to <c>https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/</c>
+    /// and can be overridden in the optional delegate.
     /// </summary>
     /// <param name="services">The service collection to add this service to.</param>
-    /// <param name="configuration">Delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
+    /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
     /// <returns>The service collection.</returns>
-    public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<ClientOptions> configuration) {
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddDotBahnClient<IFacilitiesClient, FacilitiesClient>(OptionsName, configuration);
+    public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
+        services.AddDotBahnClient<IFacilitiesClient, FacilitiesClient>(OptionsName, opts => {
+            opts.BaseEndpoint = DefaultFacilitiesEndpoint;
+            configuration?.Invoke(opts);
+        });
 
         services.AddSingleton<IParser<IEnumerable<FacilityContract>>, JsonParser<List<FacilityContract>>>();
         services.AddSingleton<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>, FacilityTransformer>();

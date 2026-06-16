@@ -38,51 +38,47 @@ dotnet add package DotBahn.Facilities
 
 ## Usage
 ### Dependency Injection (Recommended)
-All packages integrate seamlessly with `ServiceCollection`.
+All packages integrate seamlessly with `ServiceCollection`. Each client comes with a sensible default endpoint — override only for custom proxies:
 
 ```csharp
-// Add Stations/Timetables/Facilities clients
-services.AddDotBahnStations(opt => {
-    opt.BaseEndpoint = new Uri("...");
-});
-
-services.AddDotBahnTimetables(opt => {
-    opt.BaseEndpoint = new Uri("...");
-});
-
-services.AddDotBahnFacilities(opt => {
-    opt.BaseEndpoint = new Uri("...");
-});
+// Register clients (default endpoints are pre-configured)
+services.AddDotBahnStations();
+services.AddDotBahnTimetables();
+services.AddDotBahnFacilities();
 
 // Configure authorization (required for API access)
 services.AddDotBahnAuthorization(opt => {
     opt.ClientId = clientId;
     opt.ApiKey = clientSecret;
 });
+
+// Optional: override default endpoints
+services.AddDotBahnStations(opt => {
+    opt.BaseEndpoint = new Uri("https://custom-proxy.example.com/stada");
+});
 ```
 
 Enable request caching to reduce API calls:
 
 ```csharp
-// Add Cache
 services.AddDotBahnCache(opt => {
-    opt.DefaultExpiration = TimeSpan.FromSeconds(...); 
+    opt.DefaultExpiration = TimeSpan.FromSeconds(60);
 });
 ```
 
 ### Manual Initialization
-Create client instances directly without dependency injection:
+Create client instances directly without dependency injection. The caller provides the `HttpClient` lifecycle:
+
 ```csharp
-var options = new ClientOptions {
-    BaseEndpoint = new Uri("...")
-};
-
-var auth = new AuthorizationOptions {
-    ClientId = <your-client-id>, 
-    ApiKey = <your-client-secret>
-};
-
-var client = new StationsClient(opt, auth);
+using var http = new HttpClient();
+using var client = new StationsClient(http,
+    new ClientOptions {
+        BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/")
+    },
+    new AuthorizationOptions {
+        ClientId = clientId,
+        ApiKey = clientSecret
+    });
 ```
 
 ## Samples
