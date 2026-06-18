@@ -1,8 +1,8 @@
-using DotBahn.Shared.Models;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Models;
+using DotBahn.Common.Transformer;
 using DotBahn.Stations.Internal.Contracts;
-using DotBahn.Stations.Models.Enumerations;
 using DotBahn.Stations.Models;
+using DotBahn.Stations.Models.Enumerations;
 
 namespace DotBahn.Stations.Internal.Transformers;
 

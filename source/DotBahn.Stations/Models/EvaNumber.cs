@@ -1,4 +1,4 @@
-using DotBahn.Shared.Models;
+using DotBahn.Common.Models;
 
 namespace DotBahn.Stations.Models;
 

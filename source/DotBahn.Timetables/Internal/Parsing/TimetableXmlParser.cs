@@ -1,5 +1,5 @@
 using System.Xml.Linq;
-using DotBahn.Shared.Parsing;
+using DotBahn.Common.Parsing;
 using DotBahn.Timetables.Internal.Contracts;
 
 namespace DotBahn.Timetables.Internal.Parsing;

@@ -1,8 +1,7 @@
-using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
-using DotBahn.Shared;
-using DotBahn.Shared.Parsing;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Timetables.Internal.Contracts;
 using DotBahn.Timetables.Internal.Parsing;
 using DotBahn.Timetables.Internal.Transformers;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Timetables;
 
 /// <summary>
-/// Extension methods for setting up Timetables in an <see cref="IServiceCollection"/>.
+/// Extension methods for registering the DotBahn Timetables client.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
@@ -21,14 +20,11 @@ public static class ServiceCollectionExtensions {
     private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
 
     /// <summary>
-    /// Adds the Timetables client using HttpClientFactory.
-    /// <remarks>
-    /// The <see cref="ClientOptions.BaseEndpoint"/> defaults to <c>https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1</c> and can be overridden in the optional delegate.
-    /// </remarks>
+    /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services.
     /// </summary>
-    /// <param name="services">The service collection to add this service to.</param>
-    /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
-    /// <returns>The service collection.</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configuration">Optional action to override default client options.</param>
+    /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {
@@ -44,11 +40,10 @@ public static class ServiceCollectionExtensions {
             http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
-            var cache = sp.GetService<ICache>();
             var parser = sp.GetRequiredService<IParser<TimetableResponseContract>>();
             var transformer = sp.GetRequiredService<ITransformer<Timetable, TimetableResponseContract>>();
             var merger = sp.GetRequiredService<IMerger<Timetable>>();
-            return new TimetableClient(http, auth, parser, transformer, merger, cache);
+            return new TimetableClient(http, auth, parser, transformer, merger);
         });
 
         services.AddSingleton<IParser<TimetableResponseContract>, TimetableXmlParser>();

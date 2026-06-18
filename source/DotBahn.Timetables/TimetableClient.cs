@@ -1,8 +1,7 @@
-using DotBahn.Shared;
-using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
-using DotBahn.Shared.Parsing;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Timetables.Internal.Contracts;
 using DotBahn.Timetables.Internal.Parsing;
 using DotBahn.Timetables.Internal.Transformers;
@@ -28,10 +27,9 @@ public class TimetableClient : ClientBase, ITimetableClient {
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="merger">The merger for the target type.</param>
-    /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    internal TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
-        : base(http, authorization, cache) {
+    internal TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger)
+        : base(http, authorization) {
         _parser = parser;
         _transformer = transformer;
         _merger = merger;
@@ -46,9 +44,7 @@ public class TimetableClient : ClientBase, ITimetableClient {
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
-    /// <param name="cache">The cache options for the client.</param>
-    public TimetableClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(http, options, auth, cache) {
+    public TimetableClient(HttpClient http, ClientOptions options, AuthorizationOptions auth) : base(http, options, auth) {
         _parser = new TimetableXmlParser();
         _transformer = new TimetableTransformer();
         _merger = new TimetableMerger();

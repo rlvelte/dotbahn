@@ -1,11 +1,10 @@
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Internal.Transformers;
 using DotBahn.Facilities.Models;
-using DotBahn.Shared;
-using DotBahn.Shared.Parsing;
-using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
-using DotBahn.Shared.Transformer;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBahn.Facilities;
@@ -24,10 +23,9 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
-    /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    internal FacilityClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null)
-        : base(http, authorization, cache) {
+    internal FacilityClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer)
+        : base(http, authorization) {
         _parser = parser;
         _transformer = transformer;
     }
@@ -41,9 +39,7 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
-    /// <param name="cache">The cache options for the client.</param>
-    public FacilityClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(http, options, auth, cache) {
+    public FacilityClient(HttpClient http, ClientOptions options, AuthorizationOptions auth) : base(http, options, auth) {
         _parser = new JsonParser<List<FacilityContract>>();
         _transformer = new FacilityTransformer();
     }

@@ -1,4 +1,4 @@
-using DotBahn.Shared.Models;
+using DotBahn.Common.Models;
 using DotBahn.Timetables.Models.Enumerations;
 
 namespace DotBahn.Timetables.Models;

@@ -1,5 +1,5 @@
+using DotBahn.Common.Models;
 using DotBahn.Facilities.Models.Enumerations;
-using DotBahn.Shared.Models;
 
 namespace DotBahn.Facilities.Models;
 

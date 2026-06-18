@@ -1,10 +1,9 @@
+using DotBahn.Common.Models;
+using DotBahn.Common.Transformer;
+using DotBahn.Common.Utilities;
 using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
 using DotBahn.Facilities.Models.Enumerations;
-using DotBahn.Shared.Enumerations;
-using DotBahn.Shared.Models;
-using DotBahn.Shared.Transformer;
-
 using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
 
 namespace DotBahn.Facilities.Internal.Transformers;
@@ -27,9 +26,9 @@ internal sealed class FacilityTransformer : ITransformer<IEnumerable<Facility>, 
     /// <returns>The transformed model.</returns>
     private static Facility TransformFacility(FacilityContract contract) => new() {
         EquipmentNumber = contract.EquipmentNumber,
-        Type = EnumMapper.Parse(contract.Type, FacilityType.Unknown, FacilitiesJsonContext.Default.FacilityType),
+        Type = EnumUtil.Parse(contract.Type, FacilityType.Unknown, FacilitiesJsonContext.Default.FacilityType),
         Description = contract.Description,
-        State = EnumMapper.Parse(contract.State, FacilityState.Unknown, FacilitiesJsonContext.Default.FacilityState),
+        State = EnumUtil.Parse(contract.State, FacilityState.Unknown, FacilitiesJsonContext.Default.FacilityState),
         StateExplanation = contract.StateExplanation,
         StationNumber = contract.StationNumber,
         Coordinates = TransformCoordinates(contract.Longitude!.Value, contract.Latitude!.Value),

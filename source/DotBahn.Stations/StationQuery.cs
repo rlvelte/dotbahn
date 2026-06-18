@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
-using DotBahn.Shared;
-using DotBahn.Shared.Enumerations;
+using DotBahn.Common.Utilities;
 using DotBahn.Stations.Models.Enumerations;
 using StationsJsonContext = DotBahn.Stations.Internal.Json.StationsJsonContext;
 
@@ -202,10 +201,10 @@ public sealed partial record StationQuery {
     internal QueryParameters ToQueryParameters() => QueryParameters.Create()
         .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)
         .Add("category", Categories)
-        .Add("federalstate", EnumMapper.Format(State, StationsJsonContext.Default.FederalState))
+        .Add("federalstate", EnumUtil.Format(State, StationsJsonContext.Default.FederalState))
         .Add("eva", Eva)
         .Add("ril", Ril)
-        .Add("logicaloperator", EnumMapper.Format(Operator, StationsJsonContext.Default.LogicalOperator))
+        .Add("logicaloperator", EnumUtil.Format(Operator, StationsJsonContext.Default.LogicalOperator))
         .Add("offset", Offset.ToString())
         .Add("limit", Limit.ToString());
 }

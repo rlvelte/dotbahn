@@ -1,10 +1,10 @@
 using System.Globalization;
-using DotBahn.Shared.Enumerations;
-using DotBahn.Shared.Models;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Models;
+using DotBahn.Common.Transformer;
+using DotBahn.Common.Utilities;
 using DotBahn.Timetables.Internal.Contracts;
-using DotBahn.Timetables.Models.Enumerations;
 using DotBahn.Timetables.Models;
+using DotBahn.Timetables.Models.Enumerations;
 using TimetableJsonContext = DotBahn.Timetables.Internal.Json.TimetableJsonContext;
 
 namespace DotBahn.Timetables.Internal.Transformers;
@@ -58,9 +58,9 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
             Updated = contract.ChangedPlatform
         };
 
-        var changedStatus = EnumMapper.Parse(contract.ChangedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus);
+        var changedStatus = EnumUtil.Parse(contract.ChangedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus);
         var status = new ChangedValue<EventStatus> {
-            Original = EnumMapper.Parse(contract.PlannedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus),
+            Original = EnumUtil.Parse(contract.PlannedStatus, EventStatus.Unknown, TimetableJsonContext.Default.EventStatus),
             Updated = changedStatus != EventStatus.Unknown ? changedStatus : null
         };
 
@@ -94,7 +94,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
         Category = contract?.Category ?? string.Empty,
         Number = contract?.Number ?? string.Empty,
         Owner = contract?.Owner ?? string.Empty,
-        Type = string.IsNullOrEmpty(contract?.TripType) ? null : EnumMapper.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
+        Type = string.IsNullOrEmpty(contract?.TripType) ? null : EnumUtil.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
         FilterFlags = contract?.FilterFlags
     };
 
@@ -105,7 +105,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     /// <returns>The transformed model.</returns>
     private static TimetableMessage TransformMessage(MessageContract contract) => new() {
         Id = contract.Id ?? string.Empty,
-        Type = EnumMapper.Parse(contract.Type, MessageType.Him, TimetableJsonContext.Default.MessageType),
+        Type = EnumUtil.Parse(contract.Type, MessageType.Him, TimetableJsonContext.Default.MessageType),
         Timestamp = ParseBahnTime(contract.Timestamp) ?? new DateTime(),
         Code = int.TryParse(contract.Code, out var code) ? code : null,
         Category = contract.Category,

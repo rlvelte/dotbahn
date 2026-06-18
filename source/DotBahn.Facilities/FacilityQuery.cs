@@ -1,6 +1,5 @@
+using DotBahn.Common.Utilities;
 using DotBahn.Facilities.Models.Enumerations;
-using DotBahn.Shared;
-using DotBahn.Shared.Enumerations;
 using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
 
 namespace DotBahn.Facilities;
@@ -66,8 +65,8 @@ public sealed record FacilityQuery {
     /// Converts the query into <see cref="QueryParameters"/> for API calls.
     /// </summary>
     internal QueryParameters ToQueryParameters() => QueryParameters.Create()
-        .Add("type", EnumMapper.Format(Type, FacilitiesJsonContext.Default.FacilityType))
-        .Add("state", EnumMapper.Format(State, FacilitiesJsonContext.Default.FacilityState))
+        .Add("type", EnumUtil.Format(Type, FacilitiesJsonContext.Default.FacilityType))
+        .Add("state", EnumUtil.Format(State, FacilitiesJsonContext.Default.FacilityState))
         .Add("equipmentnumbers", EquipmentNumbers)
         .Add("stationnumber", StationId);
 }

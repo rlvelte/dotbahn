@@ -1,5 +1,5 @@
-using DotBahn.Shared.Models;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Models;
+using DotBahn.Common.Transformer;
 using DotBahn.Timetables.Models;
 
 namespace DotBahn.Timetables.Internal.Transformers;

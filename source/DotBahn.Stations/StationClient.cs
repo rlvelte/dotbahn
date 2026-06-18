@@ -1,8 +1,7 @@
-using DotBahn.Shared;
-using DotBahn.Shared.Parsing;
-using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
-using DotBahn.Shared.Transformer;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Stations.Internal.Contracts;
 using DotBahn.Stations.Internal.Transformers;
 using DotBahn.Stations.Models;
@@ -24,10 +23,9 @@ public class StationClient : ClientBase, IStationClient {
     /// <param name="authorization">The provider used for retrieving access tokens.</param>
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
-    /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    internal StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
-        : base(http, authorization, cache) {
+    internal StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer)
+        : base(http, authorization) {
         _parser = parser;
         _transformer = transformer;
     }
@@ -41,9 +39,8 @@ public class StationClient : ClientBase, IStationClient {
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
-    /// <param name="cache">The cache options for the client.</param>
-    public StationClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
-        : base(http, options, auth, cache) {
+    public StationClient(HttpClient http, ClientOptions options, AuthorizationOptions auth)
+        : base(http, options, auth) {
         _parser = new JsonParser<StationsResponseContract>();
         _transformer = new StationTransformer();
     }
