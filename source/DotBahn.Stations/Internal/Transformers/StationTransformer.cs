@@ -11,7 +11,7 @@ namespace DotBahn.Stations.Internal.Transformers;
 /// </summary>
 internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, StationsResponseContract> {
     /// <inheritdoc />
-    public IEnumerable<Station> Transform(in StationsResponseContract contracts) {
+    public IEnumerable<Station> Transform(StationsResponseContract contracts) {
         ArgumentNullException.ThrowIfNull(contracts);
         return contracts.Stations.Select(TransformStation);
     }
