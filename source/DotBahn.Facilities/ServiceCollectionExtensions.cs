@@ -36,13 +36,14 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<IFacilityClient, FacilityClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<IEnumerable<FacilityContract>>>();
             var transformer = sp.GetRequiredService<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>>();
             return new FacilityClient(http, auth, parser, transformer);
-        });
+        })
+        .AddStandardResilienceHandler();
 
         services.AddSingleton<IParser<IEnumerable<FacilityContract>>, JsonParser<List<FacilityContract>>>();
         services.AddSingleton<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>, FacilityTransformer>();

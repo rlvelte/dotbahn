@@ -13,7 +13,7 @@ namespace DotBahn.Facilities.Internal.Transformers;
 /// </summary>
 internal sealed class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> {
     /// <inheritdoc />
-    public IEnumerable<Facility> Transform(in IEnumerable<FacilityContract> contracts) {
+    public IEnumerable<Facility> Transform(IEnumerable<FacilityContract> contracts) {
         ArgumentNullException.ThrowIfNull(contracts);
         return contracts.Where(c => c is { Longitude: not null, Latitude: not null })
                         .Select(TransformFacility);

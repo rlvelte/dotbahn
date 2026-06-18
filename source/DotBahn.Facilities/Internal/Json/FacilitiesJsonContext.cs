@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-
 using DotBahn.Facilities.Models.Enumerations;
 
 namespace DotBahn.Facilities.Internal.Json;

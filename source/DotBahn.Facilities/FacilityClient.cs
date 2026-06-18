@@ -34,17 +34,20 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// Client for accessing 'Deutsche Bahn FaSta'-API.
     /// </summary>
     /// <remarks>
+    /// Creates and owns its own <see cref="HttpClient"/>. Dispose this instance to release it.
     /// Use only when instantiating manually without a DI container.
     /// </remarks>
-    /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
-    public FacilityClient(HttpClient http, ClientOptions options, AuthorizationOptions auth) : base(http, options, auth) {
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c>.</exception>
+    public FacilityClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
         _parser = new JsonParser<List<FacilityContract>>();
         _transformer = new FacilityTransformer();
     }
 
     /// <inheritdoc />
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c>.</exception>
     public async Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
         var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false)).ToList();
