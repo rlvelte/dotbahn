@@ -9,8 +9,9 @@ namespace DotBahn.Common.Clients;
 /// <summary>
 /// Base class for API clients providing common HTTP functionality.
 /// </summary>
-public abstract class ClientBase {
+public abstract class ClientBase : IDisposable {
     private readonly IAuthorization _authorization;
+    private readonly bool _ownsHttpClient;
 
     /// <summary>
     /// The HTTP client used for requests.
@@ -19,9 +20,12 @@ public abstract class ClientBase {
 
     /// <summary>
     /// Initializes a new instance with the specified HTTP client and authorization.
+    /// The <see cref="HttpClient"/> is not owned by this instance and will not be disposed.
     /// </summary>
     /// <param name="http">The HTTP client.</param>
     /// <param name="authorization">The authorization provider.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="http"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="authorization"/> is <c>null</c>.</exception>
     protected ClientBase(HttpClient http, IAuthorization authorization) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
@@ -31,21 +35,24 @@ public abstract class ClientBase {
     }
 
     /// <summary>
-    /// Initializes a new instance with API key authorization from the specified options.
+    /// Initializes a new instance that creates and owns its own <see cref="HttpClient"/>.
     /// </summary>
-    /// <param name="http">The HTTP client.</param>
     /// <param name="options">The client options containing the base endpoint.</param>
     /// <param name="auth">The authorization options containing the API key.</param>
-    protected ClientBase(HttpClient http, ClientOptions options, AuthorizationOptions auth) {
-        ArgumentNullException.ThrowIfNull(http);
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c>.</exception>
+    protected ClientBase(ClientOptions options, AuthorizationOptions auth) {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
 
-        http.BaseAddress = options.BaseEndpoint;
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+        HttpClient = new HttpClient {
+            BaseAddress = options.BaseEndpoint
+        };
 
-        HttpClient = http;
+        HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+
         _authorization = new ApiKeyAuthorization(auth);
+        _ownsHttpClient = true;
     }
 
     /// <summary>
@@ -54,46 +61,48 @@ public abstract class ClientBase {
     /// <typeparam name="TContract">The type to parse the response into.</typeparam>
     /// <param name="relative">The relative request URL.</param>
     /// <param name="parser">The parser for deserializing the response.</param>
-    /// <param name="acceptHeader">The accept header value.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
     /// <param name="queryParams">Optional query parameters.</param>
     /// <param name="cancellation">The cancellation token.</param>
     /// <returns>The parsed response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c>.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="cancellation"/>.</exception>
     protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
-        var url = queryParams is null || !queryParams.Any() ? relative : $"{relative}?{queryParams.ToQueryString()}";
+        var url = queryParams == null || !queryParams.Any() ? relative : $"{relative}?{queryParams.ToQueryString()}";
 
         var requestUri = BuildRequestUri(url);
-        var raw = await ExecuteHttpRequestAsync(requestUri, acceptHeader, cancellation).ConfigureAwait(false);
+        var raw = await ExecuteRequestAsync(requestUri, acceptHeader, cancellation).ConfigureAwait(false);
         return parser.Parse(raw);
     }
 
     /// <summary>
-    /// Combines the base address with a relative URL to produce an absolute or relative URI.
+    /// Combines the base address with a relative URL to produce an absolute URI.
     /// </summary>
     /// <param name="relativeUrl">The relative URL path.</param>
-    /// <returns>An absolute URI if a base address is configured; otherwise a relative URI.</returns>
-    private Uri BuildRequestUri(string relativeUrl) {
+    /// <returns>An absolute URI.</returns>
+    private static Uri BuildRequestUri(string relativeUrl) {
+        // BaseAddress is always set — by the convenience constructor or by AddHttpClient in DI.
         var path = relativeUrl.TrimStart('/');
-        var baseUrl = (HttpClient.BaseAddress?.AbsoluteUri ?? "").TrimEnd('/');
-
-        return baseUrl.Length > 0 ? new Uri($"{baseUrl}/{path}") : new Uri(path, UriKind.Relative);
+        return new Uri(path, UriKind.Relative);
     }
 
     /// <summary>
     /// Sends an authorized GET request and processes the response.
     /// </summary>
-    /// <param name="requestUri">The request URI.</param>
+    /// <param name="uri">The request URI.</param>
     /// <param name="acceptHeader">The acceptance header value.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="cancellation">The cancellation token.</param>
     /// <returns>The response body as a string.</returns>
-    private async Task<string> ExecuteHttpRequestAsync(Uri requestUri, string acceptHeader, CancellationToken cancellationToken) {
-        using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+    private async Task<string> ExecuteRequestAsync(Uri uri, string acceptHeader, CancellationToken cancellation) {
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
 
         _authorization.AuthorizeRequest(request);
 
-        using var response = await HttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using var response = await HttpClient.SendAsync(request, cancellation).ConfigureAwait(false);
         return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 
@@ -128,4 +137,11 @@ public abstract class ClientBase {
     /// <param name="body">The raw response body.</param>
     /// <returns>The body unchanged if 200 characters or fewer; otherwise the first 200 characters with an ellipsis.</returns>
     private static string DescribeBody(string body) => string.IsNullOrEmpty(body) ? string.Empty : body.Length <= 200 ? body : body[..200] + "...";
+
+    /// <inheritdoc />
+    public void Dispose() {
+        if (_ownsHttpClient) {
+            HttpClient.Dispose();
+        }
+    }
 }

@@ -14,5 +14,5 @@ public interface IMerger<TModel> {
     /// <param name="current">The current data</param>
     /// <param name="changes">The change data to merge on the current.</param>
     /// <returns>The merged object.</returns>
-    TModel Merge(TModel current, in TModel changes);
+    TModel Merge(TModel current, TModel changes);
 }

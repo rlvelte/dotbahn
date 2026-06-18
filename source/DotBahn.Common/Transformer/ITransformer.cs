@@ -14,5 +14,5 @@ public interface ITransformer<out TModel, TContract> {
     /// </summary>
     /// <param name="contracts">The contract data to transform.</param>
     /// <returns>The transformed object.</returns>
-    TModel Transform(in TContract contracts);
+    TModel Transform(TContract contracts);
 }

@@ -1,5 +1,4 @@
 using System.Text.Json;
-
 using DotBahn.Common.Parsing.Converters;
 
 namespace DotBahn.Common.Parsing;
@@ -17,5 +16,12 @@ public class JsonParser<TContract> : IParser<TContract> where TContract : new() 
     };
 
     /// <inheritdoc />
-    public TContract Parse(string input) => string.IsNullOrWhiteSpace(input) ? new TContract() : JsonSerializer.Deserialize<TContract>(input, _options)!;
+    /// <exception cref="JsonException">Thrown when deserialization fails or returns null.</exception>
+    public TContract Parse(string input) {
+        if (string.IsNullOrWhiteSpace(input)) {
+            return new TContract();
+        }
+
+        return JsonSerializer.Deserialize<TContract>(input, _options) ?? throw new JsonException("Deserialization of API response returned null.");
+    }
 }
