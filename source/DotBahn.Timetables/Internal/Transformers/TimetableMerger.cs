@@ -9,7 +9,7 @@ namespace DotBahn.Timetables.Internal.Transformers;
 /// </summary>
 internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <inheritdoc />
-    public Timetable Merge(Timetable current, in Timetable changes) {
+    public Timetable Merge(Timetable current, Timetable changes) {
         ArgumentNullException.ThrowIfNull(current);
         ArgumentNullException.ThrowIfNull(changes);
 

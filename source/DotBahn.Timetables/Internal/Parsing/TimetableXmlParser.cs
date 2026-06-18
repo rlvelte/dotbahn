@@ -1,3 +1,4 @@
+using System.Xml;
 using System.Xml.Linq;
 using DotBahn.Common.Parsing;
 using DotBahn.Timetables.Internal.Contracts;
@@ -16,6 +17,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     private static readonly XName MessageName = "m";
 
     /// <inheritdoc />
+    /// <exception cref="XmlException">Thrown when the XML is malformed or required attributes are missing.</exception>
     public TimetableResponseContract Parse(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
             return new TimetableResponseContract();
@@ -28,7 +30,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
         }
 
         var contract = new TimetableResponseContract {
-            Station = (string)root.Attribute("station")!,
+            Station = RequiredAttr(root, "station"),
             Stops = root.Elements(StopName).Select(ParseStop).ToList()
         };
 
@@ -39,20 +41,14 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     /// Parses a single stop element.
     /// </summary>
     private static StopDataContract ParseStop(XElement stopElement) {
-        var tripInfo = stopElement.Element(TripInfoName) is { } tripInfoElement
-            ? ParseTripInfo(tripInfoElement) : null;
-
-        var arrival = stopElement.Element(ArrivalName) is { } arrivalElement
-            ? ParseEvent(arrivalElement) : null;
-
-        var departure = stopElement.Element(DepartureName) is { } departureElement
-            ? ParseEvent(departureElement) : null;
-
+        var tripInfo = stopElement.Element(TripInfoName) is { } tripInfoElement ? ParseTripInfo(tripInfoElement) : null;
+        var arrival = stopElement.Element(ArrivalName) is { } arrivalElement ? ParseEvent(arrivalElement) : null;
+        var departure = stopElement.Element(DepartureName) is { } departureElement ? ParseEvent(departureElement) : null;
         var messages = stopElement.Elements(MessageName).Select(ParseMessage).ToList();
 
         return new StopDataContract {
-            Id = (string)stopElement.Attribute("id")!,
-            Eva = (string)stopElement.Attribute("eva")!,
+            Id = RequiredAttr(stopElement, "id"),
+            Eva = RequiredAttr(stopElement, "eva"),
             TripInfo = tripInfo,
             Arrival = arrival,
             Departure = departure,
@@ -109,4 +105,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
         Category = (string?)element.Attribute("cat"),
         Text = element.Value,
     };
+
+    private static string RequiredAttr(XElement element, string name) => (string?)element.Attribute(name) ?? throw new XmlException($"Missing required attribute '{name}' on <{element.Name}>.");
+
 }

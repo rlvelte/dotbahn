@@ -16,7 +16,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     private const string BahnTimeFormat = "yyMMddHHmm";
 
     /// <inheritdoc />
-    public Timetable Transform(in TimetableResponseContract contracts) {
+    public Timetable Transform(TimetableResponseContract contracts) {
         ArgumentNullException.ThrowIfNull(contracts);
         return new Timetable {
             Station = contracts.Station,

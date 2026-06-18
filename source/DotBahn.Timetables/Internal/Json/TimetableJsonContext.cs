@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-
 using DotBahn.Timetables.Models.Enumerations;
 
 namespace DotBahn.Timetables.Internal.Json;
@@ -10,4 +9,4 @@ namespace DotBahn.Timetables.Internal.Json;
 [JsonSerializable(typeof(EventStatus))]
 [JsonSerializable(typeof(MessageType))]
 [JsonSerializable(typeof(TripType))]
-public sealed partial class TimetableJsonContext : JsonSerializerContext;
+internal sealed partial class TimetableJsonContext : JsonSerializerContext;

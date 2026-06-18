@@ -37,14 +37,15 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<ITimetableClient, TimetableClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<TimetableResponseContract>>();
             var transformer = sp.GetRequiredService<ITransformer<Timetable, TimetableResponseContract>>();
             var merger = sp.GetRequiredService<IMerger<Timetable>>();
             return new TimetableClient(http, auth, parser, transformer, merger);
-        });
+        })
+        .AddStandardResilienceHandler();
 
         services.AddSingleton<IParser<TimetableResponseContract>, TimetableXmlParser>();
         services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
