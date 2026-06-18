@@ -4,21 +4,22 @@
       "src": [
         {
           "files": [
-            "source/DotBahn.Clients/DotBahn.Clients.Facilities/bin/Release/net10.0/DotBahn.Clients.Facilities.dll",
-            "source/DotBahn.Clients/DotBahn.Clients.Stations/bin/Release/net10.0/DotBahn.Clients.Stations.dll",
-            "source/DotBahn.Clients/DotBahn.Clients.Timetables/bin/Release/net10.0/DotBahn.Clients.Timetables.dll"
+            "source/DotBahn.Facilities/bin/Release/net10.0/DotBahn.Facilities.dll",
+            "source/DotBahn.Stations/bin/Release/net10.0/DotBahn.Stations.dll",
+            "source/DotBahn.Timetables/bin/Release/net10.0/DotBahn.Timetables.dll",
+            "source/DotBahn.Modules/DotBahn.Modules.Authorization/bin/Release/net10.0/DotBahn.Shared.dll",
+            "source/DotBahn.Shared/DotBahn.Modules.Cache/bin/Release/net10.0/DotBahn.Shared.dll",
+            "source/DotBahn.Shared/DotBahn.Shared/bin/Release/net10.0/DotBahn.Shared.dll"
           ],
           "src": "..",
           "exclude": [
             "**/System.*.dll",
-            "**/Microsoft.*.dll",
-            "**/DotBahn.Data.*.dll",
-            "**/DotBahn.Modules.*.dll",
-            "**/DotBahn.Clients.Shared.dll"
+            "**/Microsoft.*.dll"
           ]
         }
       ],
-      "dest": "api"
+      "dest": "api",
+      "filter": "filterconfig.yml"
     }
   ],
   "build": {
@@ -51,7 +52,7 @@
     ],
     "globalMetadata": {
       "_appTitle": "DotBahn Documentation",
-      "_appFooter": "MIT License — Robin L. Velte",
+      "_appFooter": "MIT License — Robin L. Velte & Contributors",
       "_enableSearch": true,
       "_enableNewTab": true,
       "_disableNavbar": false,

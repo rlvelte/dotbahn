@@ -1,4 +1,4 @@
-<img src="docs/images/logo-128x128.png" width=128>
+<img src="docs/images/logo-128x128.png" width=128 alt="logo">
 
 # DotBahn - .NET Client for Deutsche Bahn APIs
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Timetables?label=DotBahn.Timetables&style=flat)
@@ -71,7 +71,7 @@ Create client instances directly without dependency injection. The caller provid
 
 ```csharp
 using var http = new HttpClient();
-using var client = new StationsClient(http,
+using var client = new StationClient(http,
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/")
     },
