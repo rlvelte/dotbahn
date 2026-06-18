@@ -1,4 +1,4 @@
-namespace DotBahn.Modules.Authorization.Service.Base;
+namespace DotBahn.Modules.Authorization;
 
 /// <summary>
 /// No-op implementation of the authorization system.

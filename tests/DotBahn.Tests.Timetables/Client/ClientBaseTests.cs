@@ -1,8 +1,8 @@
 using System.Net;
 
 using DotBahn.Shared;
-using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Authorization;
+using DotBahn.Modules.Cache;
 using DotBahn.Shared.Parsing;
 using DotBahn.Tests.Shared;
 

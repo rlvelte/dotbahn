@@ -1,5 +1,4 @@
-using DotBahn.Modules.Cache.Service;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

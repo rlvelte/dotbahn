@@ -1,5 +1,4 @@
 using DotBahn.Modules.Cache;
-using DotBahn.Modules.Cache.Service;
 
 namespace DotBahn.Tests.Timetables.Cache;
 

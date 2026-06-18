@@ -1,6 +1,4 @@
-using DotBahn.Modules.Authorization.Service.Base;
-
-namespace DotBahn.Modules.Authorization.Service;
+namespace DotBahn.Modules.Authorization;
 
 /// <summary>
 /// Service for API Key-based authorization using headers.

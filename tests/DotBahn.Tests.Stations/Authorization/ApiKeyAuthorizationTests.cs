@@ -1,5 +1,4 @@
 using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Authorization.Service;
 
 namespace DotBahn.Tests.Stations.Authorization;
 

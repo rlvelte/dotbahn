@@ -1,5 +1,5 @@
-using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Modules.Authorization;
+using DotBahn.Modules.Cache;
 
 using Moq;
 
