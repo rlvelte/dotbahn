@@ -4,7 +4,7 @@ using DotBahn.Timetables;
 using DotBahn.Shared.Transformer;
 using DotBahn.Shared.Parsing;
 using DotBahn.Tests.Shared;
-using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Internal.Contracts;
 using DotBahn.Timetables.Models;
 
 using Moq;

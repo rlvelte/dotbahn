@@ -1,9 +1,9 @@
 using System.Net;
 
 using DotBahn.Facilities;
-using DotBahn.Facilities.Contracts;
-using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Shared.Parsing;
 using DotBahn.Shared.Transformer;
 using DotBahn.Tests.Shared;

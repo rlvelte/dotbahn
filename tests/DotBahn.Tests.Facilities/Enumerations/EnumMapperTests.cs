@@ -1,6 +1,7 @@
-using DotBahn.Facilities.Enumerations;
-using DotBahn.Facilities.Json;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Shared.Enumerations;
+
+using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
 
 namespace DotBahn.Tests.Facilities.Enumerations;
 

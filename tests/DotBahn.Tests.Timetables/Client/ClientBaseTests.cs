@@ -48,7 +48,7 @@ public class ClientBaseTests : ClientTestBase {
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
@@ -65,7 +65,7 @@ public class ClientBaseTests : ClientTestBase {
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
@@ -76,7 +76,7 @@ public class ClientBaseTests : ClientTestBase {
     [Fact]
     public void Constructor_OptionsConstructor_WithNullOptions_ThrowsArgumentNullException() {
         var http = new HttpClient();
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
@@ -264,7 +264,7 @@ public class ClientBaseTests : ClientTestBase {
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
@@ -298,8 +298,8 @@ public class ClientBaseTests : ClientTestBase {
         public TestClientBase(
             HttpClient http,
             ClientOptions options,
-            DotBahn.Modules.Authorization.AuthorizationOptions auth,
-            DotBahn.Modules.Cache.CacheOptions? cache)
+            AuthorizationOptions auth,
+            CacheOptions? cache)
             : base(http, options, auth, cache) { }
 
         public new HttpClient HttpClient => base.HttpClient;

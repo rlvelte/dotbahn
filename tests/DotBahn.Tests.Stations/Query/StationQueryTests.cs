@@ -1,5 +1,5 @@
 using DotBahn.Stations;
-using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Models.Enumerations;
 
 namespace DotBahn.Tests.Stations.Query;
 
@@ -31,7 +31,7 @@ public class StationQueryTests {
             Limit = 50
         };
 
-        Assert.Equal(["Hamburg*"], query.Names);
+        Assert.Equal(["Hamburg"], query.Names);
         Assert.Equal("1-3", query.Categories);
         Assert.Equal(FederalState.Hamburg, query.State);
         Assert.Equal("8002549", query.Eva);

@@ -1,6 +1,6 @@
-using DotBahn.Facilities;
-using DotBahn.Facilities.Contracts;
-using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Internal.Contracts;
+using DotBahn.Facilities.Internal.Transformers;
+using DotBahn.Facilities.Models.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Transformer;
 

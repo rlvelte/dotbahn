@@ -3,7 +3,7 @@ using System.Net;
 using DotBahn.Stations;
 using DotBahn.Shared.Transformer;
 using DotBahn.Shared.Parsing;
-using DotBahn.Stations.Contracts;
+using DotBahn.Stations.Internal.Contracts;
 using DotBahn.Stations.Models;
 using DotBahn.Tests.Shared;
 

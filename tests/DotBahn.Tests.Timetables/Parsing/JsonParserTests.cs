@@ -1,6 +1,5 @@
 using DotBahn.Shared.Parsing;
-using DotBahn.Timetables;
-using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Internal.Contracts;
 
 namespace DotBahn.Tests.Timetables.Parsing;
 

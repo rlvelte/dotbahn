@@ -1,11 +1,9 @@
-using DotBahn.Shared.Parsing;
-using DotBahn.Timetables;
-using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Internal.Parsing;
 
 namespace DotBahn.Tests.Timetables.Parsing;
 
-public class XmlParserTests {
-    private readonly XmlParser<TimetableResponseContract> _parser = new();
+public class TimetableXmlParserTests {
+    private readonly TimetableXmlParser _parser = new();
 
     [Theory]
     [InlineData("")]
