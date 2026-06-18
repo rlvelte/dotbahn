@@ -1,12 +1,12 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw XML timetable response
 /// </summary>
 [XmlRoot("timetable")]
-public record TimetableResponseContract {
+internal record TimetableResponseContract {
     /// <summary>
     /// Station name or ID
     /// </summary>

@@ -2,17 +2,17 @@ using System.Globalization;
 using DotBahn.Shared.Enumerations;
 using DotBahn.Shared.Models;
 using DotBahn.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Timetables.Internal.Contracts;
+using DotBahn.Timetables.Models.Enumerations;
 using DotBahn.Timetables.Models;
-using TimetableJsonContext = DotBahn.Timetables.Json.TimetableJsonContext;
+using TimetableJsonContext = DotBahn.Timetables.Internal.Json.TimetableJsonContext;
 
-namespace DotBahn.Timetables;
+namespace DotBahn.Timetables.Internal.Transformers;
 
 /// <summary>
 /// Transforms timetable contracts into domain models.
 /// </summary>
-public class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract> {
+internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract> {
     private const string BahnTimeFormat = "yyMMddHHmm";
 
     /// <inheritdoc />
@@ -65,8 +65,8 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
         };
 
         var path = new ChangedRef<IEnumerable<string>> {
-            Original = ParsePipeSeparatedList(contract.PlannedPath) ?? [],
-            Updated = ParsePipeSeparatedList(contract.ChangedPath)
+            Original = ParsePipeSeparatedList(contract.PlannedPath),
+            Updated = contract.ChangedPath is not null ? ParsePipeSeparatedList(contract.ChangedPath) : null
         };
 
         var distantEndpoint = new ChangedRef<string> {
@@ -80,7 +80,7 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
             Status = status,
             DistantEndpoint = distantEndpoint,
             Path = path,
-            Wings = ParsePipeSeparatedList(contract.Wings) ?? [],
+            Wings = ParsePipeSeparatedList(contract.Wings),
             Messages = []
         };
     }
@@ -94,9 +94,7 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
         Category = contract?.Category ?? string.Empty,
         Number = contract?.Number ?? string.Empty,
         Owner = contract?.Owner ?? string.Empty,
-        Type = string.IsNullOrEmpty(contract?.TripType)
-                ? null
-                : EnumMapper.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
+        Type = string.IsNullOrEmpty(contract?.TripType) ? null : EnumMapper.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
         FilterFlags = contract?.FilterFlags
     };
 
@@ -137,10 +135,9 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
     }
 
     /// <summary>
-    /// Parses a pipe-separated list to a <see cref="IReadOnlyList{T}"/>
+    /// Parses a pipe-separated list to an array.
     /// </summary>
     /// <param name="list">The list to separate.</param>
     /// <returns>A parsed list.</returns>
-    private static IReadOnlyList<string>? ParsePipeSeparatedList(string? list) =>
-        string.IsNullOrEmpty(list) ? null : list.Split('|', StringSplitOptions.RemoveEmptyEntries);
+    private static string[] ParsePipeSeparatedList(string? list) => (string.IsNullOrEmpty(list) ? null : list.Split('|', StringSplitOptions.RemoveEmptyEntries)) ?? [];
 }

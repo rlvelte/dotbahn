@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Timetables.Enumerations;
+namespace DotBahn.Timetables.Models.Enumerations;
 
 /// <summary>
 /// Type of timetable message.

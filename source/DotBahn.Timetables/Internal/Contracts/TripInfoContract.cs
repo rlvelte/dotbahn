@@ -1,11 +1,11 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw attributes for trip label (train information)
 /// </summary>
-public record TripInfoContract {
+internal record TripInfoContract {
     /// <summary>
     /// Filter flags
     /// </summary>

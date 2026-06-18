@@ -1,9 +1,14 @@
+using DotBahn.Modules.Authorization;
+using DotBahn.Modules.Cache;
 using DotBahn.Shared;
 using DotBahn.Shared.Parsing;
 using DotBahn.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Internal.Contracts;
+using DotBahn.Timetables.Internal.Parsing;
+using DotBahn.Timetables.Internal.Transformers;
 using DotBahn.Timetables.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DotBahn.Timetables;
 
@@ -17,19 +22,36 @@ public static class ServiceCollectionExtensions {
 
     /// <summary>
     /// Adds the Timetables client using HttpClientFactory.
-    /// The <see cref="ClientOptions.BaseEndpoint"/> defaults to <c>https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1</c>
-    /// and can be overridden in the optional delegate.
+    /// <remarks>
+    /// The <see cref="ClientOptions.BaseEndpoint"/> defaults to <c>https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1</c> and can be overridden in the optional delegate.
+    /// </remarks>
     /// </summary>
     /// <param name="services">The service collection to add this service to.</param>
     /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
     /// <returns>The service collection.</returns>
     public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
-        services.AddDotBahnClient<ITimetableClient, TimetableClient>(OptionsName, opts => {
-            opts.BaseEndpoint = DefaultTimetablesEndpoint;
-            configuration?.Invoke(opts);
+        services.AddOptions<ClientOptions>(OptionsName)
+                .Configure(opts => {
+                    opts.BaseEndpoint = DefaultTimetablesEndpoint;
+                    configuration?.Invoke(opts);
+                })
+                .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseEndpoint must be an absolute URI.")
+                .ValidateOnStart();
+
+        services.AddHttpClient<ITimetableClient, TimetableClient>(OptionsName, (http, sp) => {
+            var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
+            http.BaseAddress = options.BaseEndpoint;
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/1.0 (+https://github.com/rlvelte/dotbahn)");
+
+            var auth = sp.GetRequiredService<IAuthorization>();
+            var cache = sp.GetService<ICache>();
+            var parser = sp.GetRequiredService<IParser<TimetableResponseContract>>();
+            var transformer = sp.GetRequiredService<ITransformer<Timetable, TimetableResponseContract>>();
+            var merger = sp.GetRequiredService<IMerger<Timetable>>();
+            return new TimetableClient(http, auth, parser, transformer, merger, cache);
         });
 
-        services.AddSingleton<IParser<TimetableResponseContract>, XmlParser<TimetableResponseContract>>();
+        services.AddSingleton<IParser<TimetableResponseContract>, TimetableXmlParser>();
         services.AddSingleton<ITransformer<Timetable, TimetableResponseContract>, TimetableTransformer>();
         services.AddSingleton<IMerger<Timetable>, TimetableMerger>();
 

@@ -1,11 +1,11 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw XML structure for a single stop
 /// </summary>
-public record StopDataContract {
+internal record StopDataContract {
     /// <summary>
     /// Unique stop ID
     /// </summary>

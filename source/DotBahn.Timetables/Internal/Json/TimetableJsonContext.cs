@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Timetables.Models.Enumerations;
 
-namespace DotBahn.Timetables.Json;
+namespace DotBahn.Timetables.Internal.Json;
 
 /// <summary>
 /// Source-generated JSON serialization metadata for Data.Timetables enum types.

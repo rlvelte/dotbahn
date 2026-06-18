@@ -1,9 +1,11 @@
 using DotBahn.Shared;
-using DotBahn.Shared.Parsing;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
+using DotBahn.Shared.Parsing;
 using DotBahn.Shared.Transformer;
-using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Internal.Contracts;
+using DotBahn.Timetables.Internal.Parsing;
+using DotBahn.Timetables.Internal.Transformers;
 using DotBahn.Timetables.Models;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +30,7 @@ public class TimetableClient : ClientBase, ITimetableClient {
     /// <param name="merger">The merger for the target type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    public TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
+    internal TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -38,29 +40,18 @@ public class TimetableClient : ClientBase, ITimetableClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn Timetables'-API.
     /// </summary>
+    /// <remarks>
+    /// Use only when instantiating manually without a DI container.
+    /// </remarks>
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
     public TimetableClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
         : base(http, options, auth, cache) {
-        _parser = new XmlParser<TimetableResponseContract>();
+        _parser = new TimetableXmlParser();
         _transformer = new TimetableTransformer();
         _merger = new TimetableMerger();
-    }
-
-    /// <inheritdoc />
-    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? current = null, CancellationToken cancellation = default) {
-        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
-        var changes = _transformer.Transform(response);
-        return current != null ? _merger.Merge(current, changes) : changes;
-    }
-
-    /// <inheritdoc />
-    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? current = null, CancellationToken cancellation = default) {
-        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
-        var changes = _transformer.Transform(response);
-        return current != null ? _merger.Merge(current, changes) : changes;
     }
 
     /// <inheritdoc />
@@ -69,5 +60,19 @@ public class TimetableClient : ClientBase, ITimetableClient {
         var hourStr = dateTime.ToString("HH");
         var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
         return _transformer.Transform(response);
+    }
+
+    /// <inheritdoc />
+    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken cancellation = default) {
+        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
+        var changes = _transformer.Transform(response);
+        return mergeOn != null ? _merger.Merge(mergeOn, changes) : changes;
+    }
+
+    /// <inheritdoc />
+    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken cancellation = default) {
+        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
+        var changes = _transformer.Transform(response);
+        return mergeOn != null ? _merger.Merge(mergeOn, changes) : changes;
     }
 }

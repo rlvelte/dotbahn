@@ -1,11 +1,11 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw attributes for message/disruption information
 /// </summary>
-public record MessageContract {
+internal record MessageContract {
     /// <summary>
     /// Message ID
     /// </summary>

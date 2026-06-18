@@ -1,4 +1,4 @@
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Timetables.Models.Enumerations;
 
 namespace DotBahn.Timetables.Models;
 

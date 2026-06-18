@@ -1,11 +1,11 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Timetables.Contracts;
+namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw event information (Arrival/Departure)
 /// </summary>
-public record EventContract {
+internal record EventContract {
     /// <summary>
     /// Planned time (YYMMDDhhmm format)
     /// </summary>

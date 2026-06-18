@@ -2,16 +2,17 @@ using DotBahn.Shared.Models;
 using DotBahn.Shared.Transformer;
 using DotBahn.Timetables.Models;
 
-namespace DotBahn.Timetables;
+namespace DotBahn.Timetables.Internal.Transformers;
 
 /// <summary>
 /// Merges timetable model updates into the current timetable.
 /// </summary>
-public class TimetableMerger : IMerger<Timetable> {
+internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <inheritdoc />
     public Timetable Merge(Timetable current, in Timetable changes) {
         ArgumentNullException.ThrowIfNull(current);
         ArgumentNullException.ThrowIfNull(changes);
+
         var stops = current.Stops.ToDictionary(s => s.Id);
         foreach (var change in changes.Stops) {
             if (stops.TryGetValue(change.Id, out var existing)) {
@@ -104,7 +105,6 @@ public class TimetableMerger : IMerger<Timetable> {
     /// <returns>Combined list of messages.</returns>
     private static IEnumerable<TimetableMessage> MergeMessages(IEnumerable<TimetableMessage> current, IEnumerable<TimetableMessage> change) {
         var messages = current.ToList();
-
         var existing = messages.Select(m => m.Id).ToHashSet();
         return messages.Concat(change.Where(m => !existing.Contains(m.Id)));
     }
