@@ -10,15 +10,11 @@
     <File Path="docs/filterconfig.yml" />
     <File Path="docs/index.md" />
   </Folder>
-  <Folder Name="/Modules/">
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
-  </Folder>
   <Folder Name="/Packages/">
     <Project Path="source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
-    <Project Path="source/DotBahn.Shared/DotBahn.Shared.csproj" />
     <Project Path="source/DotBahn.Stations/DotBahn.Stations.csproj" />
     <Project Path="source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
+    <Project Path="source\DotBahn.Common\DotBahn.Common.csproj" />
   </Folder>
   <Folder Name="/Samples/">
     <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />

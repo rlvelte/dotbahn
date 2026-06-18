@@ -7,7 +7,6 @@ on:
       - '**.md'
       - '.gitignore'
       - 'LICENSE'
-      - 'docs/images/logo-512x512.png'
       - 'docs/**'
 
 concurrency:
