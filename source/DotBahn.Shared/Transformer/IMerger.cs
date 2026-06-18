@@ -1,9 +1,12 @@
+using System.ComponentModel;
+
 namespace DotBahn.Shared.Transformer;
 
 /// <summary>
 /// Generic interface for merging data onto a target type.
 /// </summary>
 /// <typeparam name="TModel">The type to transform on.</typeparam>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IMerger<TModel> {
     /// <summary>
     /// Merges the incoming changes onto the target object.

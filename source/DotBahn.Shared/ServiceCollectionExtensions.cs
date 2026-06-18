@@ -20,13 +20,12 @@ public static class ServiceCollectionExtensions {
         where TClient : class
         where TImplementation : ClientBase, TClient {
         ArgumentNullException.ThrowIfNull(optionsName);
-
         if (configuration != null) {
             services.Configure(optionsName, configuration);
         }
 
         services.AddOptions<ClientOptions>(optionsName)
-                .Validate(o => o.BaseEndpoint?.IsAbsoluteUri == true, "DotBahn: BaseEndpoint must be an absolute URI.")
+                .Validate(o => o.BaseEndpoint.IsAbsoluteUri, "DotBahn: BaseEndpoint must be an absolute URI.")
                 .ValidateOnStart();
 
         services.AddHttpClient<TClient, TImplementation>((sp, http) => {
