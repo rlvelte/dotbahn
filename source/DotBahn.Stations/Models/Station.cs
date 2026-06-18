@@ -1,7 +1,7 @@
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Stations.Enumerations;
+using DotBahn.Shared.Models;
+using DotBahn.Stations.Enumerations;
 
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// A railway station with its identification, location, and available services.

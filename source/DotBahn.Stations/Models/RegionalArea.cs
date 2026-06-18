@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// Regional administrative area of Deutsche Bahn responsible for the station.

@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// Mailing address of a railway station.

@@ -1,6 +1,6 @@
-using DotBahn.Data.Shared.Models;
+using DotBahn.Shared.Models;
 
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// An EVA (Europäische Verkehrsanlagen) number uniquely identifying a railway station or stop.

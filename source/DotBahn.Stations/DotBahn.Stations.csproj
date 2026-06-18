@@ -6,8 +6,7 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../DotBahn.Data/DotBahn.Data.Stations/DotBahn.Data.Stations.csproj" PrivateAssets="all" />
-    <ProjectReference Include="../DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" PrivateAssets="all" />
+    <ProjectReference Include="../DotBahn.Shared/DotBahn.Shared.csproj" />
   </ItemGroup>
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
     <ItemGroup>

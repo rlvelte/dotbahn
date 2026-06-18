@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Stations.Enumerations;
+namespace DotBahn.Stations.Enumerations;
 
 /// <summary>
 /// Category of a railway station based on its importance and traffic volume.

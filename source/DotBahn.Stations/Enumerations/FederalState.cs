@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Data.Stations.Enumerations;
+namespace DotBahn.Stations.Enumerations;
 
 /// <summary>
 /// Represents the federal states of Germany.

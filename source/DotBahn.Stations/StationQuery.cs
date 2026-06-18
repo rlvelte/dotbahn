@@ -1,18 +1,17 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using DotBahn.Shared;
+using DotBahn.Shared.Enumerations;
+using DotBahn.Stations.Enumerations;
+using StationsJsonContext = DotBahn.Stations.Json.StationsJsonContext;
 
-using DotBahn.Clients.Shared.Query;
-using DotBahn.Data.Shared.Enumerations;
-using DotBahn.Data.Stations.Enumerations;
-using DotBahn.Data.Stations.Json;
-
-namespace DotBahn.Clients.Stations.Query;
+namespace DotBahn.Stations;
 
 /// <summary>
 /// Represents the query parameters for searching stations.
 /// Provides fluent methods for convenient building of queries.
 /// </summary>
-public sealed partial record StationsQuery {
+public sealed partial record StationQuery {
     /// <summary>
     /// Matches a single category number (e.g., "1", "5").
     /// </summary>
@@ -122,18 +121,18 @@ public sealed partial record StationsQuery {
     public int? Limit { get; set; } = 10000;
 
     /// <summary>
-    /// Creates a new empty <see cref="StationsQuery"/> for fluent building.
+    /// Creates a new empty <see cref="StationQuery"/> for fluent building.
     /// </summary>
-    public static StationsQuery Create() => new();
+    public static StationQuery Create() => new();
 
     /// <summary>
     /// Sets the station names or fragments to search for.
     /// Appends a trailing '*' automatically if no wildcard is present.
     /// </summary>
     /// <param name="names"></param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
     /// <exception cref="ArgumentException">Thrown if the name is null or empty.</exception>
-    public StationsQuery WithNames(params string[] names) {
+    public StationQuery WithNames(params string[] names) {
         Names = names;
         return this;
     }
@@ -144,9 +143,9 @@ public sealed partial record StationsQuery {
     /// Categories must be between 1 and 7; otherwise, an <see cref="ArgumentException"/> is thrown.
     /// </summary>
     /// <param name="categories">One or more category specifications: integers, ranges, or comma-separated values.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
     /// <exception cref="ArgumentException">Thrown if any category is invalid or out of range.</exception>
-    public StationsQuery WithCategories(string categories) {
+    public StationQuery WithCategories(string categories) {
         Categories = categories;
         return this;
     }
@@ -156,8 +155,8 @@ public sealed partial record StationsQuery {
     /// Filters stations by federal state.
     /// </summary>
     /// <param name="state">German federal state.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery InFederalState(FederalState state) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery InFederalState(FederalState state) {
         State = state;
         return this;
     }
@@ -166,8 +165,8 @@ public sealed partial record StationsQuery {
     /// Filters stations by EVA number.
     /// </summary>
     /// <param name="eva">EVA station number.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery WithEva(string eva) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery WithEva(string eva) {
         Eva = eva;
         return this;
     }
@@ -176,8 +175,8 @@ public sealed partial record StationsQuery {
     /// Filters stations by RIL100 identifier.
     /// </summary>
     /// <param name="ril">RIL100 identifier.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery WithRil(string ril) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery WithRil(string ril) {
         Ril = ril;
         return this;
     }
@@ -186,8 +185,8 @@ public sealed partial record StationsQuery {
     /// Sets the logical operator for combining multiple filters.
     /// </summary>
     /// <param name="operator">Logical operator.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery CombineAs(LogicalOperator @operator) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery CombineAs(LogicalOperator @operator) {
         Operator = @operator;
         return this;
     }
@@ -196,8 +195,8 @@ public sealed partial record StationsQuery {
     /// Sets the number of results to skip for pagination.
     /// </summary>
     /// <param name="offset">Number of results to skip.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery Skip(int offset) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery Skip(int offset) {
         Offset = offset;
         return this;
     }
@@ -206,8 +205,8 @@ public sealed partial record StationsQuery {
     /// Sets the maximum number of results to return.
     /// </summary>
     /// <param name="limit">Maximum results.</param>
-    /// <returns>The current <see cref="StationsQuery"/> instance for fluent chaining.</returns>
-    public StationsQuery LimitTo(int limit) {
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    public StationQuery LimitTo(int limit) {
         Limit = limit;
         return this;
     }

@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// Services and facilities available at a railway station.

@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Stations.Models;
+namespace DotBahn.Stations.Models;
 
 /// <summary>
 /// A RIL 100 identifier (Richtlinie 100) used to uniquely identify railway operating points.

@@ -1,23 +1,20 @@
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Stations.Contracts;
-using DotBahn.Clients.Stations.Interfaces;
-using DotBahn.Clients.Stations.Query;
-using DotBahn.Clients.Stations.Transformer;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Stations.Models;
+using DotBahn.Shared;
+using DotBahn.Shared.Parsing;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Shared.Transformer;
+using DotBahn.Stations.Contracts;
+using DotBahn.Stations.Models;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DotBahn.Clients.Stations;
+namespace DotBahn.Stations;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
-public class StationsClient : ClientBase, IStationsClient {
+public class StationClient : ClientBase, IStationClient {
     private readonly IParser<StationsResponseContract> _parser;
     private readonly ITransformer<IEnumerable<Station>, StationsResponseContract> _transformer;
 
@@ -29,8 +26,8 @@ public class StationsClient : ClientBase, IStationsClient {
     /// <param name="parser">The parser for this contract type.</param>
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
-    public StationsClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
+    [ActivatorUtilitiesConstructor]
+    public StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -43,14 +40,14 @@ public class StationsClient : ClientBase, IStationsClient {
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    public StationsClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+    public StationClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
         : base(http, options, auth, cache) {
         _parser = new JsonParser<StationsResponseContract>();
         _transformer = new StationTransformer();
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<Station>> GetStationsAsync(StationsQuery query, CancellationToken cancellation = default) {
+    public async Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
         var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));

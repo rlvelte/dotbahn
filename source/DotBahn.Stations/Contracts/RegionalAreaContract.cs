@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Clients.Stations.Contracts;
+namespace DotBahn.Stations.Contracts;
 
 /// <summary>
 /// Raw structure for a regional area of the Deutsche Bahn.

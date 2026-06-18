@@ -1,10 +1,10 @@
-using DotBahn.Clients.Stations.Contracts;
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Stations.Enumerations;
-using DotBahn.Data.Stations.Models;
+using DotBahn.Shared.Models;
+using DotBahn.Shared.Transformer;
+using DotBahn.Stations.Contracts;
+using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Models;
 
-namespace DotBahn.Clients.Stations.Transformer;
+namespace DotBahn.Stations;
 
 /// <summary>
 /// Transforms station contracts into domain models.
