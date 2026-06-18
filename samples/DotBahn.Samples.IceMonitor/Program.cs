@@ -1,14 +1,12 @@
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Timetables;
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Timetables.Enumerations;
-using DotBahn.Data.Timetables.Models;
-using DotBahn.Modules.Authorization;
-using DotBahn.Samples.Shared;
-
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Models;
+using DotBahn.Samples.IceMonitor.Additional;
+using DotBahn.Timetables;
+using DotBahn.Timetables.Models;
+using DotBahn.Timetables.Models.Enumerations;
 using Spectre.Console;
-
-using static DotBahn.Samples.Shared.ConsoleExtensions;
+using static DotBahn.Samples.IceMonitor.Additional.ConsoleExtensions;
 
 string? clientId;
 string? clientSecret;
@@ -30,8 +28,7 @@ if (!int.TryParse(args.Length > 0 ? args[0] : "8098160", out var eva)) {
     eva = 8098160;
 }
 
-using var http = new HttpClient();
-using var client = new TimetablesClient(http,
+using var client = new TimetableClient(
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1"),
     },
@@ -59,7 +56,6 @@ while (!cts.Token.IsCancellationRequested) {
                 for (var h = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
                      h < start.AddHours(24);
                      h = h.AddHours(1)) {
-                    ctx.Status($"{h:HH:mm}\u2026");
                     var data = await client.GetTimetableAsync(eva, h);
                     first ??= data;
                     foreach (var s in data.Stops) {

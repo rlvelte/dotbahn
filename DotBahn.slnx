@@ -1,38 +1,29 @@
 <Solution>
-  <Folder Name="/DotBahn.Clients/">
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Facilities/DotBahn.Clients.Facilities.csproj" />
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Stations/DotBahn.Clients.Stations.csproj" />
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Timetables/DotBahn.Clients.Timetables.csproj" />
+  <Folder Name="/Configuration/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="Makefile" />
   </Folder>
-  <Folder Name="/DotBahn.Data/">
-    <Project Path="source/DotBahn.Data/DotBahn.Data.Facilities/DotBahn.Data.Facilities.csproj" />
-    <Project Path="source/DotBahn.Data/DotBahn.Data.Stations/DotBahn.Data.Stations.csproj" />
-    <Project Path="source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
+  <Folder Name="/Documentation/">
+    <File Path="docs/docfx.json" />
+    <File Path="docs/toc.yml" />
+    <File Path="docs/filterconfig.yml" />
+    <File Path="docs/index.md" />
   </Folder>
-  <Folder Name="/DotBahn.Modules/">
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
-    <Project Path="source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
+  <Folder Name="/Packages/">
+    <Project Path="source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
+    <Project Path="source/DotBahn.Stations/DotBahn.Stations.csproj" />
+    <Project Path="source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
+    <Project Path="source\DotBahn.Common\DotBahn.Common.csproj" />
   </Folder>
-  <Folder Name="/DotBahn.Tests/">
+  <Folder Name="/Samples/">
+    <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
+    <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
     <Project Path="tests/DotBahn.Tests.Facilities/DotBahn.Tests.Facilities.csproj" />
     <Project Path="tests/DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
     <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
     <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
-  </Folder>
-  <Folder Name="/_Configuration/">
-    <File Path="Directory.Build.props" />
-    <File Path="Directory.Packages.props" />
-  </Folder>
-  <Folder Name="/_Docs/">
-    <File Path="docs/docfx.json" />
-    <File Path="docs/toc.yml" />
-  </Folder>
-  <Folder Name="/_Samples/">
-    <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
-    <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
-  </Folder>
-  <Folder Name="/_Shared/">
-    <Project Path="source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <Project Path="source/DotBahn.Data/DotBahn.Data.Shared/DotBahn.Data.Shared.csproj" />
   </Folder>
 </Solution>

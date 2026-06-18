@@ -16,12 +16,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Timetables/DotBahn.Clients.Timetables.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Shared/DotBahn.Data.Shared.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Common\DotBahn.Common.csproj" />
     <ProjectReference Include="../DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
   </ItemGroup>
 </Project>

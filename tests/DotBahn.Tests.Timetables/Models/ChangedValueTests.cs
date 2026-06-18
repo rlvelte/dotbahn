@@ -1,4 +1,4 @@
-using DotBahn.Data.Shared.Models;
+using DotBahn.Common.Models;
 
 namespace DotBahn.Tests.Timetables.Models;
 

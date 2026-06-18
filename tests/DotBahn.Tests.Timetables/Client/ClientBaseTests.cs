@@ -1,12 +1,9 @@
 using System.Net;
-
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Shared.Query;
-using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
-
 using Moq;
 
 namespace DotBahn.Tests.Timetables.Client;
@@ -22,9 +19,8 @@ public class ClientBaseTests : ClientTestBase {
     public void Constructor_DIConstructor_StoresHttpClientReference() {
         var http = new HttpClient();
         var authorization = new Mock<IAuthorization>().Object;
-        var cache = new Mock<ICache>().Object;
 
-        var client = new TestClientBase(http, authorization, cache);
+        var client = new TestClientBase(http, authorization);
 
         Assert.NotNull(client);
     }
@@ -33,66 +29,49 @@ public class ClientBaseTests : ClientTestBase {
     public void Constructor_DIConstructor_WithNullHttpClient_ThrowsArgumentNullException() {
         var authorization = new Mock<IAuthorization>().Object;
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, authorization, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, authorization));
     }
 
     [Fact]
     public void Constructor_DIConstructor_WithNullAuthorization_ThrowsArgumentNullException() {
         var http = new HttpClient();
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!));
     }
 
     [Fact]
-    public void Constructor_OptionsConstructor_StoresAndConfiguresHttpClient() {
-        var http = new HttpClient();
-        var options = new ClientOptions {
-            BaseEndpoint = new Uri("https://api.deutschebahn.com")
-        };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+    public void Constructor_ConvenienceConstructor_CreatesHttpClientWithBaseAddress() {
+        var endpoint = new Uri("https://api.deutschebahn.com");
+        var options = new ClientOptions { BaseEndpoint = endpoint };
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
 
-        var client = new TestClientBase(http, options, auth, null);
+        using var client = new TestClientBase(options, auth);
 
         Assert.NotNull(client);
-        Assert.Same(http, client.HttpClient);
-        Assert.Equal(options.BaseEndpoint, http.BaseAddress);
+        Assert.NotNull(client.HttpClient);
+        Assert.Equal(endpoint, client.HttpClient.BaseAddress);
     }
 
     [Fact]
-    public void Constructor_OptionsConstructor_WithNullHttp_ThrowsArgumentNullException() {
-        var options = new ClientOptions {
-            BaseEndpoint = new Uri("https://api.deutschebahn.com")
-        };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
+    public void Constructor_ConvenienceConstructor_WithNullOptions_ThrowsArgumentNullException() {
+        var auth = new AuthorizationOptions {
             ClientId = "test-client",
             ApiKey = "test-key"
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, options, auth, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, auth));
     }
 
     [Fact]
-    public void Constructor_OptionsConstructor_WithNullOptions_ThrowsArgumentNullException() {
-        var http = new HttpClient();
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
-            ClientId = "test-client",
-            ApiKey = "test-key"
-        };
-
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, auth, null));
-    }
-
-    [Fact]
-    public void Constructor_OptionsConstructor_WithNullAuth_ThrowsArgumentNullException() {
-        var http = new HttpClient();
+    public void Constructor_ConvenienceConstructor_WithNullAuth_ThrowsArgumentNullException() {
         var options = new ClientOptions {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, options, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(options, null!));
     }
 
 
@@ -165,57 +144,6 @@ public class ClientBaseTests : ClientTestBase {
 
 
     [Fact]
-    public async Task GetAsync_CacheHit_ReturnsCachedAndSkipsHttp() {
-        var cacheMock = new Mock<ICache>();
-        var cachedData = "cached-response";
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync(cachedData);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>();
-        parserMock.Setup(p => p.Parse(cachedData)).Returns("parsed-cached");
-
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        Assert.Equal("parsed-cached", result);
-        Assert.Empty(HttpHandler.SentRequests);
-        cacheMock.Verify(c => c.GetAsync<string>(It.IsAny<string>()), Times.Once);
-        cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task GetAsync_CacheMiss_ExecutesHttpAndWritesCache() {
-        var cacheMock = new Mock<ICache>();
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync((string?)null);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>();
-        parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns("parsed-response");
-
-        HttpHandler.RespondWith(HttpStatusCode.OK, "<response>data</response>");
-
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        Assert.Equal("parsed-response", result);
-        Assert.Single(HttpHandler.SentRequests);
-        cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), "<response>data</response>"), Times.Once);
-    }
-
-    [Fact]
-    public async Task GetAsync_CacheKeyIsFullRequestUri() {
-        var cacheMock = new Mock<ICache>();
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync((string?)null);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>().Object;
-        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
-
-        await client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        cacheMock.Verify(c => c.GetAsync<string>(It.Is<string>(k => k.Contains("/test"))), Times.Once);
-    }
-
-
-    [Fact]
     public async Task GetAsync_With401Status_ThrowsHttpRequestExceptionUnauthorized() {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>().Object;
@@ -259,49 +187,15 @@ public class ClientBaseTests : ClientTestBase {
         await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
     }
 
-    [Fact]
-    public void Dispose_OptionsMode_DoesNotDisposeProvidedHttpClient() {
-        var http = new HttpClient();
-        var options = new ClientOptions {
-            BaseEndpoint = new Uri("https://api.deutschebahn.com")
-        };
-        var auth = new DotBahn.Modules.Authorization.AuthorizationOptions {
-            ClientId = "test-client",
-            ApiKey = "test-key"
-        };
 
-        var client = new TestClientBase(http, options, auth, null);
-        client.Dispose();
+    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object);
 
-        // HttpClient is owned by the caller — dispose should not close it
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("still-alive");
-        Assert.NotNull(http);
-    }
+    private sealed class TestClientBase : ClientBase {
+        public TestClientBase(HttpClient http, IAuthorization authorization)
+            : base(http, authorization) { }
 
-    [Fact]
-    public void Dispose_DIMode_DoesNotDisposeInjectedHttpClient() {
-        var http = new HttpClient();
-        var authorization = new Mock<IAuthorization>().Object;
-
-        var client = new TestClientBase(http, authorization, null);
-        client.Dispose();
-
-        Assert.NotNull(http);
-    }
-
-
-    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object, CacheMock.Object);
-
-    private class TestClientBase : ClientBase {
-        public TestClientBase(HttpClient http, IAuthorization authorization, ICache? cache)
-            : base(http, authorization, cache) { }
-
-        public TestClientBase(
-            HttpClient http,
-            ClientOptions options,
-            DotBahn.Modules.Authorization.AuthorizationOptions auth,
-            DotBahn.Modules.Cache.CacheOptions? cache)
-            : base(http, options, auth, cache) { }
+        public TestClientBase(ClientOptions options, AuthorizationOptions auth)
+            : base(options, auth) { }
 
         public new HttpClient HttpClient => base.HttpClient;
 

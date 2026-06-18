@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Deterministic>true</Deterministic>
+    <ImplicitUsings>enable</ImplicitUsings>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -14,7 +14,7 @@
 
   <!-- Nukpg -->
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
   </PropertyGroup>
 
@@ -38,7 +38,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup Condition="'$(IsPackable)' != 'false'">
-    <None Include="$(MSBuildThisFileDirectory)docs/images/logo-512x512.png" Pack="True" PackagePath="icon.png" />
+    <None Include="$(MSBuildThisFileDirectory)docs/images/logo-128x128.png" Pack="True" PackagePath="icon.png" />
     <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="True" PackagePath="" />
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="True" PackagePath="" />
   </ItemGroup>

@@ -1,12 +1,9 @@
 using System.Net;
-
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Shared.Query;
-using DotBahn.Modules.Authorization.Service.Base;
-using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
-
 using Moq;
 
 namespace DotBahn.Tests.Timetables.Client;
@@ -70,9 +67,9 @@ public class UriUtilTests : ClientTestBase {
         Assert.Contains("%20", requestUri);
     }
 
-    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object, CacheMock.Object);
+    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object);
 
-    private class TestClientBase(HttpClient http, IAuthorization authorization, ICache? cache) : ClientBase(http, authorization, cache) {
+    private class TestClientBase(HttpClient http, IAuthorization authorization) : ClientBase(http, authorization) {
         public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) =>
             base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, cancellation);
     }
