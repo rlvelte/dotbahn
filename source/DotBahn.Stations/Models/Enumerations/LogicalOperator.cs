@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Enumerations;
+namespace DotBahn.Stations.Models.Enumerations;
 
 /// <summary>
 /// Represents the logical operator to combine multiple filter criteria in a station query.

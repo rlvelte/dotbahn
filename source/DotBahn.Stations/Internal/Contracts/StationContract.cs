@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for a station in the StaDa API.
 /// </summary>
-public record StationContract {
+internal record StationContract {
     /// <summary>
     /// Gets the station number.
     /// </summary>

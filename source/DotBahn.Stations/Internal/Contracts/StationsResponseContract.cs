@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for the response containing a list of stations.
 /// </summary>
-public record StationsResponseContract {
+internal record StationsResponseContract {
     /// <summary>
     /// Gets the offset.
     /// </summary>

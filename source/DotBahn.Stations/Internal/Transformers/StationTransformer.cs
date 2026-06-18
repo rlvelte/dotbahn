@@ -1,15 +1,15 @@
 using DotBahn.Shared.Models;
 using DotBahn.Shared.Transformer;
-using DotBahn.Stations.Contracts;
-using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Internal.Contracts;
+using DotBahn.Stations.Models.Enumerations;
 using DotBahn.Stations.Models;
 
-namespace DotBahn.Stations;
+namespace DotBahn.Stations.Internal.Transformers;
 
 /// <summary>
 /// Transforms station contracts into domain models.
 /// </summary>
-public class StationTransformer : ITransformer<IEnumerable<Station>, StationsResponseContract> {
+internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, StationsResponseContract> {
     /// <inheritdoc />
     public IEnumerable<Station> Transform(in StationsResponseContract contracts) {
         ArgumentNullException.ThrowIfNull(contracts);

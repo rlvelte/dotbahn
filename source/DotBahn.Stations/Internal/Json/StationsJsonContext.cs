@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Models.Enumerations;
 
-namespace DotBahn.Stations.Json;
+namespace DotBahn.Stations.Internal.Json;
 
 /// <summary>
 /// Source-generated JSON serialization metadata for Data.Stations enum types.

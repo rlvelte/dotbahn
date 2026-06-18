@@ -3,7 +3,8 @@ using DotBahn.Shared.Parsing;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Cache;
 using DotBahn.Shared.Transformer;
-using DotBahn.Stations.Contracts;
+using DotBahn.Stations.Internal.Contracts;
+using DotBahn.Stations.Internal.Transformers;
 using DotBahn.Stations.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +26,7 @@ public class StationClient : ClientBase, IStationClient {
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    public StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
+    internal StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -34,6 +35,9 @@ public class StationClient : ClientBase, IStationClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn StaDa'-API.
     /// </summary>
+    /// <remarks>
+    /// Use only when instantiating manually without a DI container.
+    /// </remarks>
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>

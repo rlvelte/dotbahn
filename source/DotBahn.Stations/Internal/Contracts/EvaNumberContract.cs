@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for an EVA number.
 /// </summary>
-public record EvaNumberContract {
+internal record EvaNumberContract {
     /// <summary>
     /// Gets the EVA number.
     /// </summary>

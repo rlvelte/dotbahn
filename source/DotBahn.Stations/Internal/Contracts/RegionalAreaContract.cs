@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for a regional area of the Deutsche Bahn.
 /// </summary>
-public record RegionalAreaContract {
+internal record RegionalAreaContract {
     /// <summary>
     /// Gets the number of the regional area.
     /// </summary>

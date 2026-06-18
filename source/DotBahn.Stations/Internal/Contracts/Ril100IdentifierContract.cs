@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 ///Raw structure for a Ril100 identifier.
 /// </summary>
-public record Ril100IdentifierContract {
+internal record Ril100IdentifierContract {
     /// <summary>
     /// Gets the Ril identifier.
     /// </summary>

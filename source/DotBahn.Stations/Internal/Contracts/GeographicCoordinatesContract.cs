@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for geographic coordinates.
 /// </summary>
-public record GeographicCoordinatesContract {
+internal record GeographicCoordinatesContract {
     /// <summary>
     /// Gets the type.
     /// </summary>

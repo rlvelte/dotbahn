@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Stations.Contracts;
+namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for the mailing address of a station.
 /// </summary>
-public record MailingAddressContract {
+internal record MailingAddressContract {
     /// <summary>
     /// Gets the city.
     /// </summary>
