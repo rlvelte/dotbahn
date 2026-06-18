@@ -17,7 +17,7 @@ namespace DotBahn.Timetables;
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
 
-    private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1");
+    private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
 
     /// <summary>
     /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services.
