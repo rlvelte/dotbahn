@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Data.Timetables.Enumerations;
+namespace DotBahn.Timetables.Enumerations;
 
 /// <summary>
 /// Status of an arrival or departure event.

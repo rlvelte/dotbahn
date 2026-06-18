@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Timetables.Models;
+namespace DotBahn.Timetables.Models;
 
 /// <summary>
 /// A stop in a timetable, representing a train's arrival and/or departure at a station.

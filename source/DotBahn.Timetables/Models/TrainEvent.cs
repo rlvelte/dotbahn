@@ -1,7 +1,7 @@
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Timetables.Enumerations;
+using DotBahn.Shared.Models;
+using DotBahn.Timetables.Enumerations;
 
-namespace DotBahn.Data.Timetables.Models;
+namespace DotBahn.Timetables.Models;
 
 /// <summary>
 /// Represents an arrival or departure event at a station.

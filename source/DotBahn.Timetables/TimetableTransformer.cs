@@ -1,14 +1,13 @@
 using System.Globalization;
+using DotBahn.Shared.Enumerations;
+using DotBahn.Shared.Models;
+using DotBahn.Shared.Transformer;
+using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Enumerations;
+using DotBahn.Timetables.Models;
+using TimetableJsonContext = DotBahn.Timetables.Json.TimetableJsonContext;
 
-using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Data.Shared.Enumerations;
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Timetables.Enumerations;
-using DotBahn.Data.Timetables.Json;
-using DotBahn.Data.Timetables.Models;
-
-namespace DotBahn.Clients.Timetables.Transformer;
+namespace DotBahn.Timetables;
 
 /// <summary>
 /// Transforms timetable contracts into domain models.
@@ -16,7 +15,6 @@ namespace DotBahn.Clients.Timetables.Transformer;
 public class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract> {
     private const string BahnTimeFormat = "yyMMddHHmm";
 
-    #region Transforming
     /// <inheritdoc />
     public Timetable Transform(in TimetableResponseContract contracts) {
         ArgumentNullException.ThrowIfNull(contracts);
@@ -124,7 +122,6 @@ public class TimetableTransformer : ITransformer<Timetable, TimetableResponseCon
         IsDeleted = contract.IsDeleted == "1",
         AffectedTrips = []
     };
-    #endregion
 
     /// <summary>
     /// Parses the Bahn time to a <see cref="DateTime"/>.

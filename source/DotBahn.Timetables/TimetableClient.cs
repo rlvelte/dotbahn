@@ -1,22 +1,21 @@
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Clients.Timetables.Interfaces;
-using DotBahn.Clients.Timetables.Transformer;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Timetables.Models;
+using DotBahn.Shared;
+using DotBahn.Shared.Parsing;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Shared.Transformer;
+using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Models;
 
-namespace DotBahn.Clients.Timetables;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DotBahn.Timetables;
 
 /// <summary>
 /// Client for accessing 'Deutsche Bahn Timetables'-API.
 /// </summary>
-public class TimetablesClient : ClientBase, ITimetablesClient {
+public class TimetableClient : ClientBase, ITimetableClient {
     private readonly IParser<TimetableResponseContract> _parser;
     private readonly ITransformer<Timetable, TimetableResponseContract> _transformer;
     private readonly IMerger<Timetable> _merger;
@@ -30,8 +29,8 @@ public class TimetablesClient : ClientBase, ITimetablesClient {
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="merger">The merger for the target type.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
-    [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
-    public TimetablesClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
+    [ActivatorUtilitiesConstructor]
+    public TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -45,7 +44,7 @@ public class TimetablesClient : ClientBase, ITimetablesClient {
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>
     /// <param name="cache">The cache options for the client.</param>
-    public TimetablesClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
+    public TimetableClient(HttpClient http, ClientOptions options, AuthorizationOptions auth, CacheOptions? cache = null)
         : base(http, options, auth, cache) {
         _parser = new XmlParser<TimetableResponseContract>();
         _transformer = new TimetableTransformer();

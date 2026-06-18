@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace DotBahn.Clients.Timetables.Contracts;
+namespace DotBahn.Timetables.Contracts;
 
 /// <summary>
 /// Raw XML structure for a single stop

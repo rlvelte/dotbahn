@@ -1,8 +1,8 @@
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Timetables.Models;
+using DotBahn.Shared.Models;
+using DotBahn.Shared.Transformer;
+using DotBahn.Timetables.Models;
 
-namespace DotBahn.Clients.Timetables.Transformer;
+namespace DotBahn.Timetables;
 
 /// <summary>
 /// Merges timetable model updates into the current timetable.

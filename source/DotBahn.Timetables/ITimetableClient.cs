@@ -1,11 +1,11 @@
-using DotBahn.Data.Timetables.Models;
+using DotBahn.Timetables.Models;
 
-namespace DotBahn.Clients.Timetables.Interfaces;
+namespace DotBahn.Timetables;
 
 /// <summary>
 /// Client for accessing the 'Deutsche Bahn Timetables'-API.
 /// </summary>
-public interface ITimetablesClient {
+public interface ITimetableClient {
     /// <summary>
     /// Gets full changes for a specific station.
     /// If a <see cref="Timetable"/> is supplied, the changes are merged onto this instance.

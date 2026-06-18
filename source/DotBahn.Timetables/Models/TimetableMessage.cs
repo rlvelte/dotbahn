@@ -1,6 +1,6 @@
-using DotBahn.Data.Timetables.Enumerations;
+using DotBahn.Timetables.Enumerations;
 
-namespace DotBahn.Data.Timetables.Models;
+namespace DotBahn.Timetables.Models;
 
 /// <summary>
 /// A message associated with an event, a stop, or a trip.

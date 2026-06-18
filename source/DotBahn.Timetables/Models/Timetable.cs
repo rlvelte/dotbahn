@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Timetables.Models;
+namespace DotBahn.Timetables.Models;
 
 /// <summary>
 /// A timetable containing stops and messages for a station.

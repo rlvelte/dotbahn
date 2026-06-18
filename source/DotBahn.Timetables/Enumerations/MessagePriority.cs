@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Timetables.Enumerations;
+namespace DotBahn.Timetables.Enumerations;
 
 /// <summary>
 /// Priority level of a timetable message.
