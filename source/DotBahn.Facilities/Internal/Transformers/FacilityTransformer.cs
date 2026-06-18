@@ -1,17 +1,18 @@
-using DotBahn.Facilities.Contracts;
-using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Shared.Enumerations;
 using DotBahn.Shared.Models;
 using DotBahn.Shared.Transformer;
-using FacilitiesJsonContext = DotBahn.Facilities.Json.FacilitiesJsonContext;
 
-namespace DotBahn.Facilities;
+using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
+
+namespace DotBahn.Facilities.Internal.Transformers;
 
 /// <summary>
 /// Transforms facility contracts into domain models.
 /// </summary>
-public class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> {
+internal sealed class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> {
     /// <inheritdoc />
     public IEnumerable<Facility> Transform(in IEnumerable<FacilityContract> contracts) {
         ArgumentNullException.ThrowIfNull(contracts);

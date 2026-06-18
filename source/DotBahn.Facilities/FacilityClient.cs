@@ -1,4 +1,5 @@
-using DotBahn.Facilities.Contracts;
+using DotBahn.Facilities.Internal.Contracts;
+using DotBahn.Facilities.Internal.Transformers;
 using DotBahn.Facilities.Models;
 using DotBahn.Shared;
 using DotBahn.Shared.Parsing;
@@ -25,7 +26,7 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <param name="transformer">The transformer for this model and contract types.</param>
     /// <param name="cache">The cache provider for storing requests.</param>
     [ActivatorUtilitiesConstructor]
-    public FacilityClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null)
+    internal FacilityClient(HttpClient http, IAuthorization authorization, IParser<IEnumerable<FacilityContract>> parser, ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> transformer, ICache? cache = null)
         : base(http, authorization, cache) {
         _parser = parser;
         _transformer = transformer;
@@ -34,6 +35,9 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <summary>
     /// Client for accessing 'Deutsche Bahn FaSta'-API.
     /// </summary>
+    /// <remarks>
+    /// Use only when instantiating manually without a DI container.
+    /// </remarks>
     /// <param name="http">The HTTP client used for requests. The caller owns its lifecycle; it is not disposed by this instance.</param>
     /// <param name="options">The options for this instance.</param>
     /// <param name="auth">The auth credentials for the client.</param>

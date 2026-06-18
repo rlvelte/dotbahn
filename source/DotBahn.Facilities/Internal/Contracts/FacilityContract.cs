@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Facilities.Contracts;
+namespace DotBahn.Facilities.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for a station facility (elevator or escalator) in the FaSta API.
 /// </summary>
-public record FacilityContract {
+internal record FacilityContract {
     /// <summary>
     /// Gets the unique equipment number.
     /// </summary>

@@ -1,8 +1,7 @@
-using System.ComponentModel;
-using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Shared;
 using DotBahn.Shared.Enumerations;
-using FacilitiesJsonContext = DotBahn.Facilities.Json.FacilitiesJsonContext;
+using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
 
 namespace DotBahn.Facilities;
 
@@ -12,22 +11,22 @@ namespace DotBahn.Facilities;
 /// </summary>
 public sealed record FacilityQuery {
     /// <summary>
-    /// Type of the facility. Optional filter.
+    /// Type of the facility.
     /// </summary>
     public FacilityType? Type { get; set; }
 
     /// <summary>
-    /// State of the facility. Optional filter.
+    /// State of the facility.
     /// </summary>
     public FacilityState? State { get; set; }
 
     /// <summary>
-    /// Equipment numbers to filter by. Optional filter.
+    /// Equipment numbers to filter by.
     /// </summary>
     public IEnumerable<string> EquipmentNumbers { get; set; } = [];
 
     /// <summary>
-    /// The station ID to filter facilities. Optional filter.
+    /// The station ID to filter facilities.
     /// </summary>
     public string? StationId { get; set; }
 
@@ -66,8 +65,7 @@ public sealed record FacilityQuery {
     /// <summary>
     /// Converts the query into <see cref="QueryParameters"/> for API calls.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public QueryParameters ToQueryParameters() => QueryParameters.Create()
+    internal QueryParameters ToQueryParameters() => QueryParameters.Create()
         .Add("type", EnumMapper.Format(Type, FacilitiesJsonContext.Default.FacilityType))
         .Add("state", EnumMapper.Format(State, FacilitiesJsonContext.Default.FacilityState))
         .Add("equipmentnumbers", EquipmentNumbers)

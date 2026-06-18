@@ -1,7 +1,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Facilities.Enumerations;
+namespace DotBahn.Facilities.Models.Enumerations;
 
 /// <summary>
 /// Represents the operational state of a facility.

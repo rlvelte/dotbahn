@@ -1,4 +1,4 @@
-using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Shared.Models;
 
 namespace DotBahn.Facilities.Models;

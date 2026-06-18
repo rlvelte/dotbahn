@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotBahn.Facilities.Enumerations;
+namespace DotBahn.Facilities.Models.Enumerations;
 
 /// <summary>
 /// Represents the type of facility in a station.
