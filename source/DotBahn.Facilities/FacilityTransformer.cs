@@ -1,12 +1,12 @@
-using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Data.Facilities.Enumerations;
-using DotBahn.Data.Facilities.Json;
-using DotBahn.Data.Facilities.Models;
-using DotBahn.Data.Shared.Enumerations;
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Shared.Transformer;
+using DotBahn.Facilities.Contracts;
+using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Models;
+using DotBahn.Shared.Enumerations;
+using DotBahn.Shared.Models;
+using DotBahn.Shared.Transformer;
+using FacilitiesJsonContext = DotBahn.Facilities.Json.FacilitiesJsonContext;
 
-namespace DotBahn.Clients.Facilities.Transformer;
+namespace DotBahn.Facilities;
 
 /// <summary>
 /// Transforms facility contracts into domain models.

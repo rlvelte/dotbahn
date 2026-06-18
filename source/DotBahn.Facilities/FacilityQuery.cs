@@ -1,17 +1,16 @@
 using System.ComponentModel;
+using DotBahn.Facilities.Enumerations;
+using DotBahn.Shared;
+using DotBahn.Shared.Enumerations;
+using FacilitiesJsonContext = DotBahn.Facilities.Json.FacilitiesJsonContext;
 
-using DotBahn.Clients.Shared.Query;
-using DotBahn.Data.Facilities.Enumerations;
-using DotBahn.Data.Facilities.Json;
-using DotBahn.Data.Shared.Enumerations;
-
-namespace DotBahn.Clients.Facilities.Query;
+namespace DotBahn.Facilities;
 
 /// <summary>
 /// Represents the query parameters for searching facilities in stations.
 /// Provides fluent methods for convenient building of queries.
 /// </summary>
-public sealed record FacilitiesQuery {
+public sealed record FacilityQuery {
     /// <summary>
     /// Type of the facility. Optional filter.
     /// </summary>
@@ -35,7 +34,7 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Sets the facility type filter.
     /// </summary>
-    public FacilitiesQuery WithType(FacilityType type) {
+    public FacilityQuery WithType(FacilityType type) {
         Type = type;
         return this;
     }
@@ -43,7 +42,7 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Sets the facility state filter.
     /// </summary>
-    public FacilitiesQuery WithState(FacilityState state) {
+    public FacilityQuery WithState(FacilityState state) {
         State = state;
         return this;
     }
@@ -51,7 +50,7 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Filters facilities by one or more equipment numbers.
     /// </summary>
-    public FacilitiesQuery WithEquipmentNumbers(params string[] numbers) {
+    public FacilityQuery WithEquipmentNumbers(params string[] numbers) {
         EquipmentNumbers = numbers;
         return this;
     }
@@ -59,7 +58,7 @@ public sealed record FacilitiesQuery {
     /// <summary>
     /// Filters facilities by station ID.
     /// </summary>
-    public FacilitiesQuery AtStation(int stationId) {
+    public FacilityQuery AtStation(int stationId) {
         StationId = stationId.ToString();
         return this;
     }

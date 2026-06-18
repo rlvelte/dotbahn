@@ -1,20 +1,16 @@
-using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Clients.Facilities.Interfaces;
-using DotBahn.Clients.Facilities.Transformer;
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Data.Facilities.Models;
-using DotBahn.Data.Shared.Transformer;
-
+using DotBahn.Facilities.Contracts;
+using DotBahn.Facilities.Models;
+using DotBahn.Shared;
+using DotBahn.Shared.Parsing;
+using DotBahn.Shared.Transformer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DotBahn.Clients.Facilities;
+namespace DotBahn.Facilities;
 
 /// <summary>
 /// Extension methods for setting up FaSta in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtension {
+public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Facilities";
 
     private static readonly Uri DefaultFacilitiesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
@@ -28,7 +24,7 @@ public static class ServiceCollectionExtension {
     /// <param name="configuration">Optional delegate to configure <see cref="ClientOptions"/>. Can use the service provider.</param>
     /// <returns>The service collection.</returns>
     public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
-        services.AddDotBahnClient<IFacilitiesClient, FacilitiesClient>(OptionsName, opts => {
+        services.AddDotBahnClient<IFacilityClient, FacilityClient>(OptionsName, opts => {
             opts.BaseEndpoint = DefaultFacilitiesEndpoint;
             configuration?.Invoke(opts);
         });

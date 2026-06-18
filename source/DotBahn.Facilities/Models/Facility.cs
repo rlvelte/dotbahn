@@ -1,7 +1,7 @@
-using DotBahn.Data.Facilities.Enumerations;
-using DotBahn.Data.Shared.Models;
+using DotBahn.Facilities.Enumerations;
+using DotBahn.Shared.Models;
 
-namespace DotBahn.Data.Facilities.Models;
+namespace DotBahn.Facilities.Models;
 
 /// <summary>
 /// A station facility such as an elevator or escalator with operational status information.

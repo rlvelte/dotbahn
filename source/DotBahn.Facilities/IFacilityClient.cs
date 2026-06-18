@@ -1,12 +1,11 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Models;
+using DotBahn.Facilities.Models;
 
-namespace DotBahn.Clients.Facilities.Interfaces;
+namespace DotBahn.Facilities;
 
 /// <summary>
 /// Client for accessing the 'Deutsche Bahn FaSta'-API.
 /// </summary>
-public interface IFacilitiesClient {
+public interface IFacilityClient {
     /// <summary>
     /// Finds facilities based on optional filter criteria.
     /// </summary>
@@ -14,5 +13,5 @@ public interface IFacilitiesClient {
     /// <param name="cancellation">Token to cancel the request.</param>
     /// <returns>List of facilities matching the criteria.</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
-    Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilitiesQuery query, CancellationToken cancellation = default);
+    Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken cancellation = default);
 }
