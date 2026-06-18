@@ -1,4 +1,4 @@
-<img src="docs/images/logo-128x128.png" width=128 alt="logo">
+<img src="docs/images/logo-256x256.png" width=128 alt="logo">
 
 # DotBahn - .NET Client for Deutsche Bahn APIs
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Timetables?label=DotBahn.Timetables&style=flat)
@@ -6,18 +6,12 @@
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
 [![Docs](https://img.shields.io/badge/docs-github_pages-blue?style=flat)](https://rlvelte.github.io/dotbahn/)
 
-DotBahn is a collection of .NET client libraries for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly from your .NET applications.
+DotBahn is a collection of .NET client libraries for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly from your application.
 
 Available clients:
-- **StaDa**: Station data including parking, accessibility, and opening hours.
-
-- **FaSta**: Real-time operational status of elevators and escalators at DB InfraGO AG stations.
-
+- **Stations (StaDa)**: Station data including parking, accessibility, and opening hours.
+- **Facilities (FaSta)**: Real-time operational status of elevators and escalators at stations.
 - **Timetables**: Scheduled departures and arrivals with real-time delay and platform change information.
-
-> [!IMPORTANT]
-> This project originated from a personal application. Development follows my own needs rather than a fixed roadmap. Contributions and forks are welcome.
-
 
 ## Table of Contents
 - [Install](#install)
@@ -38,10 +32,10 @@ dotnet add package DotBahn.Facilities
 
 ## Usage
 ### Dependency Injection (Recommended)
-All packages integrate seamlessly with `ServiceCollection`. Each client comes with a sensible default endpoint — override only for custom proxies:
+All packages integrate seamlessly with `ServiceCollection`. Each client comes with a default endpoint, override only for custom proxies:
 
 ```csharp
-// Register clients (default endpoints are pre-configured)
+// Register clients
 services.AddDotBahnStations();
 services.AddDotBahnTimetables();
 services.AddDotBahnFacilities();
@@ -52,13 +46,15 @@ services.AddDotBahnAuthorization(opt => {
     opt.ApiKey = clientSecret;
 });
 
+// ---
+
 // Optional: override default endpoints
 services.AddDotBahnStations(opt => {
     opt.BaseEndpoint = new Uri("https://custom-proxy.example.com/stada");
 });
 ```
 
-Enable request caching to reduce API calls:
+Enable request caching to reduce API calls via the integrated cacheing:
 
 ```csharp
 services.AddDotBahnCache(opt => {
