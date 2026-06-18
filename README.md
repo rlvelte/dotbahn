@@ -54,14 +54,6 @@ services.AddDotBahnStations(opt => {
 });
 ```
 
-Enable request caching to reduce API calls via the integrated cacheing:
-
-```csharp
-services.AddDotBahnCache(opt => {
-    opt.DefaultExpiration = TimeSpan.FromSeconds(60);
-});
-```
-
 ### Manual Initialization
 Create client instances directly without dependency injection. The caller provides the `HttpClient` lifecycle:
 
