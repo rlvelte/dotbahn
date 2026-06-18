@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Shared.Transformer;
+namespace DotBahn.Shared.Transformer;
 
 /// <summary>
 /// Generic interface for transforming data into a target type.

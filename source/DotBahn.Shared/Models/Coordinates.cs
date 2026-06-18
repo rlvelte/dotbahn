@@ -1,4 +1,4 @@
-namespace DotBahn.Data.Shared.Models;
+namespace DotBahn.Shared.Models;
 
 /// <summary>
 /// Geographic coordinates representing the location of a entity.

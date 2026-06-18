@@ -1,20 +1,18 @@
 using System.Net;
 using System.Net.Http.Headers;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Shared.Query;
-using DotBahn.Clients.Shared.Utilities;
 using DotBahn.Modules.Authorization;
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache;
 using DotBahn.Modules.Cache.Service;
 using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Shared.Parsing;
 
-namespace DotBahn.Clients.Shared;
+namespace DotBahn.Shared;
 
 /// <summary>
 /// Base class for rest clients, providing common functionality for authentication and request caching.
-/// The HttpClient is owned by the caller (or IHttpClientFactory) — this class does not dispose it.
+/// The HttpClient is owned by the caller (or IHttpClientFactory) — this class does not dispose of it.
 /// </summary>
 public abstract class ClientBase : IDisposable {
     private readonly IAuthorization _authorization;
@@ -68,7 +66,6 @@ public abstract class ClientBase : IDisposable {
     /// <inheritdoc />
     public void Dispose() {
         _cache?.Dispose();
-        HttpClient.Dispose();
     }
 
     /// <summary>
@@ -84,7 +81,9 @@ public abstract class ClientBase : IDisposable {
     protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
-        var url = UriUtil.BuildUrl(relative, queryParams);
+        var url = queryParams is null || !queryParams.Any()
+            ? relative
+            : $"{relative}?{queryParams.ToQueryString()}";
         var raw = await GetContractDataAsync(url, acceptHeader, cancellation).ConfigureAwait(false);
         return parser.Parse(raw);
     }
@@ -150,7 +149,6 @@ public abstract class ClientBase : IDisposable {
                 throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
             HttpStatusCode.BadRequest =>
                 throw new HttpRequestException("Bad request.", null, response.StatusCode),
-
             HttpStatusCode.NotFound => string.Empty,
             _ => await ReadSuccessResponseAsync(response).ConfigureAwait(false)
         };

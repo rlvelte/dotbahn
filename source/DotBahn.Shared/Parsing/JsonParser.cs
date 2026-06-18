@@ -1,9 +1,7 @@
 using System.Text.Json;
+using DotBahn.Shared.Parsing.Converters;
 
-using DotBahn.Clients.Shared.Parsing.Additional;
-using DotBahn.Clients.Shared.Parsing.Base;
-
-namespace DotBahn.Clients.Shared.Parsing;
+namespace DotBahn.Shared.Parsing;
 
 /// <summary>
 /// Generic JSON parser implementation.

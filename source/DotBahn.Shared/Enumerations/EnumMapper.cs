@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace DotBahn.Data.Shared.Enumerations;
+namespace DotBahn.Shared.Enumerations;
 
 /// <summary>
 /// Helpers for parsing enums to/from their string representation using <see cref="JsonTypeInfo{T}"/> contracts.

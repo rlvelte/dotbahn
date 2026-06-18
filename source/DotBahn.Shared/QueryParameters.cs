@@ -1,4 +1,4 @@
-namespace DotBahn.Clients.Shared.Query;
+namespace DotBahn.Shared;
 
 /// <summary>
 /// Helper class for building query string parameters in a fluent way.

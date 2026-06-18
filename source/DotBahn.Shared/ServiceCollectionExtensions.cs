@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace DotBahn.Clients.Shared;
+namespace DotBahn.Shared;
 
 /// <summary>
 /// Shared helper for registering DotBahn typed clients.

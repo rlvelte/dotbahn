@@ -1,10 +1,10 @@
-namespace DotBahn.Data.Shared.Models;
+namespace DotBahn.Shared.Models;
 
 /// <summary>
-/// Represents a reference type that can be updated, tracking both the original and changed value.
+/// Represents a value type that can be updated, tracking both the original and changed value.
 /// </summary>
-/// <typeparam name="T">The reference type.</typeparam>
-public class ChangedRef<T> where T : class {
+/// <typeparam name="T">The value type.</typeparam>
+public class ChangedValue<T> where T : struct {
     /// <summary>
     /// The original value.
     /// </summary>
@@ -18,7 +18,7 @@ public class ChangedRef<T> where T : class {
     /// <summary>
     /// Indicates if there is an updated value.
     /// </summary>
-    public bool HasUpdate => Updated != null;
+    public bool HasUpdate => Updated.HasValue;
 
     /// <summary>
     /// Gets the currently active value.
