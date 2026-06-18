@@ -1,5 +1,4 @@
 using DotBahn.Common.Auth;
-
 using Moq;
 
 namespace DotBahn.Tests.Shared;

@@ -1,6 +1,5 @@
 using DotBahn.Common.Utilities;
 using DotBahn.Facilities.Models.Enumerations;
-
 using FacilitiesJsonContext = DotBahn.Facilities.Internal.Json.FacilitiesJsonContext;
 
 namespace DotBahn.Tests.Facilities.Enumerations;

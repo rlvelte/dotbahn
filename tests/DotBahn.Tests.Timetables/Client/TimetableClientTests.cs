@@ -22,7 +22,7 @@ public class TimetableClientTests : ClientTestBase {
 
     private sealed class StubTransformer(Timetable result) : ITransformer<Timetable, TimetableResponseContract> {
         public int TransformCallCount { get; private set; }
-        public Timetable Transform(in TimetableResponseContract contracts) {
+        public Timetable Transform(TimetableResponseContract contracts) {
             TransformCallCount++;
             return result;
         }
@@ -30,7 +30,7 @@ public class TimetableClientTests : ClientTestBase {
 
     private sealed class StubMerger(Timetable result) : IMerger<Timetable> {
         public int MergeCallCount { get; private set; }
-        public Timetable Merge(Timetable current, in Timetable changes) {
+        public Timetable Merge(Timetable current, Timetable changes) {
             MergeCallCount++;
             return result;
         }

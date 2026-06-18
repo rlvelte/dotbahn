@@ -26,7 +26,7 @@ public class TimetableXmlParserTests {
 
     [Fact]
     public void Parse_ValidXmlWithStop_ReturnsStops() {
-        var xml = """<?xml version="1.0"?><timetable station="Berlin Hbf"><s id="stop-1"><tl c="ICE" n="100" o="80" /></s></timetable>""";
+        var xml = """<?xml version="1.0"?><timetable station="Berlin Hbf"><s id="stop-1" eva="8011160"><tl c="ICE" n="100" o="80" /></s></timetable>""";
 
         var result = _parser.Parse(xml);
 

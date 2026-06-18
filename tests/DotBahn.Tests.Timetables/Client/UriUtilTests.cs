@@ -4,7 +4,6 @@ using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
-
 using Moq;
 
 namespace DotBahn.Tests.Timetables.Client;
