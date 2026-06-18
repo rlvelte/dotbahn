@@ -1,13 +1,11 @@
 using System.Net;
-
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Facilities;
 using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
 using DotBahn.Facilities.Models.Enumerations;
-using DotBahn.Shared.Parsing;
-using DotBahn.Shared.Transformer;
 using DotBahn.Tests.Shared;
-
 using Moq;
 
 namespace DotBahn.Tests.Facilities.Client;
@@ -77,8 +75,7 @@ public class FacilityClientTests : ClientTestBase {
             HttpClient,
             AuthorizationMock.Object,
             _parserMock.Object,
-            _transformerMock.Object,
-            CacheMock.Object);
+            _transformerMock.Object);
 
     /// <summary>
     /// Configures default behaviors for parser and transformer mocks

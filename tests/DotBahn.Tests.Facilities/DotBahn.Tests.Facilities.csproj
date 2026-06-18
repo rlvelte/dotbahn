@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Shared/DotBahn.Shared.csproj" />
+    <ProjectReference Include="..\..\source\DotBahn.Common\DotBahn.Common.csproj" />
     <ProjectReference Include="..\DotBahn.Tests.Shared\DotBahn.Tests.Shared.csproj" />
   </ItemGroup>
 </Project>

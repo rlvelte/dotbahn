@@ -1,9 +1,8 @@
 using System.Net;
-
-using DotBahn.Shared;
-using DotBahn.Modules.Authorization;
-using DotBahn.Modules.Cache;
-using DotBahn.Shared.Parsing;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
 
 using Moq;
@@ -21,9 +20,8 @@ public class ClientBaseTests : ClientTestBase {
     public void Constructor_DIConstructor_StoresHttpClientReference() {
         var http = new HttpClient();
         var authorization = new Mock<IAuthorization>().Object;
-        var cache = new Mock<ICache>().Object;
 
-        var client = new TestClientBase(http, authorization, cache);
+        var client = new TestClientBase(http, authorization);
 
         Assert.NotNull(client);
     }
@@ -32,14 +30,14 @@ public class ClientBaseTests : ClientTestBase {
     public void Constructor_DIConstructor_WithNullHttpClient_ThrowsArgumentNullException() {
         var authorization = new Mock<IAuthorization>().Object;
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, authorization, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, authorization));
     }
 
     [Fact]
     public void Constructor_DIConstructor_WithNullAuthorization_ThrowsArgumentNullException() {
         var http = new HttpClient();
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!));
     }
 
     [Fact]
@@ -53,7 +51,7 @@ public class ClientBaseTests : ClientTestBase {
             ApiKey = "test-key"
         };
 
-        var client = new TestClientBase(http, options, auth, null);
+        var client = new TestClientBase(http, options, auth);
 
         Assert.NotNull(client);
         Assert.Same(http, client.HttpClient);
@@ -70,7 +68,7 @@ public class ClientBaseTests : ClientTestBase {
             ApiKey = "test-key"
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, options, auth, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(null!, options, auth));
     }
 
     [Fact]
@@ -81,7 +79,7 @@ public class ClientBaseTests : ClientTestBase {
             ApiKey = "test-key"
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, auth, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, null!, auth));
     }
 
     [Fact]
@@ -91,7 +89,7 @@ public class ClientBaseTests : ClientTestBase {
             BaseEndpoint = new Uri("https://api.deutschebahn.com")
         };
 
-        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, options, null!, null));
+        Assert.Throws<ArgumentNullException>(() => new TestClientBase(http, options, null!));
     }
 
 
@@ -164,57 +162,6 @@ public class ClientBaseTests : ClientTestBase {
 
 
     [Fact]
-    public async Task GetAsync_CacheHit_ReturnsCachedAndSkipsHttp() {
-        var cacheMock = new Mock<ICache>();
-        var cachedData = "cached-response";
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync(cachedData);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>();
-        parserMock.Setup(p => p.Parse(cachedData)).Returns("parsed-cached");
-
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        Assert.Equal("parsed-cached", result);
-        Assert.Empty(HttpHandler.SentRequests);
-        cacheMock.Verify(c => c.GetAsync<string>(It.IsAny<string>()), Times.Once);
-        cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task GetAsync_CacheMiss_ExecutesHttpAndWritesCache() {
-        var cacheMock = new Mock<ICache>();
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync((string?)null);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>();
-        parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns("parsed-response");
-
-        HttpHandler.RespondWith(HttpStatusCode.OK, "<response>data</response>");
-
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        Assert.Equal("parsed-response", result);
-        Assert.Single(HttpHandler.SentRequests);
-        cacheMock.Verify(c => c.SetAsync(It.IsAny<string>(), "<response>data</response>"), Times.Once);
-    }
-
-    [Fact]
-    public async Task GetAsync_CacheKeyIsFullRequestUri() {
-        var cacheMock = new Mock<ICache>();
-        cacheMock.Setup(c => c.GetAsync<string>(It.IsAny<string>())).ReturnsAsync((string?)null);
-
-        var client = new TestClientBase(HttpClient, AuthorizationMock.Object, cacheMock.Object);
-        var parserMock = new Mock<IParser<string>>().Object;
-        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
-
-        await client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken);
-
-        cacheMock.Verify(c => c.GetAsync<string>(It.Is<string>(k => k.Contains("/test"))), Times.Once);
-    }
-
-
-    [Fact]
     public async Task GetAsync_With401Status_ThrowsHttpRequestExceptionUnauthorized() {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>().Object;
@@ -258,49 +205,18 @@ public class ClientBaseTests : ClientTestBase {
         await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
     }
 
-    [Fact]
-    public void Dispose_OptionsMode_DoesNotDisposeProvidedHttpClient() {
-        var http = new HttpClient();
-        var options = new ClientOptions {
-            BaseEndpoint = new Uri("https://api.deutschebahn.com")
-        };
-        var auth = new AuthorizationOptions {
-            ClientId = "test-client",
-            ApiKey = "test-key"
-        };
 
-        var client = new TestClientBase(http, options, auth, null);
-        client.Dispose();
-
-        // HttpClient is owned by the caller — dispose should not close it
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("still-alive");
-        Assert.NotNull(http);
-    }
-
-    [Fact]
-    public void Dispose_DIMode_DoesNotDisposeInjectedHttpClient() {
-        var http = new HttpClient();
-        var authorization = new Mock<IAuthorization>().Object;
-
-        var client = new TestClientBase(http, authorization, null);
-        client.Dispose();
-
-        Assert.NotNull(http);
-    }
-
-
-    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object, CacheMock.Object);
+    private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object);
 
     private class TestClientBase : ClientBase {
-        public TestClientBase(HttpClient http, IAuthorization authorization, ICache? cache)
-            : base(http, authorization, cache) { }
+        public TestClientBase(HttpClient http, IAuthorization authorization)
+            : base(http, authorization) { }
 
         public TestClientBase(
             HttpClient http,
             ClientOptions options,
-            AuthorizationOptions auth,
-            CacheOptions? cache)
-            : base(http, options, auth, cache) { }
+            AuthorizationOptions auth)
+            : base(http, options, auth) { }
 
         public new HttpClient HttpClient => base.HttpClient;
 

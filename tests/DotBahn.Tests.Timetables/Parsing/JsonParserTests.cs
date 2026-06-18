@@ -1,4 +1,4 @@
-using DotBahn.Shared.Parsing;
+using DotBahn.Common.Parsing;
 using DotBahn.Timetables.Internal.Contracts;
 
 namespace DotBahn.Tests.Timetables.Parsing;

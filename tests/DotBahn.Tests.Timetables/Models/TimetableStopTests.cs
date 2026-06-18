@@ -1,6 +1,6 @@
-using DotBahn.Shared.Models;
-using DotBahn.Timetables.Models.Enumerations;
+using DotBahn.Common.Models;
 using DotBahn.Timetables.Models;
+using DotBahn.Timetables.Models.Enumerations;
 
 namespace DotBahn.Tests.Timetables.Models;
 

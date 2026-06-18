@@ -1,12 +1,10 @@
 using System.Net;
-
+using DotBahn.Common.Parsing;
+using DotBahn.Common.Transformer;
 using DotBahn.Stations;
-using DotBahn.Shared.Transformer;
-using DotBahn.Shared.Parsing;
 using DotBahn.Stations.Internal.Contracts;
 using DotBahn.Stations.Models;
 using DotBahn.Tests.Shared;
-
 using Moq;
 
 namespace DotBahn.Tests.Stations.Client;
@@ -85,7 +83,7 @@ public class StationClientTests : ClientTestBase {
     }
 
     private StationClient CreateClient() =>
-        new(HttpClient, AuthorizationMock.Object, _parserMock.Object, _transformerMock.Object, CacheMock.Object);
+        new(HttpClient, AuthorizationMock.Object, _parserMock.Object, _transformerMock.Object);
 
     private void SetupMocks(StationsResponseContract contract) {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(contract);

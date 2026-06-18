@@ -1,7 +1,7 @@
+using DotBahn.Common.Models;
 using DotBahn.Timetables.Internal.Transformers;
-using DotBahn.Shared.Models;
-using DotBahn.Timetables.Models.Enumerations;
 using DotBahn.Timetables.Models;
+using DotBahn.Timetables.Models.Enumerations;
 
 namespace DotBahn.Tests.Timetables.Transformer;
 
