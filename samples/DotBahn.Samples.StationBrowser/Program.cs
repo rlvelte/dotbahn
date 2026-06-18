@@ -1,10 +1,10 @@
 using System.Text;
 using DotBahn.Stations;
-using DotBahn.Facilities.Enumerations;
 using DotBahn.Facilities.Models;
-using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Models.Enumerations;
 using DotBahn.Stations.Models;
 using DotBahn.Facilities;
+using DotBahn.Facilities.Models.Enumerations;
 using DotBahn.Modules.Authorization;
 using DotBahn.Samples.StationBrowser.Additional;
 using Microsoft.Extensions.DependencyInjection;

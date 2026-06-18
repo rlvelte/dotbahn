@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace DotBahn.Samples.IceMonitor.Shared;
+namespace DotBahn.Samples.IceMonitor.Additional;
 
 /// <summary>
 /// Convenience wrappers around common Spectre.Console patterns used across samples.

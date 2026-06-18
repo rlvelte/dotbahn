@@ -2,11 +2,11 @@ using DotBahn.Shared;
 using DotBahn.Timetables;
 using DotBahn.Shared.Models;
 using DotBahn.Modules.Authorization;
-using DotBahn.Samples.IceMonitor.Shared;
-using DotBahn.Timetables.Enumerations;
+using DotBahn.Samples.IceMonitor.Additional;
+using DotBahn.Timetables.Models.Enumerations;
 using DotBahn.Timetables.Models;
 using Spectre.Console;
-using static DotBahn.Samples.IceMonitor.Shared.ConsoleExtensions;
+using static DotBahn.Samples.IceMonitor.Additional.ConsoleExtensions;
 
 string? clientId;
 string? clientSecret;
@@ -57,7 +57,6 @@ while (!cts.Token.IsCancellationRequested) {
                 for (var h = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
                      h < start.AddHours(24);
                      h = h.AddHours(1)) {
-                    ctx.Status($"{h:HH:mm}\u2026");
                     var data = await client.GetTimetableAsync(eva, h);
                     first ??= data;
                     foreach (var s in data.Stops) {

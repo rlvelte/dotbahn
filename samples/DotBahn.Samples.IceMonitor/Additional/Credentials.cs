@@ -1,4 +1,4 @@
-namespace DotBahn.Samples.IceMonitor.Shared;
+namespace DotBahn.Samples.IceMonitor.Additional;
 
 /// <summary>
 /// Helper for reading DotBahn API credentials from environment variables.
