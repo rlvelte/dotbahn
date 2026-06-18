@@ -1,0 +1,40 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace DotBahn.Common.Parsing.Converters;
+
+/// <summary>
+/// Converts dialect in the contracts to real types (e.g. 'yes' as 'true').
+/// </summary>
+public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
+    /// <inheritdoc />
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+        if (reader.TokenType == JsonTokenType.True) {
+            return true;
+        }
+
+        if (reader.TokenType == JsonTokenType.False) {
+            return false;
+        }
+
+        if (reader.TokenType == JsonTokenType.String) {
+            var value = reader.GetString()?.Trim().ToUpperInvariant();
+            return value switch {
+                "TRUE" => true,
+                "FALSE" => false,
+                "YES" => true,
+                "NO" => false,
+                "1" => true,
+                _ => false
+            };
+        }
+
+        throw new JsonException($"Unexpected token {reader.TokenType} when parsing boolean.");
+    }
+
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) {
+        ArgumentNullException.ThrowIfNull(writer);
+        writer.WriteBooleanValue(value);
+    }
+}
