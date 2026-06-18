@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace DotBahn.Samples.Shared;
+namespace DotBahn.Samples.StationBrowser.Additional;
 
 /// <summary>
 /// Convenience wrappers around common Spectre.Console patterns used across samples.
@@ -31,9 +31,4 @@ public static class ConsoleExtensions {
     /// Pre-built Gruvbox gray style.
     /// </summary>
     public static Style GrayStyle => Style.Parse(Gruvbox.Gray);
-
-    /// <summary>
-    /// Gruvbox gray border color (0x928374).
-    /// </summary>
-    public static Color BorderColor => new(0x92, 0x83, 0x74);
 }

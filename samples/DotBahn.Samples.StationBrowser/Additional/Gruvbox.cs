@@ -1,4 +1,4 @@
-namespace DotBahn.Samples.Shared;
+namespace DotBahn.Samples.StationBrowser.Additional;
 
 /// <summary>
 /// Gruvbox color palette constants for use with Spectre.Console markup.

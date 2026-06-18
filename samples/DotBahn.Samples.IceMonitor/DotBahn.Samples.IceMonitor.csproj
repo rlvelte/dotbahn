@@ -9,9 +9,8 @@
     <PackageReference Include="Spectre.Console" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Timetables/DotBahn.Clients.Timetables.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Data/DotBahn.Data.Timetables/DotBahn.Data.Timetables.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Shared/DotBahn.Shared.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
     <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
   </ItemGroup>
 </Project>

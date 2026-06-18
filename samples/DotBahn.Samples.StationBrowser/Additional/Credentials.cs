@@ -1,4 +1,4 @@
-namespace DotBahn.Samples.Shared;
+namespace DotBahn.Samples.StationBrowser.Additional;
 
 /// <summary>
 /// Helper for reading DotBahn API credentials from environment variables.

@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace DotBahn.Samples.Shared;
+namespace DotBahn.Samples.IceMonitor.Shared;
 
 /// <summary>
 /// Convenience wrappers around common Spectre.Console patterns used across samples.
@@ -19,18 +19,6 @@ public static class ConsoleExtensions {
         Justification = Justify.Center,
         Style = Style.Parse(Gruvbox.Blue)
     };
-
-    /// <summary>
-    /// Creates a separator Rule in Gruvbox gray.
-    /// </summary>
-    public static Rule SeparatorRule() => new() {
-        Style = Style.Parse(Gruvbox.Gray)
-    };
-
-    /// <summary>
-    /// Pre-built Gruvbox gray style.
-    /// </summary>
-    public static Style GrayStyle => Style.Parse(Gruvbox.Gray);
 
     /// <summary>
     /// Gruvbox gray border color (0x928374).
