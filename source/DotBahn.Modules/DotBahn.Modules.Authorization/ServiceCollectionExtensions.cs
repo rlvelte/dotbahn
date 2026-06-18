@@ -1,6 +1,5 @@
 using DotBahn.Modules.Authorization.Service;
 using DotBahn.Modules.Authorization.Service.Base;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -10,7 +9,7 @@ namespace DotBahn.Modules.Authorization;
 /// <summary>
 /// Extension methods for setting up authorization services in an <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtension {
+public static class ServiceCollectionExtensions {
     /// <summary>
     /// Adds the authorization system, with options configured via callback.
     /// </summary>
