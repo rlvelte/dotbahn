@@ -1,10 +1,10 @@
-using DotBahn.Shared;
-using DotBahn.Timetables;
-using DotBahn.Shared.Models;
-using DotBahn.Modules.Authorization;
+using DotBahn.Common.Auth;
+using DotBahn.Common.Clients;
+using DotBahn.Common.Models;
 using DotBahn.Samples.IceMonitor.Additional;
-using DotBahn.Timetables.Models.Enumerations;
+using DotBahn.Timetables;
 using DotBahn.Timetables.Models;
+using DotBahn.Timetables.Models.Enumerations;
 using Spectre.Console;
 using static DotBahn.Samples.IceMonitor.Additional.ConsoleExtensions;
 
@@ -29,7 +29,7 @@ if (!int.TryParse(args.Length > 0 ? args[0] : "8098160", out var eva)) {
 }
 
 using var http = new HttpClient();
-using var client = new TimetableClient(http,
+var client = new TimetableClient(http,
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1"),
     },
