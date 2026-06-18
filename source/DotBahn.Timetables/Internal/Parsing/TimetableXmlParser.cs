@@ -48,7 +48,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
 
         return new StopDataContract {
             Id = RequiredAttr(stopElement, "id"),
-            Eva = RequiredAttr(stopElement, "eva"),
+            Eva = OptionalAttr(stopElement, "eva") ?? string.Empty,
             TripInfo = tripInfo,
             Arrival = arrival,
             Departure = departure,
@@ -107,5 +107,5 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     };
 
     private static string RequiredAttr(XElement element, string name) => (string?)element.Attribute(name) ?? throw new XmlException($"Missing required attribute '{name}' on <{element.Name}>.");
-
+    private static string? OptionalAttr(XElement element, string name) => (string?)element.Attribute(name);
 }
