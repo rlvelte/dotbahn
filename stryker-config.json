@@ -12,7 +12,7 @@
     ],
     "mutate": [
       "!**/*Options.cs",
-      "!**/ServiceCollectionExtension.cs"
+      "!**/ServiceCollectionExtensions.cs"
     ]
   }
 }

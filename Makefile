@@ -1,20 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: help build test coverage pack format clean docs docs-serve docs-clean
+.PHONY: build test coverage pack format clean docs docs-serve docs-clean
 
 CONFIGURATION 		?= Release
 COVERAGE_DIR  		?= TestResults/coverage-results
 COVERAGE_REPORT_DIR ?= TestResults/coverage-report
 NUPKG_DIR     		?= nupkgs
 DOCFX_DIR     		?= docs
-
-help: ## Show this help
-	@echo "DotBahn — Make targets"
-	@echo ""
-	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  %-15s %s\n", $$1, $$2}'
-	@echo ""
-	@echo "Variables (set via make VAR=value):"
-	@echo "  CONFIGURATION   Build configuration (default: Release)"
-	@echo ""
 
 build: ## Build all projects (Release)
 	dotnet build --configuration $(CONFIGURATION)
@@ -43,13 +34,10 @@ format: ## Auto-fix all code formatting (style, analyzers, whitespace)
 
 clean: ## Remove all build artifacts
 	dotnet clean
-	rm -rf ./$(COVERAGE_DIR) ./$(COVERAGE_REPORT_DIR) ./$(NUPKG_DIR)
+	rm -rf ./$(COVERAGE_DIR) ./$(COVERAGE_REPORT_DIR) ./$(NUPKG_DIR) ./$(DOCFX_DIR)/_site ./$(DOCFX_DIR)/api
 
 docs: build ## Build documentation site
 	dotnet docfx $(DOCFX_DIR)/docfx.json
 
 docs-serve: build ## Build and serve documentation locally (http://localhost:8080)
 	dotnet docfx $(DOCFX_DIR)/docfx.json --serve
-
-docs-clean: ## Remove generated documentation artifacts
-	rm -rf $(DOCFX_DIR)/_site $(DOCFX_DIR)/api
