@@ -16,7 +16,7 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../source/DotBahn.Clients/DotBahn.Clients.Shared/DotBahn.Clients.Shared.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Shared/DotBahn.Shared.csproj" />
     <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Authorization/DotBahn.Modules.Authorization.csproj" />
     <ProjectReference Include="../../source/DotBahn.Modules/DotBahn.Modules.Cache/DotBahn.Modules.Cache.csproj" />
   </ItemGroup>

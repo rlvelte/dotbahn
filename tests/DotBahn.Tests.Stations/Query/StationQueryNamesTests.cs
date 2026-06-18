@@ -1,11 +1,11 @@
-using DotBahn.Clients.Stations.Query;
+using DotBahn.Stations;
 
 namespace DotBahn.Tests.Stations.Query;
 
-public class StationsQueryNamesTests {
+public class StationQueryNamesTests {
     [Fact]
     public void Names_WithNullValue_ShouldThrowArgumentException() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Names = null);
         Assert.Equal("value", exception.ParamName);
@@ -14,7 +14,7 @@ public class StationsQueryNamesTests {
 
     [Fact]
     public void Names_WithEmptyArray_ShouldThrowArgumentException() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Names = []);
         Assert.Equal("value", exception.ParamName);
@@ -25,7 +25,7 @@ public class StationsQueryNamesTests {
     [InlineData("Berlin", "Berlin*")]
     [InlineData("München", "München*")]
     public void Names_WithoutWildcard_ShouldAppendAsterisk(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Names = [input]
         };
 
@@ -42,7 +42,7 @@ public class StationsQueryNamesTests {
     [InlineData("Ham?burg")]
     [InlineData("*Hamburg?")]
     public void Names_WithWildcard_ShouldNotAppendAsterisk(string nameWithWildcard) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Names = [nameWithWildcard]
         };
 
@@ -51,7 +51,7 @@ public class StationsQueryNamesTests {
 
     [Fact]
     public void Names_WithMultipleValues_ShouldProcessEachIndividually() {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Names = ["Hamburg", "Berlin*", "München?"]
         };
 
@@ -63,7 +63,7 @@ public class StationsQueryNamesTests {
 
     [Fact]
     public void WithNames_ShouldSetNamesAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.WithNames("Hamburg", "Berlin");
 
@@ -73,7 +73,7 @@ public class StationsQueryNamesTests {
 
     [Fact]
     public void WithNames_FluentChaining_ShouldWork() {
-        var query = new StationsQuery()
+        var query = new StationQuery()
                     .WithNames("Hamburg")
                     .WithCategories("1")
                     .LimitTo(5);

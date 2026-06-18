@@ -1,16 +1,16 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryStateTests {
+public class FacilityQueryStateTests {
     [Theory]
     [InlineData(FacilityState.Active)]
     [InlineData(FacilityState.Inactive)]
     [InlineData(FacilityState.Unknown)]
     public void State_ShouldSetAndGetValue(FacilityState state) {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             State = state
         };
 
@@ -21,7 +21,7 @@ public class FacilitiesQueryStateTests {
     [Fact]
     public void State_WithNull_ShouldSetNull() {
         // Arrange
-        var query = new FacilitiesQuery { State = FacilityState.Active };
+        var query = new FacilityQuery { State = FacilityState.Active };
 
         // Act
         query.State = null;
@@ -33,7 +33,7 @@ public class FacilitiesQueryStateTests {
     [Fact]
     public void WithState_ShouldSetStateAndReturnQuery() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result = query.WithState(FacilityState.Active);
@@ -49,7 +49,7 @@ public class FacilitiesQueryStateTests {
     [InlineData(FacilityState.Unknown)]
     public void WithState_WithDifferentStates_ShouldSetCorrectState(FacilityState state) {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         query.WithState(state);

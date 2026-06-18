@@ -1,6 +1,6 @@
-using DotBahn.Data.Facilities.Enumerations;
-using DotBahn.Data.Facilities.Json;
-using DotBahn.Data.Shared.Enumerations;
+using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Json;
+using DotBahn.Shared.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Enumerations;
 

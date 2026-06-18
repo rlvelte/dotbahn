@@ -1,13 +1,13 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryTests {
+public class FacilityQueryTests {
     [Fact]
     public void Constructor_ShouldInitializeWithDefaultValues() {
         // Arrange & Act
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Assert
         Assert.Null(query.Type);
@@ -19,7 +19,7 @@ public class FacilitiesQueryTests {
     [Fact]
     public void ObjectInitializer_ShouldSetAllProperties() {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
             EquipmentNumbers = ["10562421", "10562422"],
@@ -36,7 +36,7 @@ public class FacilitiesQueryTests {
     [Fact]
     public void ObjectInitializer_WithPartialProperties_ShouldSetOnlySpecified() {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             Type = FacilityType.Escalator,
             StationId = "8000105"
         };

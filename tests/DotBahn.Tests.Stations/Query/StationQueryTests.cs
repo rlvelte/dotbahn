@@ -1,12 +1,12 @@
-using DotBahn.Clients.Stations.Query;
-using DotBahn.Data.Stations.Enumerations;
+using DotBahn.Stations;
+using DotBahn.Stations.Enumerations;
 
 namespace DotBahn.Tests.Stations.Query;
 
-public class StationsQueryTests {
+public class StationQueryTests {
     [Fact]
     public void Constructor_ShouldInitializeWithDefaultValues() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         Assert.Null(query.Names);
         Assert.Null(query.Categories);
@@ -20,7 +20,7 @@ public class StationsQueryTests {
 
     [Fact]
     public void ObjectInitializer_ShouldSetAllProperties() {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Names = ["Hamburg"],
             Categories = "1-3",
             State = FederalState.Hamburg,

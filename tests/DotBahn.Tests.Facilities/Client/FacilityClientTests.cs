@@ -1,12 +1,11 @@
 using System.Net;
 
-using DotBahn.Clients.Facilities;
-using DotBahn.Clients.Facilities.Contracts;
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Data.Facilities.Enumerations;
-using DotBahn.Data.Facilities.Models;
-using DotBahn.Data.Shared.Transformer;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Contracts;
+using DotBahn.Facilities.Enumerations;
+using DotBahn.Facilities.Models;
+using DotBahn.Shared.Parsing;
+using DotBahn.Shared.Transformer;
 using DotBahn.Tests.Shared;
 
 using Moq;
@@ -14,33 +13,33 @@ using Moq;
 namespace DotBahn.Tests.Facilities.Client;
 
 /// <summary>
-/// Tests for <see cref="FacilitiesClient.GetFacilitiesAsync"/> covering URL building,
+/// Tests for <see cref="FacilityClient.GetFacilitiesAsync"/> covering URL building,
 /// query parameter application, list conversion, and null query guard.
 /// </summary>
-public class FacilitiesClientTests : ClientTestBase {
+public class FacilityClientTests : ClientTestBase {
     private readonly Mock<IParser<IEnumerable<FacilityContract>>> _parserMock = new();
     private readonly Mock<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>> _transformerMock = new();
 
-    public FacilitiesClientTests() {
+    public FacilityClientTests() {
         HttpClient.BaseAddress = new Uri("https://api.deutschebahn.com");
     }
 
     [Fact]
     public async Task GetFacilitiesAsync_BuildsUrlWithFacilitiesEndpoint() {
         var client = CreateClient();
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
         SetupParserAndTransformer();
         HttpHandler.RespondWith(HttpStatusCode.OK, "[]", "application/json");
 
-        await client.GetFacilitiesAsync(query);
+        await client.GetFacilitiesAsync(query, TestContext.Current.CancellationToken);
 
         AssertRequest(HttpMethod.Get, "/facilities", "application/json");
     }
 
     [Fact]
-    public async Task GetFacilitiesAsync_AppliesQueryParametersFromFacilitiesQuery() {
+    public async Task GetFacilitiesAsync_AppliesQueryParametersFromFacilityQuery() {
         var client = CreateClient();
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             Type = FacilityType.Elevator,
             StationId = "8002549"
         };
@@ -48,7 +47,7 @@ public class FacilitiesClientTests : ClientTestBase {
         SetupParserAndTransformer();
         HttpHandler.RespondWith(HttpStatusCode.OK, "[]", "application/json");
 
-        await client.GetFacilitiesAsync(query);
+        await client.GetFacilitiesAsync(query, TestContext.Current.CancellationToken);
 
         var requestUri = HttpHandler.SentRequests[0].RequestUri?.ToString();
         Assert.Contains("type=ELEVATOR", requestUri);
@@ -58,11 +57,11 @@ public class FacilitiesClientTests : ClientTestBase {
     [Fact]
     public async Task GetFacilitiesAsync_CallsToListBeforeTransform() {
         var client = CreateClient();
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
         SetupParserAndTransformer();
         HttpHandler.RespondWith(HttpStatusCode.OK, "[]", "application/json");
 
-        var result = await client.GetFacilitiesAsync(query);
+        var result = await client.GetFacilitiesAsync(query, TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
     }
@@ -71,10 +70,10 @@ public class FacilitiesClientTests : ClientTestBase {
     public async Task GetFacilitiesAsync_WithNullQuery_ThrowsArgumentNullException() {
         var client = CreateClient();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetFacilitiesAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetFacilitiesAsync(null!, TestContext.Current.CancellationToken));
     }
 
-    private FacilitiesClient CreateClient() => new(
+    private FacilityClient CreateClient() => new(
             HttpClient,
             AuthorizationMock.Object,
             _parserMock.Object,

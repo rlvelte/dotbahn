@@ -1,24 +1,24 @@
 using System.Net;
 
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Timetables;
-using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Data.Shared.Transformer;
-using DotBahn.Data.Timetables.Models;
+using DotBahn.Timetables;
+using DotBahn.Shared.Transformer;
+using DotBahn.Shared.Parsing;
 using DotBahn.Tests.Shared;
+using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Models;
 
 using Moq;
 
 namespace DotBahn.Tests.Timetables.Client;
 
-public class TimetablesClientTests : ClientTestBase {
+public class TimetableClientTests : ClientTestBase {
     private const int TestEva = 8000105;
 
     private readonly Mock<IParser<TimetableResponseContract>> _parserMock = new();
     private readonly Timetable _defaultTimetable = new() { Station = "TestStation" };
     private readonly TimetableResponseContract _defaultContract = new() { Station = "TestStation" };
 
-    public TimetablesClientTests() {
+    public TimetableClientTests() {
         HttpClient.BaseAddress = new Uri("https://api.deutschebahn.com");
     }
 
@@ -49,7 +49,7 @@ public class TimetablesClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
         var result = await client.GetFullChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
@@ -69,7 +69,7 @@ public class TimetablesClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"ChangesStation\"/>");
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
         var result = await client.GetFullChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
@@ -86,7 +86,7 @@ public class TimetablesClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
         var result = await client.GetRecentChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
@@ -106,7 +106,7 @@ public class TimetablesClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"RecentChangesStation\"/>");
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, merger, CacheMock.Object);
         var result = await client.GetRecentChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
@@ -123,7 +123,7 @@ public class TimetablesClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, transformer, new StubMerger(_defaultTimetable), CacheMock.Object);
         var result = await client.GetTimetableAsync(TestEva, dateTime, TestContext.Current.CancellationToken);
 
@@ -138,7 +138,7 @@ public class TimetablesClientTests : ClientTestBase {
         await cts.CancelAsync();
         HttpHandler.RespondWith(_ => throw new OperationCanceledException(cts.Token));
 
-        var client = new TimetablesClient(HttpClient, AuthorizationMock.Object,
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
             _parserMock.Object, new StubTransformer(_defaultTimetable),
             new StubMerger(_defaultTimetable), CacheMock.Object);
 

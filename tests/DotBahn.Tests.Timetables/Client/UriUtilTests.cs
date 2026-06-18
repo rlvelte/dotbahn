@@ -1,10 +1,9 @@
 using System.Net;
 
-using DotBahn.Clients.Shared;
-using DotBahn.Clients.Shared.Parsing.Base;
-using DotBahn.Clients.Shared.Query;
+using DotBahn.Shared;
 using DotBahn.Modules.Authorization.Service.Base;
 using DotBahn.Modules.Cache.Service.Base;
+using DotBahn.Shared.Parsing;
 using DotBahn.Tests.Shared;
 
 using Moq;

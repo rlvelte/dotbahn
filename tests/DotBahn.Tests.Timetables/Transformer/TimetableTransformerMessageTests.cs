@@ -1,6 +1,6 @@
-using DotBahn.Clients.Timetables.Contracts;
-using DotBahn.Clients.Timetables.Transformer;
-using DotBahn.Data.Timetables.Enumerations;
+using DotBahn.Timetables;
+using DotBahn.Timetables.Contracts;
+using DotBahn.Timetables.Enumerations;
 
 namespace DotBahn.Tests.Timetables.Transformer;
 

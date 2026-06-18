@@ -1,15 +1,15 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryTypeTests {
+public class FacilityQueryTypeTests {
     [Theory]
     [InlineData(FacilityType.Elevator)]
     [InlineData(FacilityType.Escalator)]
     public void Type_ShouldSetAndGetValue(FacilityType type) {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             Type = type
         };
 
@@ -20,7 +20,7 @@ public class FacilitiesQueryTypeTests {
     [Fact]
     public void Type_WithNull_ShouldSetNull() {
         // Arrange
-        var query = new FacilitiesQuery { Type = FacilityType.Elevator };
+        var query = new FacilityQuery { Type = FacilityType.Elevator };
 
         // Act
         query.Type = null;
@@ -32,7 +32,7 @@ public class FacilitiesQueryTypeTests {
     [Fact]
     public void WithType_ShouldSetTypeAndReturnQuery() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result = query.WithType(FacilityType.Elevator);
@@ -47,7 +47,7 @@ public class FacilitiesQueryTypeTests {
     [InlineData(FacilityType.Escalator)]
     public void WithType_WithDifferentTypes_ShouldSetCorrectType(FacilityType type) {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         query.WithType(type);

@@ -1,12 +1,12 @@
-using DotBahn.Clients.Facilities.Query;
+using DotBahn.Facilities;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryEquipmentNumbersTests {
+public class FacilityQueryEquipmentNumbersTests {
     [Fact]
     public void EquipmentNumbers_WithSingleNumber_ShouldSetValue() {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             EquipmentNumbers = ["10562421"]
         };
 
@@ -18,7 +18,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void EquipmentNumbers_WithMultipleNumbers_ShouldSetAllValues() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
         var numbers = new[] { "10562421", "10562422", "10562423" };
 
         // Act
@@ -32,7 +32,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void EquipmentNumbers_WithEmptyArray_ShouldSetEmptyArray() {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             EquipmentNumbers = []
         };
 
@@ -44,7 +44,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void EquipmentNumbers_WithNull_ShouldSetNull() {
         // Arrange
-        var query = new FacilitiesQuery { EquipmentNumbers = ["10562421"] };
+        var query = new FacilityQuery { EquipmentNumbers = ["10562421"] };
 
         // Act
         query.EquipmentNumbers = null!;
@@ -56,7 +56,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void WithEquipmentNumbers_WithSingleParameter_ShouldSetArray() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result = query.WithEquipmentNumbers("10562421");
@@ -70,7 +70,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void WithEquipmentNumbers_WithMultipleParameters_ShouldSetAllValues() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result = query.WithEquipmentNumbers("10562421", "10562422", "10562423");
@@ -84,7 +84,7 @@ public class FacilitiesQueryEquipmentNumbersTests {
     [Fact]
     public void WithEquipmentNumbers_CalledMultipleTimes_ShouldOverwritePreviousValue() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         query.WithEquipmentNumbers("10562421")

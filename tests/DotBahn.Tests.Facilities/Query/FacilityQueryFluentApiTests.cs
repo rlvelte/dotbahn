@@ -1,13 +1,13 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryFluentApiTests {
+public class FacilityQueryFluentApiTests {
     [Fact]
     public void FluentApi_CompleteChaining_ShouldSetAllProperties() {
         // Arrange & Act
-        var query = new FacilitiesQuery()
+        var query = new FacilityQuery()
                     .WithType(FacilityType.Elevator)
                     .WithState(FacilityState.Active)
                     .WithEquipmentNumbers("10562421", "10562422")
@@ -23,7 +23,7 @@ public class FacilitiesQueryFluentApiTests {
     [Fact]
     public void FluentApi_PartialChaining_ShouldSetOnlySpecifiedProperties() {
         // Arrange & Act
-        var query = new FacilitiesQuery()
+        var query = new FacilityQuery()
                     .WithType(FacilityType.Escalator)
                     .AtStation(8000105);
 
@@ -37,7 +37,7 @@ public class FacilitiesQueryFluentApiTests {
     [Fact]
     public void FluentApi_ChainingSingleMethod_ShouldReturnSameInstance() {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result1 = query.WithType(FacilityType.Elevator);
@@ -55,7 +55,7 @@ public class FacilitiesQueryFluentApiTests {
     [Fact]
     public void FluentApi_MixedWithObjectInitializer_ShouldCombineBothApproaches() {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             Type = FacilityType.Elevator
         }.WithState(FacilityState.Active)
              .AtStation(8002549);
@@ -69,7 +69,7 @@ public class FacilitiesQueryFluentApiTests {
     [Fact]
     public void FluentApi_OverwritingValues_ShouldUseLastSetValue() {
         // Arrange & Act
-        var query = new FacilitiesQuery()
+        var query = new FacilityQuery()
                     .WithType(FacilityType.Elevator)
                     .WithType(FacilityType.Escalator)
                     .AtStation(8002549)

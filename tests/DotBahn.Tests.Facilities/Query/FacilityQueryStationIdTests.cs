@@ -1,15 +1,15 @@
-using DotBahn.Clients.Facilities.Query;
+using DotBahn.Facilities;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryStationIdTests {
+public class FacilityQueryStationIdTests {
     [Theory]
     [InlineData("8002549")]
     [InlineData("8000105")]
     [InlineData("8011160")]
     public void StationId_ShouldSetAndGetValue(string stationId) {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             StationId = stationId
         };
 
@@ -20,7 +20,7 @@ public class FacilitiesQueryStationIdTests {
     [Fact]
     public void StationId_WithNull_ShouldSetNull() {
         // Arrange
-        var query = new FacilitiesQuery { StationId = "8002549" };
+        var query = new FacilityQuery { StationId = "8002549" };
 
         // Act
         query.StationId = null;
@@ -34,7 +34,7 @@ public class FacilitiesQueryStationIdTests {
     [InlineData("   ")]
     public void StationId_WithEmptyOrWhitespace_ShouldSetValue(string stationId) {
         // Arrange & Act
-        var query = new FacilitiesQuery {
+        var query = new FacilityQuery {
             StationId = stationId
         };
 
@@ -48,7 +48,7 @@ public class FacilitiesQueryStationIdTests {
     [InlineData(8011160)]
     public void AtStation_ShouldConvertIntToStringAndReturnQuery(int stationId) {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         var result = query.AtStation(stationId);
@@ -64,7 +64,7 @@ public class FacilitiesQueryStationIdTests {
     [InlineData(999999999, "999999999")]
     public void AtStation_WithEdgeCaseValues_ShouldConvertCorrectly(int stationId, string expected) {
         // Arrange
-        var query = new FacilitiesQuery();
+        var query = new FacilityQuery();
 
         // Act
         query.AtStation(stationId);

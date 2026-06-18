@@ -1,6 +1,6 @@
-using DotBahn.Data.Shared.Models;
-using DotBahn.Data.Stations.Enumerations;
-using DotBahn.Data.Stations.Models;
+using DotBahn.Shared.Models;
+using DotBahn.Stations.Enumerations;
+using DotBahn.Stations.Models;
 
 namespace DotBahn.Tests.Stations.Models;
 

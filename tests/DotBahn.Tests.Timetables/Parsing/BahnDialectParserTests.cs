@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-using DotBahn.Clients.Shared.Parsing.Additional;
+using DotBahn.Shared.Parsing.Converters;
 
 namespace DotBahn.Tests.Timetables.Parsing;
 

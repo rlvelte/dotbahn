@@ -1,12 +1,12 @@
-using DotBahn.Clients.Stations.Query;
-using DotBahn.Data.Stations.Enumerations;
+using DotBahn.Stations;
+using DotBahn.Stations.Enumerations;
 
 namespace DotBahn.Tests.Stations.Query;
 
-public class StationsQueryFluentApiTests {
+public class StationQueryFluentApiTests {
     [Fact]
     public void InFederalState_ShouldSetStateAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.InFederalState(FederalState.Hamburg);
 
@@ -16,7 +16,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void WithEva_ShouldSetEvaAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.WithEva("8002549");
 
@@ -26,7 +26,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void WithRil_ShouldSetRilAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.WithRil("AH");
 
@@ -36,7 +36,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void CombineAs_ShouldSetOperatorAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.CombineAs(LogicalOperator.Or);
 
@@ -46,7 +46,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void Skip_ShouldSetOffsetAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.Skip(50);
 
@@ -56,7 +56,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void LimitTo_ShouldSetLimitAndReturnQuery() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.LimitTo(100);
 
@@ -66,7 +66,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void FluentApi_ComplexChaining_ShouldSetAllProperties() {
-        var query = new StationsQuery()
+        var query = new StationQuery()
                     .WithNames("Hamburg", "Berlin")
                     .WithCategories("1-3")
                     .InFederalState(FederalState.Hamburg)
@@ -88,7 +88,7 @@ public class StationsQueryFluentApiTests {
 
     [Fact]
     public void FluentApi_PartialChaining_ShouldSetOnlySpecifiedProperties() {
-        var query = new StationsQuery()
+        var query = new StationQuery()
                     .WithNames("Hamburg")
                     .WithCategories("1")
                     .LimitTo(5);

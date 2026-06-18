@@ -1,19 +1,19 @@
-using DotBahn.Clients.Facilities.Query;
-using DotBahn.Data.Facilities.Enumerations;
+using DotBahn.Facilities;
+using DotBahn.Facilities.Enumerations;
 
 namespace DotBahn.Tests.Facilities.Query;
 
-public class FacilitiesQueryRecordBehaviorTests {
+public class FacilityQueryRecordBehaviorTests {
     [Fact]
     public void Equality_WithSameValues_ShouldBeEqual() {
         // Arrange
-        var query1 = new FacilitiesQuery {
+        var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
             StationId = "8002549"
         };
 
-        var query2 = new FacilitiesQuery {
+        var query2 = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
             StationId = "8002549"
@@ -27,12 +27,12 @@ public class FacilitiesQueryRecordBehaviorTests {
     [Fact]
     public void Equality_WithDifferentValues_ShouldNotBeEqual() {
         // Arrange
-        var query1 = new FacilitiesQuery {
+        var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
             StationId = "8002549"
         };
 
-        var query2 = new FacilitiesQuery {
+        var query2 = new FacilityQuery {
             Type = FacilityType.Escalator,
             StationId = "8002549"
         };
@@ -45,7 +45,7 @@ public class FacilitiesQueryRecordBehaviorTests {
     [Fact]
     public void With_ShouldCreateNewInstanceWithModifiedProperty() {
         // Arrange
-        var original = new FacilitiesQuery {
+        var original = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
             StationId = "8002549"
@@ -65,12 +65,12 @@ public class FacilitiesQueryRecordBehaviorTests {
     [Fact]
     public void GetHashCode_WithSameValues_ShouldBeEqual() {
         // Arrange
-        var query1 = new FacilitiesQuery {
+        var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
             StationId = "8002549"
         };
 
-        var query2 = new FacilitiesQuery {
+        var query2 = new FacilityQuery {
             Type = FacilityType.Elevator,
             StationId = "8002549"
         };

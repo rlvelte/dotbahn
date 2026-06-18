@@ -1,4 +1,4 @@
-using DotBahn.Clients.Shared.Query;
+using DotBahn.Shared;
 
 namespace DotBahn.Tests.Timetables.Client;
 

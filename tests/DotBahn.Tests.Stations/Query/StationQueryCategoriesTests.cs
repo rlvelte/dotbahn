@@ -1,11 +1,11 @@
-using DotBahn.Clients.Stations.Query;
+using DotBahn.Stations;
 
 namespace DotBahn.Tests.Stations.Query;
 
-public class StationsQueryCategoriesTests {
+public class StationQueryCategoriesTests {
     [Fact]
     public void Categories_WithNullValue_ShouldThrowArgumentException() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Categories = null);
         Assert.Equal("value", exception.ParamName);
@@ -17,7 +17,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("   ")]
     [InlineData("\t")]
     public void Categories_WithWhitespace_ShouldThrowArgumentException(string whitespace) {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Categories = whitespace);
         Assert.Equal("value", exception.ParamName);
@@ -28,7 +28,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("7", "7")]
     [InlineData("4", "4")]
     public void Categories_WithValidSingleCategory_ShouldSetValue(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = input
         };
 
@@ -40,7 +40,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("8")]
     [InlineData("10")]
     public void Categories_WithInvalidSingleCategory_ShouldThrowArgumentException(string invalid) {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Categories = invalid);
         Assert.Contains("must be between 1 and 7", exception.Message);
@@ -51,7 +51,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("2-7", "2-7")]
     [InlineData("1-1", "1-1")]
     public void Categories_WithValidRange_ShouldSetValue(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = input
         };
 
@@ -65,7 +65,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("5-4")]
     [InlineData("-1-3")]
     public void Categories_WithInvalidRange_ShouldThrowArgumentException(string invalidRange) {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         Assert.Throws<ArgumentException>(() => query.Categories = invalidRange);
     }
@@ -76,7 +76,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("x-y")]
     [InlineData("1--3")]
     public void Categories_WithNonNumericRange_ShouldThrowArgumentException(string invalidRange) {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var exception = Assert.Throws<ArgumentException>(() => query.Categories = invalidRange);
         Assert.Contains("Invalid category range", exception.Message);
@@ -87,7 +87,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("1,2,3", "1,2,3")]
     [InlineData("7,6,5", "7,6,5")]
     public void Categories_WithMultipleCategories_ShouldSetValue(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = input
         };
 
@@ -98,7 +98,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("1,3-5,7", "1,3-5,7")]
     [InlineData("1-2,4,6-7", "1-2,4,6-7")]
     public void Categories_WithMixedCategoriesAndRanges_ShouldSetValue(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = input
         };
 
@@ -110,7 +110,7 @@ public class StationsQueryCategoriesTests {
     [InlineData("  1-3  ", "1-3")]
     [InlineData(" 1 - 3 ", "1-3")]
     public void Categories_WithWhitespace_ShouldTrimAndNormalize(string input, string expected) {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = input
         };
 
@@ -119,7 +119,7 @@ public class StationsQueryCategoriesTests {
 
     [Fact]
     public void WithCategories_WithSingleParameter_ShouldSetCategories() {
-        var query = new StationsQuery();
+        var query = new StationQuery();
 
         var result = query.WithCategories("1-3");
 
@@ -129,7 +129,7 @@ public class StationsQueryCategoriesTests {
 
     [Fact]
     public void Categories_WithRangeStartAtBoundary_ShouldSetValue() {
-        var query = new StationsQuery {
+        var query = new StationQuery {
             Categories = "7-7"
         };
 
