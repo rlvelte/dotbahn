@@ -55,11 +55,10 @@ services.AddDotBahnStations(opt => {
 ```
 
 ### Manual Initialization
-Create client instances directly without dependency injection. The caller provides the `HttpClient` lifecycle:
+Create client instances directly without dependency injection. Each client creates and owns its own `HttpClient`:
 
 ```csharp
-using var http = new HttpClient();
-using var client = new StationClient(http,
+using var client = new StationClient(
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/")
     },

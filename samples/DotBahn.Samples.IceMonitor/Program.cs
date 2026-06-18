@@ -28,8 +28,7 @@ if (!int.TryParse(args.Length > 0 ? args[0] : "8098160", out var eva)) {
     eva = 8098160;
 }
 
-using var http = new HttpClient();
-var client = new TimetableClient(http,
+using var client = new TimetableClient(
     new ClientOptions {
         BaseEndpoint = new Uri("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1"),
     },
