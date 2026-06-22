@@ -53,14 +53,14 @@ jobs:
             --output ./nupkgs
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nupkgs
           path: ./nupkgs/
           retention-days: 30
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-results
           path: ./coverage-results/
