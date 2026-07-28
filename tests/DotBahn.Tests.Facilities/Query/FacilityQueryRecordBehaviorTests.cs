@@ -10,13 +10,21 @@ public class FacilityQueryRecordBehaviorTests {
         var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1,
+            LatitudeSouth = 50.2,
+            LongitudeEast = 8.3,
+            LatitudeNorth = 50.4
         };
 
         var query2 = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1,
+            LatitudeSouth = 50.2,
+            LongitudeEast = 8.3,
+            LatitudeNorth = 50.4
         };
 
         // Act & Assert
@@ -29,12 +37,14 @@ public class FacilityQueryRecordBehaviorTests {
         // Arrange
         var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1
         };
 
         var query2 = new FacilityQuery {
-            Type = FacilityType.Escalator,
-            StationId = "8002549"
+            Type = FacilityType.Elevator,
+            StationId = "8002549",
+            LongitudeWest = 9.9
         };
 
         // Act & Assert
@@ -48,7 +58,11 @@ public class FacilityQueryRecordBehaviorTests {
         var original = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1,
+            LatitudeSouth = 50.2,
+            LongitudeEast = 8.3,
+            LatitudeNorth = 50.4
         };
 
         // Act
@@ -60,6 +74,10 @@ public class FacilityQueryRecordBehaviorTests {
         Assert.Equal(FacilityType.Escalator, modified.Type);
         Assert.Equal(original.State, modified.State);
         Assert.Equal(original.StationId, modified.StationId);
+        Assert.Equal(original.LongitudeWest, modified.LongitudeWest);
+        Assert.Equal(original.LatitudeSouth, modified.LatitudeSouth);
+        Assert.Equal(original.LongitudeEast, modified.LongitudeEast);
+        Assert.Equal(original.LatitudeNorth, modified.LatitudeNorth);
     }
 
     [Fact]
@@ -67,12 +85,14 @@ public class FacilityQueryRecordBehaviorTests {
         // Arrange
         var query1 = new FacilityQuery {
             Type = FacilityType.Elevator,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1
         };
 
         var query2 = new FacilityQuery {
             Type = FacilityType.Elevator,
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1
         };
 
         // Act & Assert

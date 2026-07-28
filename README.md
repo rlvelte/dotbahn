@@ -6,19 +6,20 @@
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
 [![Docs](https://img.shields.io/badge/docs-github_pages-blue?style=flat)](https://rlvelte.github.io/dotbahn/)
 
-DotBahn is a collection of .NET client libraries for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly from your application.
+DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties.
 
-Available clients:
-- **Stations (StaDa)**: Station data including parking, accessibility, and opening hours.
-- **Facilities (FaSta)**: Real-time operational status of elevators and escalators at stations.
-- **Timetables**: Scheduled departures and arrivals with real-time delay and platform change information.
+| API                    | Description |
+|------------------------|-------------|
+| **Stations (StaDa)**   | Station data including parking, accessibility, and opening hours. |
+| **Facilities (FaSta)** | Real-time operational status of elevators and escalators at stations. |
+| **Timetables**         | Scheduled departures and arrivals with real-time delay and platform change information. |
 
 ## Table of Contents
 - [Install](#install)
 - [Usage](#usage)
-- [API Reference](https://rlvelte.github.io/dotbahn/index.html)
-- [Samples](#samples)
 - [Authorization](#authorization)
+- [Samples](#samples)
+- [API Reference](https://rlvelte.github.io/dotbahn/index.html)
 
 
 ## Install
@@ -29,10 +30,13 @@ dotnet add package DotBahn.Stations
 dotnet add package DotBahn.Facilities
 ```
 
+> [!NOTE]
+> All client packages depend on **DotBahn.Common**, which provides cross-cutting abstractions such as authorization, base client infrastructure, and shared models. It is installed automatically as a transitive dependency.
+
 
 ## Usage
 ### Dependency Injection (Recommended)
-All packages integrate seamlessly with `ServiceCollection`. Each client comes with a default endpoint, override only for custom proxies:
+All packages integrate seamlessly with `IServiceCollection`. Each client comes with a default endpoint, override only for custom proxies:
 
 ```csharp
 // Register clients
@@ -46,7 +50,7 @@ services.AddDotBahnAuthorization(opt => {
     opt.ApiKey = clientSecret;
 });
 
-// ---
+...
 
 // Optional: override default endpoints
 services.AddDotBahnStations(opt => {
@@ -68,6 +72,14 @@ using var client = new StationClient(
     });
 ```
 
+
+## Authorization
+A Deutsche Bahn API key is required. Register and obtain your credentials at the [DB API Marketplace](https://developers.deutschebahn.com/db-api-marketplace/apis/start).
+
+> [!WARNING]
+> These packages only consume the credentials you provide for API authentication. They do not create, register, or manage credentials on your behalf.
+
+
 ## Samples
 ### ICE Monitor
 A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes in real time. Refreshes automatically every 2 minutes.
@@ -86,6 +98,3 @@ dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <you
 ```
 
 <img src="https://i.imgur.com/XWwBVr2.png" width=500>
-
-## Authorization
-A Deutsche Bahn API key is required. Register and obtain your credentials at the [DB API Marketplace](https://developers.deutschebahn.com/db-api-marketplace/apis/start).

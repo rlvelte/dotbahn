@@ -11,14 +11,20 @@ public class FacilityQueryToQueryParametersTests {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
             EquipmentNumbers = ["10562421", "10562422"],
-            StationId = "8002549"
+            StationId = "8002549",
+            LongitudeWest = 8.1,
+            LatitudeSouth = 50.2,
+            LongitudeEast = 8.3,
+            LatitudeNorth = 50.4
         };
 
         // Act
         var parameters = query.ToQueryParameters();
+        var qs = parameters.ToQueryString();
 
         // Assert
         Assert.NotNull(parameters);
+        Assert.Contains("area=", qs);
     }
 
     [Fact]

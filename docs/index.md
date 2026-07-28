@@ -1,5 +1,5 @@
 # .NET Clients for Deutsche Bahn APIs
-DotBahn is a collection of .NET client libraries for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly from your .NET applications.
+DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application.
 
 | Package | Description | API |
 |---|---|---|
