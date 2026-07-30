@@ -30,6 +30,13 @@ public class EnumUtilTests {
     }
 
     [Fact]
+    public void Parse_WithWhiteSpace_ReturnsDefault() {
+        var result = EnumUtil.Parse("   ", FacilityState.Unknown, FacilitiesJsonContext.Default.FacilityState);
+
+        Assert.Equal(FacilityState.Unknown, result);
+    }
+
+    [Fact]
     public void Parse_WithUnknownValue_ReturnsDefault() {
         var result = EnumUtil.Parse("NONEXISTENT", FacilityState.Unknown, FacilitiesJsonContext.Default.FacilityState);
 
