@@ -6,10 +6,8 @@ namespace DotBahn.Tests.Facilities.Query;
 public class FacilityQueryTests {
     [Fact]
     public void Constructor_ShouldInitializeWithDefaultValues() {
-        // Arrange & Act
         var query = new FacilityQuery();
 
-        // Assert
         Assert.Null(query.Type);
         Assert.Null(query.State);
         Assert.Empty(query.EquipmentNumbers);
@@ -22,7 +20,6 @@ public class FacilityQueryTests {
 
     [Fact]
     public void ObjectInitializer_ShouldSetAllProperties() {
-        // Arrange & Act
         var query = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
@@ -34,7 +31,6 @@ public class FacilityQueryTests {
             LatitudeNorth = 50.4
         };
 
-        // Assert
         Assert.Equal(FacilityType.Elevator, query.Type);
         Assert.Equal(FacilityState.Active, query.State);
         Assert.Equal(["10562421", "10562422"], query.EquipmentNumbers);
@@ -47,13 +43,11 @@ public class FacilityQueryTests {
 
     [Fact]
     public void ObjectInitializer_WithPartialProperties_ShouldSetOnlySpecified() {
-        // Arrange & Act
         var query = new FacilityQuery {
             Type = FacilityType.Escalator,
             StationId = "8000105"
         };
 
-        // Assert
         Assert.Equal(FacilityType.Escalator, query.Type);
         Assert.Null(query.State);
         Assert.Empty(query.EquipmentNumbers);

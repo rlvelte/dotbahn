@@ -10,10 +10,6 @@ using Moq;
 
 namespace DotBahn.Tests.Facilities.Client;
 
-/// <summary>
-/// Tests for <see cref="FacilityClient.GetFacilitiesAsync"/> covering URL building,
-/// query parameter application, list conversion, and null query guard.
-/// </summary>
 public class FacilityClientTests : ClientTestBase {
     private readonly Mock<IParser<IEnumerable<FacilityContract>>> _parserMock = new();
     private readonly Mock<ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>>> _transformerMock = new();
@@ -71,16 +67,8 @@ public class FacilityClientTests : ClientTestBase {
         await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetFacilitiesAsync(null!, TestContext.Current.CancellationToken));
     }
 
-    private FacilityClient CreateClient() => new(
-            HttpClient,
-            AuthorizationMock.Object,
-            _parserMock.Object,
-            _transformerMock.Object);
+    private FacilityClient CreateClient() => new(HttpClient, AuthorizationMock.Object, _parserMock.Object, _transformerMock.Object);
 
-    /// <summary>
-    /// Configures default behaviors for parser and transformer mocks
-    /// so they return empty collections without errors.
-    /// </summary>
     private void SetupParserAndTransformer() {
         var emptyContracts = new List<FacilityContract>();
         var emptyFacilities = new List<Facility>();

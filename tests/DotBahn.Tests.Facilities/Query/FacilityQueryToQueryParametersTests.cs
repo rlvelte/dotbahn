@@ -6,7 +6,6 @@ namespace DotBahn.Tests.Facilities.Query;
 public class FacilityQueryToQueryParametersTests {
     [Fact]
     public void ToQueryParameters_WithAllPropertiesSet_ShouldConvertCorrectly() {
-        // Arrange
         var query = new FacilityQuery {
             Type = FacilityType.Elevator,
             State = FacilityState.Active,
@@ -18,53 +17,42 @@ public class FacilityQueryToQueryParametersTests {
             LatitudeNorth = 50.4
         };
 
-        // Act
         var parameters = query.ToQueryParameters();
         var qs = parameters.ToQueryString();
 
-        // Assert
         Assert.NotNull(parameters);
         Assert.Contains("area=", qs);
     }
 
     [Fact]
     public void ToQueryParameters_WithMinimalProperties_ShouldConvertCorrectly() {
-        // Arrange
         var query = new FacilityQuery();
 
-        // Act
         var parameters = query.ToQueryParameters();
 
-        // Assert
         Assert.NotNull(parameters);
     }
 
     [Fact]
     public void ToQueryParameters_WithPartialProperties_ShouldHandleNullValues() {
-        // Arrange
         var query = new FacilityQuery {
             Type = FacilityType.Elevator,
             StationId = "8002549"
         };
 
-        // Act
         var parameters = query.ToQueryParameters();
 
-        // Assert
         Assert.NotNull(parameters);
     }
 
     [Fact]
     public void ToQueryParameters_WithEmptyEquipmentNumbers_ShouldHandleGracefully() {
-        // Arrange
         var query = new FacilityQuery {
             EquipmentNumbers = []
         };
 
-        // Act
         var parameters = query.ToQueryParameters();
 
-        // Assert
         Assert.NotNull(parameters);
     }
 }
