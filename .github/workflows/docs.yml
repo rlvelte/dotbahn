@@ -62,4 +62,5 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        if: github.ref_name == 'master'
         uses: actions/deploy-pages@v5
