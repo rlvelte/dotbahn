@@ -18,7 +18,7 @@ public class JsonParserTests {
 
     [Fact]
     public void Parse_ValidJson_ReturnsPopulatedContract() {
-        var json = """{"station":"Hamburg Hbf","stops":[]}""";
+        const string json = """{"station":"Hamburg Hbf","stops":[]}""";
 
         var result = _parser.Parse(json);
 
@@ -27,7 +27,7 @@ public class JsonParserTests {
 
     [Fact]
     public void Parse_JsonWithCaseInsensitiveKeys_ReturnsPopulatedContract() {
-        var json = """{"STATION":"Hamburg Hbf","stops":[]}""";
+        const string json = """{"STATION":"Hamburg Hbf","stops":[]}""";
 
         var result = _parser.Parse(json);
 

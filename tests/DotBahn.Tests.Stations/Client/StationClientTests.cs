@@ -87,7 +87,6 @@ public class StationClientTests : ClientTestBase {
 
     private void SetupMocks(StationsResponseContract contract) {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(contract);
-        _transformerMock.Setup(t => t.Transform(It.IsAny<StationsResponseContract>()))
-            .Returns(Enumerable.Empty<Station>());
+        _transformerMock.Setup(t => t.Transform(It.IsAny<StationsResponseContract>())).Returns([]);
     }
 }

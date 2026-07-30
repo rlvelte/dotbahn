@@ -56,8 +56,7 @@ public class UriUtilTests : ClientTestBase {
     [Fact]
     public async Task GetAsync_WithSpecialCharacters_UrlEncodesParameters() {
         var client = CreateClient();
-        var queryParams = QueryParameters.Create()
-            .Add("search", "test value");
+        var queryParams = QueryParameters.Create().Add("search", "test value");
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
         await client.GetAsync("/test", _parserMock.Object, "application/xml", queryParams, TestContext.Current.CancellationToken);

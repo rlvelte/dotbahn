@@ -4,19 +4,15 @@ using DotBahn.Timetables.Models.Enumerations;
 namespace DotBahn.Tests.Timetables.Models;
 
 public class TimetableMessageTests {
-    private static TimetableMessage Make(
-        bool isDeleted = false,
-        DateTime? validTo = null,
-        string? internalText = null,
-        string? externalText = null) => new() {
-            Id = "m1",
-            Type = MessageType.Him,
-            Timestamp = DateTime.UtcNow,
-            IsDeleted = isDeleted,
-            ValidTo = validTo,
-            InternalText = internalText,
-            ExternalText = externalText
-        };
+    private static TimetableMessage Make(bool isDeleted = false, DateTime? validTo = null, string? internalText = null, string? externalText = null) => new() {
+        Id = "m1",
+        Type = MessageType.Him,
+        Timestamp = DateTime.UtcNow,
+        IsDeleted = isDeleted,
+        ValidTo = validTo,
+        InternalText = internalText,
+        ExternalText = externalText
+    };
 
     [Theory]
     [InlineData(null, "public info", "public info")]
