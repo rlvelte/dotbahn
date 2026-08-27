@@ -4,11 +4,6 @@ on:
   push:
     branches: [master]
     tags: ['v*.*.*']
-    paths:
-      - 'docs/**'
-      - 'source/**'
-      - 'Directory.Build.props'
-      - 'dotnet-tools.json'
   workflow_dispatch:
 
 concurrency:
@@ -62,4 +57,5 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        if: github.ref_name == 'master'
         uses: actions/deploy-pages@v5

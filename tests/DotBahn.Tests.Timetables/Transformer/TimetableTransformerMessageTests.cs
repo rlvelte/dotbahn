@@ -7,11 +7,6 @@ namespace DotBahn.Tests.Timetables.Transformer;
 public class TimetableTransformerMessageTests {
     private readonly TimetableTransformer _transformer = new();
 
-    private static TimetableResponseContract WithStop(StopDataContract stop) => new() {
-        Station = "Test",
-        Stops = [stop]
-    };
-
     [Fact]
     public void Transform_InternalMessage_SetsInternalTextOnly() {
         var contract = WithStop(new StopDataContract {
@@ -115,6 +110,26 @@ public class TimetableTransformerMessageTests {
         Assert.Empty(stop.Messages);
     }
 
+    public static TheoryData<string, string?, string, string?, string?> TransformMessageIsInternalClassificationCases => new()
+    {
+        { "BL—internal", "1", "secret info", "secret info", null },
+        { "C1—external", "0", "public info", null, "public info" },
+        { "C2—null_flag", null, "some text", null, "some text" },
+        { "C3—empty_flag", "", "other text", null, "other text" },
+    };
+
+    [Theory]
+    [MemberData(nameof(TransformMessageIsInternalClassificationCases))]
+    public void TransformMessageIsInternalClassification(string _, string? isInternal, string text, string? expectedInternal, string? expectedExternal) {
+        var contract = WithStop(new StopDataContract {
+            Id = "s1",
+            Messages = [new MessageContract { Id = "m1", Type = "h", Timestamp = "2501191200", IsInternal = isInternal, Text = text }]
+        });
+        var msg = _transformer.Transform(contract).Stops.First().Messages.First();
+        Assert.Equal(expectedInternal, msg.InternalText);
+        Assert.Equal(expectedExternal, msg.ExternalText);
+    }
+
     [Fact]
     public void Transform_MessageType_ParsedCorrectly() {
         var contract = WithStop(new StopDataContract {
@@ -130,4 +145,33 @@ public class TimetableTransformerMessageTests {
 
         Assert.Equal(MessageType.QualityChange, msg.Type);
     }
+
+    public static TheoryData<string, string, MessagePriority?> TransformMessagePriorityCases => new()
+    {
+        { "BL—none", "0", MessagePriority.None },
+        { "B1—high", "1", MessagePriority.High },
+        { "B2—medium", "2", MessagePriority.Medium },
+        { "B3—low", "3", MessagePriority.Low },
+        { "B4—done", "4", MessagePriority.Done },
+        { "B5—unknown", "5", MessagePriority.Unknown },
+        { "C1—undefined", "6", (MessagePriority)6 },
+        { "C2—negative", "-1", (MessagePriority)(-1) },
+        { "C3—unparseable", "abc", null },
+    };
+
+    [Theory]
+    [MemberData(nameof(TransformMessagePriorityCases))]
+    public void TransformMessagePriority(string _, string priority, MessagePriority? expected) {
+        var contract = WithStop(new StopDataContract {
+            Id = "s1",
+            Messages = [new MessageContract { Id = "m1", Type = "h", Timestamp = "2501191200", Priority = priority }]
+        });
+        var msg = _transformer.Transform(contract).Stops.First().Messages.First();
+        Assert.Equal(expected, msg.Priority);
+    }
+
+    private static TimetableResponseContract WithStop(StopDataContract stop) => new() {
+        Station = "Test",
+        Stops = [stop]
+    };
 }

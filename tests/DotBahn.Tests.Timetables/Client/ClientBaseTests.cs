@@ -14,7 +14,6 @@ public class ClientBaseTests : ClientTestBase {
         HttpClient.BaseAddress = new Uri("https://api.deutschebahn.com");
     }
 
-
     [Fact]
     public void Constructor_DIConstructor_StoresHttpClientReference() {
         var http = new HttpClient();
@@ -73,7 +72,6 @@ public class ClientBaseTests : ClientTestBase {
 
         Assert.Throws<ArgumentNullException>(() => new TestClientBase(options, null!));
     }
-
 
     [Fact]
     public async Task GetAsync_BuildsCorrectUrlFromBaseAndRelative() {
@@ -142,7 +140,6 @@ public class ClientBaseTests : ClientTestBase {
         await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetAsync("/test", null!, "application/xml", cancellation: TestContext.Current.CancellationToken));
     }
 
-
     [Fact]
     public async Task GetAsync_With401Status_ThrowsHttpRequestExceptionUnauthorized() {
         var client = CreateClient();
@@ -188,14 +185,42 @@ public class ClientBaseTests : ClientTestBase {
     }
 
 
+    public static TheoryData<string, bool, bool> GetAsyncUrlQueryParamHandlingCases => new() {
+        { "BL—has_params", true, true },
+        { "C1—null_params", false, false },
+        { "C2—empty_params", true, false },
+    };
+
+    [Theory]
+    [MemberData(nameof(GetAsyncUrlQueryParamHandlingCases))]
+    public async Task GetAsyncUrlQueryParamHandling(string _, bool createParams, bool addParam) {
+        var client = CreateClient();
+        var parser = new Mock<IParser<string>>().Object;
+        HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
+
+        QueryParameters? queryParams = null;
+        if (createParams) {
+            queryParams = QueryParameters.Create();
+            if (addParam)
+                queryParams.Add("key", "val");
+        }
+
+        await client.GetAsync("/test", parser, "application/xml", queryParams, TestContext.Current.CancellationToken);
+        var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
+
+        if (addParam) {
+            Assert.Contains("?key=val", requestUri);
+        } else {
+            Assert.DoesNotContain("?", requestUri);
+        }
+    }
+
     private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object);
 
     private sealed class TestClientBase : ClientBase {
-        public TestClientBase(HttpClient http, IAuthorization authorization)
-            : base(http, authorization) { }
+        public TestClientBase(HttpClient http, IAuthorization authorization) : base(http, authorization) { }
 
-        public TestClientBase(ClientOptions options, AuthorizationOptions auth)
-            : base(options, auth) { }
+        public TestClientBase(ClientOptions options, AuthorizationOptions auth) : base(options, auth) { }
 
         public new HttpClient HttpClient => base.HttpClient;
 

@@ -14,9 +14,7 @@ public abstract class ClientTestBase : IDisposable {
 
     protected void AssertRequest(HttpMethod method, string relativeUrl, string? acceptHeader = null, int? expectedCount = 1) {
         var count = expectedCount ?? 1;
-        var matchingRequests = HttpHandler.SentRequests
-            .Where(r => r.Method == method && r.RequestUri?.ToString().EndsWith(relativeUrl.TrimStart('/'), StringComparison.Ordinal) == true)
-            .ToList();
+        var matchingRequests = HttpHandler.SentRequests.Where(r => r.Method == method && r.RequestUri?.ToString().EndsWith(relativeUrl.TrimStart('/'), StringComparison.Ordinal) == true).ToList();
 
         Assert.Equal(count, matchingRequests.Count);
 

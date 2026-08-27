@@ -26,6 +26,11 @@ public class FacilityTransformerTests {
     }
 
     [Fact]
+    public void TransformNullContractsThrowsArgumentNullException() {
+        Assert.Throws<ArgumentNullException>(() => _transformer.Transform(null!));
+    }
+
+    [Fact]
     public void Transform_ValidContract_MapsAllFieldsIncludingCoordinates() {
         var contract = new FacilityContract {
             EquipmentNumber = 200,

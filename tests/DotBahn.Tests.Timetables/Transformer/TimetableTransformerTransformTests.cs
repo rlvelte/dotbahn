@@ -288,6 +288,50 @@ public class TimetableTransformerTransformTests {
         Assert.Empty(departure.Wings);
     }
 
+    public static TheoryData<string, string, DateTime?> ParseBahnTimeEdgeCases => new()
+    {
+        { "BL—valid", "2501191430", new DateTime(2025, 1, 19, 14, 30, 0) },
+        { "B1—leap_year", "2402291200", new DateTime(2024, 2, 29, 12, 0, 0) },
+        { "B2—non_leap_feb29", "2302291200", null },
+        { "B3—midnight", "2501190000", new DateTime(2025, 1, 19, 0, 0, 0) },
+        { "B4—end_of_day", "2501192359", new DateTime(2025, 1, 19, 23, 59, 0) },
+        { "B5—invalid_month", "2501320000", null },
+        { "B6—invalid_day", "2502301200", null },
+        { "B7—invalid_hour", "2501192400", null },
+        { "B8—invalid_minute", "2501190060", null },
+        { "B9—year_rollover", "9912311200", new DateTime(1999, 12, 31, 12, 0, 0) },
+        { "B10—century_leap", "0002291200", new DateTime(2000, 2, 29, 12, 0, 0) },
+        { "B11—invalid_century_day", "0102291200", null },
+    };
+
+    [Theory]
+    [MemberData(nameof(ParseBahnTimeEdgeCases))]
+    public void ParseBahnTimeEdge(string _, string plannedTime, DateTime? expected) {
+        var contract = new TimetableResponseContract {
+            Station = "Test",
+            Stops = [new StopDataContract { Id = "s1", Departure = new EventContract { PlannedTime = plannedTime } }],
+        };
+        var result = _transformer.Transform(contract);
+        var departure = result.Stops.First().Departure!;
+
+        Assert.Equal(expected ?? default, departure.Time.Original);
+    }
+
+    [Fact]
+    public void TransformWithUnrecognizedTripTypeDefaultsToPassenger() {
+        var contract = new TimetableResponseContract {
+            Station = "Test",
+            Stops = [new StopDataContract {
+                Id = "s1",
+                TripInfo = new TripInfoContract { TripType = "UNKNOWN_TYPE" }
+            }]
+        };
+
+        var result = _transformer.Transform(contract);
+
+        Assert.Equal(TripType.Passenger, result.Stops.First().Train.Type);
+    }
+
     [Fact]
     public void Transform_WithChangedStatusNull_ShouldNotSetUpdate() {
         var contract = new TimetableResponseContract {

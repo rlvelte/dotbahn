@@ -20,22 +20,6 @@ public class TimetableClientTests : ClientTestBase {
         HttpClient.BaseAddress = new Uri("https://api.deutschebahn.com");
     }
 
-    private sealed class StubTransformer(Timetable result) : ITransformer<Timetable, TimetableResponseContract> {
-        public int TransformCallCount { get; private set; }
-        public Timetable Transform(TimetableResponseContract contracts) {
-            TransformCallCount++;
-            return result;
-        }
-    }
-
-    private sealed class StubMerger(Timetable result) : IMerger<Timetable> {
-        public int MergeCallCount { get; private set; }
-        public Timetable Merge(Timetable current, Timetable changes) {
-            MergeCallCount++;
-            return result;
-        }
-    }
-
     [Fact]
     public async Task GetFullChangesAsync_WithoutCurrentTimetable_ReturnsTransformedChanges() {
         var transformer = new StubTransformer(_defaultTimetable);
@@ -43,8 +27,7 @@ public class TimetableClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, transformer, merger);
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
         var result = await client.GetFullChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
@@ -63,8 +46,7 @@ public class TimetableClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"ChangesStation\"/>");
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, transformer, merger);
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
         var result = await client.GetFullChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
         Assert.Same(mergedTimetable, result);
@@ -80,8 +62,7 @@ public class TimetableClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, transformer, merger);
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
         var result = await client.GetRecentChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
@@ -100,8 +81,7 @@ public class TimetableClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"RecentChangesStation\"/>");
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, transformer, merger);
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
         var result = await client.GetRecentChangesAsync(TestEva, currentTimetable, TestContext.Current.CancellationToken);
 
         Assert.Same(mergedTimetable, result);
@@ -117,8 +97,7 @@ public class TimetableClientTests : ClientTestBase {
         _parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(_defaultContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, transformer, new StubMerger(_defaultTimetable));
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, new StubMerger(_defaultTimetable));
         var result = await client.GetTimetableAsync(TestEva, dateTime, TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
@@ -132,21 +111,34 @@ public class TimetableClientTests : ClientTestBase {
         await cts.CancelAsync();
         HttpHandler.RespondWith(_ => throw new OperationCanceledException(cts.Token));
 
-        var client = new TimetableClient(HttpClient, AuthorizationMock.Object,
-            _parserMock.Object, new StubTransformer(_defaultTimetable),
-            new StubMerger(_defaultTimetable));
+        var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, new StubTransformer(_defaultTimetable), new StubMerger(_defaultTimetable));
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            client.GetFullChangesAsync(TestEva, null, cts.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.GetFullChangesAsync(TestEva, null, cts.Token));
     }
 
     private void AssertRequest(HttpMethod method, string relativeUrl, string acceptHeader) {
         var match = HttpHandler.SentRequests
             .Where(r => r.Method == method && r.RequestUri?.ToString().EndsWith(relativeUrl.TrimStart('/'), StringComparison.Ordinal) == true)
             .ToList();
+
         Assert.NotEmpty(match);
         Assert.Single(match);
-        Assert.True(match[0].Headers.Accept.Any(h => h.MediaType == acceptHeader),
-            $"Expected Accept header '{acceptHeader}' not found.");
+        Assert.True(match[0].Headers.Accept.Any(h => h.MediaType == acceptHeader), $"Expected Accept header '{acceptHeader}' not found.");
+    }
+
+    private sealed class StubTransformer(Timetable result) : ITransformer<Timetable, TimetableResponseContract> {
+        public int TransformCallCount { get; private set; }
+        public Timetable Transform(TimetableResponseContract contracts) {
+            TransformCallCount++;
+            return result;
+        }
+    }
+
+    private sealed class StubMerger(Timetable result) : IMerger<Timetable> {
+        public int MergeCallCount { get; private set; }
+        public Timetable Merge(Timetable current, Timetable changes) {
+            MergeCallCount++;
+            return result;
+        }
     }
 }

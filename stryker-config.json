@@ -1,5 +1,8 @@
 {
   "stryker-config": {
+    "coverage-analysis": "off",
+    "mutation-level": "Advanced",
+    "additional-timeout": 30000,
     "reporters": ["html", "json", "progress"],
     "ignore-mutations": ["string"],
     "ignore-methods": [

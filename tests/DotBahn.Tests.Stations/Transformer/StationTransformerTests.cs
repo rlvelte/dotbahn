@@ -105,6 +105,21 @@ public class StationTransformerTests {
     }
 
     [Fact]
+    public void Transform_EvaWithZeroCoordinates_ReturnsNullCoordinates() {
+        var contract = Minimal() with {
+            EvaNumbers = [new EvaNumberContract {
+                Number = 8000001,
+                IsMain = true,
+                GeographicCoordinates = new GeographicCoordinatesContract { Coordinates = [] }
+            }]
+        };
+
+        var result = _transformer.Transform(Wrap(contract)).First();
+
+        Assert.Null(result.EvaNumbers.First().Coordinates);
+    }
+
+    [Fact]
     public void Transform_EvaWithSingleCoordinate_ReturnsNullCoordinates() {
         var contract = Minimal() with {
             EvaNumbers = [new EvaNumberContract {

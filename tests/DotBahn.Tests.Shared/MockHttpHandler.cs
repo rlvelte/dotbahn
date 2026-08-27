@@ -21,12 +21,10 @@ public class MockHttpHandler : HttpMessageHandler {
     /// <param name="content">The response content body.</param>
     /// <param name="contentType">The content type header value (default: "application/xml").</param>
     /// <returns>The handler instance for fluent chaining.</returns>
-    public MockHttpHandler RespondWith(HttpStatusCode status, string content, string contentType = "application/xml") {
+    public void RespondWith(HttpStatusCode status, string content, string contentType = "application/xml") {
         _responseFactories.Enqueue(_ => new HttpResponseMessage(status) {
             Content = new StringContent(content, System.Text.Encoding.UTF8, contentType)
         });
-
-        return this;
     }
 
     /// <summary>
@@ -34,9 +32,8 @@ public class MockHttpHandler : HttpMessageHandler {
     /// </summary>
     /// <param name="factory">A function that takes the request and returns a response.</param>
     /// <returns>The handler instance for fluent chaining.</returns>
-    public MockHttpHandler RespondWith(Func<HttpRequestMessage, HttpResponseMessage> factory) {
+    public void RespondWith(Func<HttpRequestMessage, HttpResponseMessage> factory) {
         _responseFactories.Enqueue(factory);
-        return this;
     }
 
     /// <inheritdoc />

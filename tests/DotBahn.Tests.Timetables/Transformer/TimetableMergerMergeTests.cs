@@ -101,6 +101,26 @@ public class TimetableMergerMergeTests {
     }
 
     [Fact]
+    public void Merge_WithEmptyCurrentMessages_OnlyTakesChangeMessages() {
+        var current = CreateTimetable("Frankfurt Hbf", [], []);
+        var changes = CreateTimetable("Frankfurt Hbf", [], [CreateMessage("msg-1"), CreateMessage("msg-2")]);
+
+        var result = _merger.Merge(current, changes);
+
+        Assert.Equal(2, result.Messages.Count());
+    }
+
+    [Fact]
+    public void Merge_WithEmptyChangeMessages_PreservesCurrentMessages() {
+        var current = CreateTimetable("Frankfurt Hbf", [], [CreateMessage("msg-1"), CreateMessage("msg-2")]);
+        var changes = CreateTimetable("Frankfurt Hbf", [], []);
+
+        var result = _merger.Merge(current, changes);
+
+        Assert.Equal(2, result.Messages.Count());
+    }
+
+    [Fact]
     public void Merge_PreservesStation() {
         var current = CreateTimetable("Leipzig Hbf", []);
         var changes = CreateTimetable("Other Station", []);
@@ -211,6 +231,14 @@ public class TimetableMergerMergeTests {
         var platform = result.Stops.First().Departure!.Platform;
         Assert.Equal("5", platform.Original);
         Assert.Equal("5A", platform.Updated);
+    }
+
+    [Fact]
+    public void MergeDuplicateStopIdsInCurrentThrowsArgumentException() {
+        var current = CreateTimetable("Test", [CreateStop("dup-id"), CreateStop("dup-id")]);
+        var changes = CreateTimetable("Test", []);
+
+        Assert.Throws<ArgumentException>(() => _merger.Merge(current, changes));
     }
 
     private static Timetable CreateTimetable(string station, IEnumerable<TimetableStop> stops, IEnumerable<TimetableMessage>? messages = null) => new() {

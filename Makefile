@@ -1,4 +1,4 @@
-.PHONY: build test coverage pack format clean docs docs-serve
+.PHONY: build test coverage pack format clean mutate docs docs-serve
 
 CONFIGURATION 		?= Release
 NUPKG_DIR     		?= nupkgs
@@ -20,7 +20,7 @@ coverage: test ## Generate HTML coverage report
 		-targetdir:./$(TESTS_DIR) \
 		-reporttypes:Html \
 		-verbosity:Warning \
-		-filefilters:-*RegexGenerator.g.cs*
+		-filefilters:-**/*.g.cs
 	@echo "Coverage report: file://$(CURDIR)/$(TESTS_DIR)/index.html"
 
 pack: build ## Build NuGet packages
@@ -34,6 +34,9 @@ format: ## Auto-fix all code formatting (style, analyzers, whitespace)
 clean: ## Remove all build artifacts
 	dotnet clean
 	rm -rf ./$(STRYKER_DIR) ./$(TESTS_DIR) ./$(NUPKG_DIR) ./$(DOCFX_DIR)/_site ./$(DOCFX_DIR)/api
+
+mutate: build ## Run Stryker mutation testing
+	dotnet stryker
 
 docs: build ## Build documentation site
 	dotnet docfx $(DOCFX_DIR)/docfx.json

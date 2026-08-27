@@ -40,4 +40,31 @@ public class StationQueryTests {
         Assert.Equal(10, query.Offset);
         Assert.Equal(50, query.Limit);
     }
+
+    [Fact]
+    public void SkipNegativeOffsetSetsOffset() {
+        var query = new StationQuery();
+
+        query.Skip(-5);
+
+        Assert.Equal(-5, query.Offset);
+    }
+
+    [Fact]
+    public void LimitToZeroSetsLimit() {
+        var query = new StationQuery();
+
+        query.LimitTo(0);
+
+        Assert.Equal(0, query.Limit);
+    }
+
+    [Fact]
+    public void LimitToNegativeSetsLimit() {
+        var query = new StationQuery();
+
+        query.LimitTo(-1);
+
+        Assert.Equal(-1, query.Limit);
+    }
 }

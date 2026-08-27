@@ -7,6 +7,7 @@
             "source/DotBahn.Facilities/bin/Release/net10.0/DotBahn.Facilities.dll",
             "source/DotBahn.Stations/bin/Release/net10.0/DotBahn.Stations.dll",
             "source/DotBahn.Timetables/bin/Release/net10.0/DotBahn.Timetables.dll",
+            "source/DotBahn.Common/bin/Release/net10.0/DotBahn.Common.dll",
             "source/DotBahn.Modules/DotBahn.Modules.Authorization/bin/Release/net10.0/DotBahn.Shared.dll",
             "source/DotBahn.Modules/DotBahn.Modules.Cache/bin/Release/net10.0/DotBahn.Shared.dll"
           ],

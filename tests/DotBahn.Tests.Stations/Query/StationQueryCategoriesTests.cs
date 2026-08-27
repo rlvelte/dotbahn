@@ -125,9 +125,35 @@ public class StationQueryCategoriesTests {
     }
 
     [Fact]
+    public void WithCategoriesRangeOverflowThrowsOverflowException() {
+        var query = new StationQuery();
+
+        Assert.Throws<OverflowException>(() => query.WithCategories("9999999999999-1"));
+    }
+
+    [Fact]
     public void Categories_SetDirectly_RawValue() {
         var query = new StationQuery { Categories = "1-3" };
 
         Assert.Equal("1-3", query.Categories);
+    }
+
+    public static TheoryData<string, string, bool> WithCategoriesRangeBoundaryCases => new()
+    {
+        { "BL—all_valid", "2-6", false },
+        { "C1—start_lt_1", "0-3", true },
+        { "C2—start_gt_7", "8-8", true },
+        { "C4—end_gt_7", "1-8", true },
+        { "C5—start_gt_end", "3-1", true },
+    };
+
+    [Theory]
+    [MemberData(nameof(WithCategoriesRangeBoundaryCases))]
+    public void WithCategoriesRangeBoundary(string _, string categories, bool shouldThrow) {
+        var query = new StationQuery();
+        if (shouldThrow)
+            Assert.Throws<ArgumentException>(() => query.WithCategories(categories));
+        else
+            Assert.Equal(categories, query.WithCategories(categories).Categories);
     }
 }
