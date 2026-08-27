@@ -4,11 +4,6 @@ on:
   push:
     branches: [master]
     tags: ['v*.*.*']
-    paths:
-      - 'docs/**'
-      - 'source/**'
-      - 'Directory.Build.props'
-      - 'dotnet-tools.json'
   workflow_dispatch:
 
 concurrency:
