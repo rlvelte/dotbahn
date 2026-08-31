@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Timetables;
 
 /// <summary>
-/// Extension methods for registering the DotBahn Timetables client.
+/// Extension methods for registering the DotBahn Timetables client
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
@@ -20,11 +20,11 @@ public static class ServiceCollectionExtensions {
     private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
 
     /// <summary>
-    /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services.
+    /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services
     /// </summary>
-    /// <param name="services">The service collection to add to.</param>
-    /// <param name="configuration">Optional action to override default client options.</param>
-    /// <returns>The service collection for chaining.</returns>
+    /// <param name="services">The service collection to add to</param>
+    /// <param name="configuration">Optional action to override default client options</param>
+    /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {

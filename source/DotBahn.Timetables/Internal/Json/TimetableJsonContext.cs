@@ -4,7 +4,7 @@ using DotBahn.Timetables.Models.Enumerations;
 namespace DotBahn.Timetables.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for Data.Timetables enum types.
+/// Source-generated JSON serialization metadata for Data.Timetables enum types
 /// </summary>
 [JsonSerializable(typeof(EventStatus))]
 [JsonSerializable(typeof(MessageType))]

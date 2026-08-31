@@ -3,17 +3,17 @@ using System.Diagnostics.CodeAnalysis;
 namespace DotBahn.Common.Auth;
 
 /// <summary>
-/// Options for authorization.
+/// Options for authorization
 /// </summary>
 [ExcludeFromCodeCoverage]
 public record AuthorizationOptions {
     /// <summary>
-    /// The client ID for your application.
+    /// The client ID for your application
     /// </summary>
     public required string ClientId { get; set; }
 
     /// <summary>
-    /// The api key for your application.
+    /// The api key for your application
     /// </summary>
     public required string ApiKey { get; set; }
 

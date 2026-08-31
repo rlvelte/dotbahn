@@ -1,7 +1,7 @@
 namespace DotBahn.Timetables.Models;
 
 /// <summary>
-/// A stop in a timetable, representing a train's arrival and/or departure at a station.
+/// A stop in a timetable, representing a train's arrival and/or departure at a station
 /// </summary>
 public class TimetableStop {
     /// <summary>
@@ -16,37 +16,37 @@ public class TimetableStop {
     public required string Id { get; init; }
 
     /// <summary>
-    /// Train identification information.
+    /// Train identification information
     /// </summary>
     public required TrainLabel Train { get; init; }
 
     /// <summary>
-    /// Arrival event, if the train arrives at this station.
+    /// Arrival event, if the train arrives at this station
     /// </summary>
     public TrainEvent? Arrival { get; init; }
 
     /// <summary>
-    /// Whether this is an arrival-only stop (train terminates here).
+    /// Whether this is an arrival-only stop (train terminates here)
     /// </summary>
     public bool IsArrivalOnly => Arrival != null && Departure == null;
 
     /// <summary>
-    /// Departure event, if the train departs from this station.
+    /// Departure event, if the train departs from this station
     /// </summary>
     public TrainEvent? Departure { get; init; }
 
     /// <summary>
-    /// Whether this is a departure-only stop (train originates here).
+    /// Whether this is a departure-only stop (train originates here)
     /// </summary>
     public bool IsDepartureOnly => Departure != null && Arrival == null;
 
     /// <summary>
-    /// Whether this is a through stop (train both arrives and departs).
+    /// Whether this is a through stop (train both arrives and departs)
     /// </summary>
     public bool IsThrough => Arrival != null && Departure != null;
 
     /// <summary>
-    /// Messages associated with this stop.
+    /// Messages associated with this stop
     /// </summary>
     public IEnumerable<TimetableMessage> Messages { get; init; } = [];
 }

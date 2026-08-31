@@ -3,17 +3,17 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
-///Raw structure for a Ril100 identifier.
+///Raw structure for a Ril100 identifier
 /// </summary>
 internal record Ril100IdentifierContract {
     /// <summary>
-    /// Gets the Ril identifier.
+    /// Gets the Ril identifier
     /// </summary>
     [JsonPropertyName("rilIdentifier")]
     public string RilIdentifier { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets a value indicating whether this is the main identifier.
+    /// Gets a value indicating whether this is the main identifier
     /// </summary>
     [JsonPropertyName("isMain")]
     public bool IsMain { get; init; }

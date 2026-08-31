@@ -5,7 +5,7 @@ using DotBahn.Timetables.Models;
 namespace DotBahn.Timetables.Internal.Transformers;
 
 /// <summary>
-/// Merges timetable model updates into the current timetable.
+/// Merges timetable model updates into the current timetable
 /// </summary>
 internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <inheritdoc />
@@ -30,11 +30,11 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     }
 
     /// <summary>
-    /// Merges two <see cref="TimetableStop"/> in a new instance.
+    /// Merges two <see cref="TimetableStop"/> in a new instance
     /// </summary>
-    /// <param name="current">The current value.</param>
-    /// <param name="change">The changed value.</param>
-    /// <returns>Instance with combined values.</returns>
+    /// <param name="current">The current value</param>
+    /// <param name="change">The changed value</param>
+    /// <returns>Instance with combined values</returns>
     private static TimetableStop MergeStop(TimetableStop current, TimetableStop change) => new() {
         Id = current.Id,
         Train = current.Train,
@@ -44,11 +44,11 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     };
 
     /// <summary>
-    /// Merges two <see cref="TrainEvent"/> in a new instance.
+    /// Merges two <see cref="TrainEvent"/> in a new instance
     /// </summary>
-    /// <param name="current">The current value.</param>
-    /// <param name="change">The changed value.</param>
-    /// <returns>Instance with combined values.</returns>
+    /// <param name="current">The current value</param>
+    /// <param name="change">The changed value</param>
+    /// <returns>Instance with combined values</returns>
     private static TrainEvent? MergeEvent(TrainEvent? current, TrainEvent? change) {
         if (current == null || change == null) {
             return change;
@@ -66,12 +66,12 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     }
 
     /// <summary>
-    /// Merges two <see cref="ChangedValue{T}"/> in a new instance.
+    /// Merges two <see cref="ChangedValue{T}"/> in a new instance
     /// </summary>
-    /// <param name="current">The current value.</param>
-    /// <param name="change">The changed value.</param>
-    /// <typeparam name="T">The type that can be changed.</typeparam>
-    /// <returns>Instance with combined values.</returns>
+    /// <param name="current">The current value</param>
+    /// <param name="change">The changed value</param>
+    /// <typeparam name="T">The type that can be changed</typeparam>
+    /// <returns>Instance with combined values</returns>
     private static ChangedValue<T> MergeValue<T>(ChangedValue<T> current, ChangedValue<T> change)
         where T : struct {
         var hasRealUpdate = change.HasUpdate && !EqualityComparer<T>.Default.Equals(change.Updated!.Value, current.Original);
@@ -82,12 +82,12 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     }
 
     /// <summary>
-    /// Merges two <see cref="ChangedRef{T}"/> in a new instance.
+    /// Merges two <see cref="ChangedRef{T}"/> in a new instance
     /// </summary>
-    /// <param name="current">The current value.</param>
-    /// <param name="change">The changed value.</param>
-    /// <typeparam name="T">The type that can be changed.</typeparam>
-    /// <returns>Instance with combined values.</returns>
+    /// <param name="current">The current value</param>
+    /// <param name="change">The changed value</param>
+    /// <typeparam name="T">The type that can be changed</typeparam>
+    /// <returns>Instance with combined values</returns>
     private static ChangedRef<T> MergeRef<T>(ChangedRef<T> current, ChangedRef<T> change)
         where T : class {
         var hasRealUpdate = change.HasUpdate && !Equals(change.Updated, current.Original);
@@ -98,11 +98,11 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     }
 
     /// <summary>
-    /// Merges two message sequences, appending new messages while avoiding duplicates by ID.
+    /// Merges two message sequences, appending new messages while avoiding duplicates by ID
     /// </summary>
-    /// <param name="current">The current messages.</param>
-    /// <param name="change">The changed messages.</param>
-    /// <returns>Combined list of messages.</returns>
+    /// <param name="current">The current messages</param>
+    /// <param name="change">The changed messages</param>
+    /// <returns>Combined list of messages</returns>
     private static IEnumerable<TimetableMessage> MergeMessages(IEnumerable<TimetableMessage> current, IEnumerable<TimetableMessage> change) {
         var messages = current.ToList();
         var existing = messages.Select(m => m.Id).ToHashSet();

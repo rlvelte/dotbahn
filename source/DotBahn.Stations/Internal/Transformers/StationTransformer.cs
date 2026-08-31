@@ -7,7 +7,7 @@ using DotBahn.Stations.Models.Enumerations;
 namespace DotBahn.Stations.Internal.Transformers;
 
 /// <summary>
-/// Transforms station contracts into domain models.
+/// Transforms station contracts into domain models
 /// </summary>
 internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, StationsResponseContract> {
     /// <inheritdoc />
@@ -17,10 +17,10 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     }
 
     /// <summary>
-    /// Transforms the <see cref="StationContract"/> into its domain model.
+    /// Transforms the <see cref="StationContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static Station TransformStation(StationContract contract) => new() {
         Number = contract.Number,
         Name = contract.Name,
@@ -33,18 +33,18 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     };
 
     /// <summary>
-    /// Transforms the category number into the <see cref="StationCategory"/> enum.
+    /// Transforms the category number into the <see cref="StationCategory"/> enum
     /// </summary>
-    /// <param name="category">The category number (1-7).</param>
-    /// <returns>The corresponding station category.</returns>
+    /// <param name="category">The category number (1-7)</param>
+    /// <returns>The corresponding station category</returns>
     private static StationCategory TransformCategory(int category) =>
         category is >= 1 and <= 7 ? (StationCategory)category : StationCategory.Unknown;
 
     /// <summary>
-    /// Transforms the <see cref="MailingAddressContract"/> into its domain model.
+    /// Transforms the <see cref="MailingAddressContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model, or null if the contract is null.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model, or null if the contract is null</returns>
     private static StationAddress? TransformAddress(MailingAddressContract? contract) {
         if (contract == null) {
             return null;
@@ -58,10 +58,10 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     }
 
     /// <summary>
-    /// Transforms the <see cref="RegionalAreaContract"/> into its domain model.
+    /// Transforms the <see cref="RegionalAreaContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model, or null if the contract is null.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model, or null if the contract is null</returns>
     private static RegionalArea? TransformRegionalArea(RegionalAreaContract? contract) {
         if (contract == null) {
             return null;
@@ -75,20 +75,20 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     }
 
     /// <summary>
-    /// Transforms the <see cref="Ril100IdentifierContract"/> into its domain model.
+    /// Transforms the <see cref="Ril100IdentifierContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static Ril100Identifier TransformRil100Identifier(Ril100IdentifierContract contract) => new() {
         Identifier = contract.RilIdentifier,
         IsMain = contract.IsMain
     };
 
     /// <summary>
-    /// Transforms the <see cref="EvaNumberContract"/> into its domain model.
+    /// Transforms the <see cref="EvaNumberContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static EvaNumber TransformEvaNumber(EvaNumberContract contract) => new() {
         Number = contract.Number,
         IsMain = contract.IsMain,
@@ -96,10 +96,10 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     };
 
     /// <summary>
-    /// Transforms the <see cref="GeographicCoordinatesContract"/> into its domain model.
+    /// Transforms the <see cref="GeographicCoordinatesContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model, or null if the contract is null or has insufficient coordinates.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model, or <c>null</c> if the contract is <c>null</c> or has insufficient coordinates</returns>
     private static Coordinates? TransformCoordinates(GeographicCoordinatesContract? contract) {
         if (contract?.Coordinates == null || contract.Coordinates.Count < 2) {
             return null;
@@ -112,10 +112,10 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
     }
 
     /// <summary>
-    /// Transforms the service flags from the <see cref="StationContract"/> into a <see cref="StationServices"/> model.
+    /// Transforms the service flags from the <see cref="StationContract"/> into a <see cref="StationServices"/> model
     /// </summary>
-    /// <param name="contract">The station contract containing service flags.</param>
-    /// <returns>The transformed services model.</returns>
+    /// <param name="contract">The station contract containing service flags</param>
+    /// <returns>The transformed services model</returns>
     private static StationServices TransformServices(StationContract contract) => new() {
         HasParking = contract.HasParking,
         HasBicycleParking = contract.HasBicycleParking,

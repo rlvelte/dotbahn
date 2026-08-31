@@ -7,79 +7,79 @@ namespace DotBahn.Stations;
 
 /// <summary>
 /// Represents the query parameters for searching stations.
-/// Provides fluent methods for convenient building of queries.
+/// Provides fluent methods for convenient building of queries
 /// </summary>
 public sealed partial record StationQuery {
     /// <summary>
-    /// Matches a category range pattern (e.g., "2-4", "1 - 7").
+    /// Matches a category range pattern (e.g., "2-4", "1 - 7")
     /// </summary>
     [GeneratedRegex(@"^(\d+)\s*-\s*(\d+)$")]
     private static partial Regex ComplexCategoryRegex();
 
     /// <summary>
-    /// Strings to search for station names.
-    /// <remarks>
-    /// Wildcards '*' and '?' are supported.
-    /// </remarks>
+    /// Strings to search for station names
     /// </summary>
+    /// <remarks>
+    /// Wildcards '*' and '?' are supported
+    /// </remarks>
     public string[]? Names { get; set; }
 
     /// <summary>
-    /// Filter by station category.
-    /// <remarks>
-    /// Single values (1-7), ranges (e.g., "2-4"), or comma-separated (e.g., "1,3-5").
-    /// </remarks>
+    /// Filter by station category
     /// </summary>
+    /// <remarks>
+    /// Single values (1-7), ranges (e.g., "2-4"), or comma-separated (e.g., "1,3-5")
+    /// </remarks>
     public string? Categories { get; set; }
 
     /// <summary>
-    /// Filter by German federal state.
+    /// Filter by German federal state
     /// </summary>
     public FederalState? State { get; set; }
 
     /// <summary>
-    /// The EVA station number used as a unique identifier.
+    /// The EVA station number used as a unique identifier
     /// </summary>
     public string? Eva { get; set; }
 
     /// <summary>
-    /// The RIL100 identifier of the station.
+    /// The RIL100 identifier of the station
     /// </summary>
     public string? Ril { get; set; }
 
     /// <summary>
-    /// Logical operator for combining multiple filters.
-    /// <remarks>
-    /// Default is <see cref="LogicalOperator.And"/>.
-    /// </remarks>
+    /// Logical operator for combining multiple filters
     /// </summary>
+    /// <remarks>
+    /// Default is <see cref="LogicalOperator.And"/>
+    /// </remarks>
     public LogicalOperator Operator { get; set; } = LogicalOperator.And;
 
     /// <summary>
-    /// Offset of the first hit returned.
-    /// <remarks>
-    /// Default is 0.
-    /// </remarks>
+    /// Offset of the first hit returned
     /// </summary>
+    /// <remarks>
+    /// Default is 0
+    /// </remarks>
     public int Offset { get; set; }
 
     /// <summary>
-    /// The maximum number of hits to return.
-    /// <remarks>
-    /// Default is 10_000.
-    /// </remarks>
+    /// The maximum number of hits to return
     /// </summary>
+    /// <remarks>
+    /// Default is 10_000
+    /// </remarks>
     public int Limit { get; set; } = 10000;
 
     /// <summary>
-    /// Sets the station names or fragments to search for.
+    /// Sets the station names or fragments to search for
     /// </summary>
     /// <remarks>
-    /// Appends a trailing '*' automatically if no wildcard is present.
+    /// Appends a trailing '*' automatically if no wildcard is present
     /// </remarks>
-    /// <param name="names">One or more station name patterns.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
-    /// <exception cref="ArgumentException">Thrown if no names are provided.</exception>
+    /// <param name="names">One or more station name patterns</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
+    /// <exception cref="ArgumentException">Thrown if no names are provided</exception>
     public StationQuery WithNames(params string[] names) {
         if (names is not { Length: > 0 }) {
             throw new ArgumentException("At least one name is required.", nameof(names));
@@ -90,14 +90,14 @@ public sealed partial record StationQuery {
     }
 
     /// <summary>
-    /// Sets the station category filter.
-    /// <remarks>
-    /// You can specify a single category, a range (e.g., "2-4") or a list of categories (e.g., "1,3-5"). Categories must be between 1 and 7.
-    /// </remarks>
+    /// Sets the station category filter
     /// </summary>
-    /// <param name="categories">One or more category specifications: integers, ranges, or comma-separated values.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
-    /// <exception cref="ArgumentException">Thrown if any category is invalid or out of range (1-7).</exception>
+    /// <remarks>
+    /// You can specify a single category, a range (e.g., "2-4") or a list of categories (e.g., "1,3-5"). Categories must be between 1 and 7
+    /// </remarks>
+    /// <param name="categories">One or more category specifications: integers, ranges, or comma-separated values</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
+    /// <exception cref="ArgumentException">Thrown if any category is invalid or out of range (1-7)</exception>
     public StationQuery WithCategories(string categories) {
         if (string.IsNullOrWhiteSpace(categories)) {
             throw new ArgumentException("At least one category must be specified.", nameof(categories));
@@ -136,67 +136,67 @@ public sealed partial record StationQuery {
     }
 
     /// <summary>
-    /// Filters stations by federal state.
+    /// Filters stations by federal state
     /// </summary>
-    /// <param name="state">German federal state.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="state">German federal state</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery InFederalState(FederalState state) {
         State = state;
         return this;
     }
 
     /// <summary>
-    /// Filters stations by EVA number.
+    /// Filters stations by EVA number
     /// </summary>
-    /// <param name="eva">EVA station number.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="eva">EVA station number</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery WithEva(string eva) {
         Eva = eva;
         return this;
     }
 
     /// <summary>
-    /// Filters stations by RIL100 identifier.
+    /// Filters stations by RIL100 identifier
     /// </summary>
-    /// <param name="ril">RIL100 identifier.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="ril">RIL100 identifier</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery WithRil(string ril) {
         Ril = ril;
         return this;
     }
 
     /// <summary>
-    /// Sets the logical operator for combining multiple filters.
+    /// Sets the logical operator for combining multiple filters
     /// </summary>
-    /// <param name="operator">Logical operator.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="operator">Logical operator</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery CombineAs(LogicalOperator @operator) {
         Operator = @operator;
         return this;
     }
 
     /// <summary>
-    /// Sets the number of results to skip for pagination.
+    /// Sets the number of results to skip for pagination
     /// </summary>
-    /// <param name="offset">Number of results to skip.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="offset">Number of results to skip</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery Skip(int offset) {
         Offset = offset;
         return this;
     }
 
     /// <summary>
-    /// Sets the maximum number of results to return.
+    /// Sets the maximum number of results to return
     /// </summary>
-    /// <param name="limit">Maximum results.</param>
-    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining.</returns>
+    /// <param name="limit">Maximum results</param>
+    /// <returns>The current <see cref="StationQuery"/> instance for fluent chaining</returns>
     public StationQuery LimitTo(int limit) {
         Limit = limit;
         return this;
     }
 
     /// <summary>
-    /// Converts the query into <see cref="QueryParameters"/> for API calls.
+    /// Converts the query into <see cref="QueryParameters"/> for API calls
     /// </summary>
     internal QueryParameters ToQueryParameters() => QueryParameters.Create()
         .Add("searchstring", Names != null ? string.Join(',', Names) : string.Empty)

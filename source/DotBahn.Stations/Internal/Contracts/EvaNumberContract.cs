@@ -3,23 +3,23 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for an EVA number.
+/// Raw structure for an EVA number
 /// </summary>
 internal record EvaNumberContract {
     /// <summary>
-    /// Gets the EVA number.
+    /// Gets the EVA number
     /// </summary>
     [JsonPropertyName("number")]
     public long Number { get; init; }
 
     /// <summary>
-    /// Gets a value indicating whether this is the main EVA number.
+    /// Gets a value indicating whether this is the main EVA number
     /// </summary>
     [JsonPropertyName("isMain")]
     public bool IsMain { get; init; }
 
     /// <summary>
-    /// Gets the geographic coordinates.
+    /// Gets the geographic coordinates
     /// </summary>
     [JsonPropertyName("geographicCoordinates")]
     public GeographicCoordinatesContract? GeographicCoordinates { get; init; }

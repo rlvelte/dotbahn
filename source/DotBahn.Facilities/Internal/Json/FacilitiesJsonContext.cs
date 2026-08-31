@@ -4,7 +4,7 @@ using DotBahn.Facilities.Models.Enumerations;
 namespace DotBahn.Facilities.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for Facilities enum types.
+/// Source-generated JSON serialization metadata for Facilities enum types
 /// </summary>
 [JsonSerializable(typeof(FacilityState))]
 [JsonSerializable(typeof(FacilityType))]

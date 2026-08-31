@@ -3,48 +3,48 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Timetables.Models.Enumerations;
 
 /// <summary>
-/// Type of trip/train service.
+/// Type of trip/train service
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<TripType>))]
 public enum TripType {
     /// <summary>
-    /// Regular passenger service.
+    /// Regular passenger service
     /// </summary>
     [JsonStringEnumMemberName("p")]
     Passenger,
 
     /// <summary>
-    /// Empty train movement (no passengers).
+    /// Empty train movement (no passengers)
     /// </summary>
     [JsonStringEnumMemberName("e")]
     Empty,
 
     /// <summary>
-    /// Additional train type (z).
+    /// Additional train type (z)
     /// </summary>
     [JsonStringEnumMemberName("z")]
     Z,
 
     /// <summary>
-    /// Additional train type (s).
+    /// Additional train type (s)
     /// </summary>
     [JsonStringEnumMemberName("s")]
     S,
 
     /// <summary>
-    /// Additional train type (h).
+    /// Additional train type (h)
     /// </summary>
     [JsonStringEnumMemberName("h")]
     H,
 
     /// <summary>
-    /// Additional train type (n).
+    /// Additional train type (n)
     /// </summary>
     [JsonStringEnumMemberName("n")]
     N,
 
     /// <summary>
-    /// There is no further information available.
+    /// There is no further information available
     /// </summary>
     Unknown
 }
