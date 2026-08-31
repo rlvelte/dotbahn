@@ -4,7 +4,7 @@ using DotBahn.Stations.Models.Enumerations;
 namespace DotBahn.Stations.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for Data.Stations enum types.
+/// Source-generated JSON serialization metadata for Data.Stations enum types
 /// </summary>
 [JsonSerializable(typeof(FederalState))]
 [JsonSerializable(typeof(LogicalOperator))]

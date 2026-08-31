@@ -3,29 +3,29 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Stations.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for the response containing a list of stations.
+/// Raw structure for the response containing a list of stations
 /// </summary>
 internal record StationsResponseContract {
     /// <summary>
-    /// Gets the offset.
+    /// Gets the offset
     /// </summary>
     [JsonPropertyName("offset")]
     public int Offset { get; init; }
 
     /// <summary>
-    /// Gets the limit.
+    /// Gets the limit
     /// </summary>
     [JsonPropertyName("limit")]
     public int Limit { get; init; }
 
     /// <summary>
-    /// Gets the total number of items.
+    /// Gets the total number of items
     /// </summary>
     [JsonPropertyName("total")]
     public int Total { get; init; }
 
     /// <summary>
-    /// Gets the list of stations.
+    /// Gets the list of stations
     /// </summary>
     [JsonPropertyName("result")]
     public List<StationContract> Stations { get; init; } = [];

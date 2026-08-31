@@ -10,7 +10,7 @@ using TimetableJsonContext = DotBahn.Timetables.Internal.Json.TimetableJsonConte
 namespace DotBahn.Timetables.Internal.Transformers;
 
 /// <summary>
-/// Transforms timetable contracts into domain models.
+/// Transforms timetable contracts into domain models
 /// </summary>
 internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableResponseContract> {
     private const string BahnTimeFormat = "yyMMddHHmm";
@@ -26,10 +26,10 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     }
 
     /// <summary>
-    /// Transforms the <see cref="StopDataContract"/> into its domain model.
+    /// Transforms the <see cref="StopDataContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static TimetableStop TransformStop(StopDataContract contract) => new() {
         Id = contract.Id,
         Train = TransformTrainLabel(contract.TripInfo),
@@ -39,10 +39,10 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     };
 
     /// <summary>
-    /// Transforms the <see cref="EventContract"/> into its domain model.
+    /// Transforms the <see cref="EventContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static TrainEvent? TransformEvent(EventContract? contract) {
         if (contract == null) {
             return null;
@@ -86,10 +86,10 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     }
 
     /// <summary>
-    /// Transforms the <see cref="TripInfoContract"/> into its domain model.
+    /// Transforms the <see cref="TripInfoContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static TrainLabel TransformTrainLabel(TripInfoContract? contract) => new() {
         Category = contract?.Category ?? string.Empty,
         Number = contract?.Number ?? string.Empty,
@@ -99,10 +99,10 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     };
 
     /// <summary>
-    /// Transforms the <see cref="MessageContract"/> into its domain model.
+    /// Transforms the <see cref="MessageContract"/> into its domain model
     /// </summary>
-    /// <param name="contract">The contract to transform.</param>
-    /// <returns>The transformed model.</returns>
+    /// <param name="contract">The contract to transform</param>
+    /// <returns>The transformed model</returns>
     private static TimetableMessage TransformMessage(MessageContract contract) => new() {
         Id = contract.Id ?? string.Empty,
         Type = EnumUtil.Parse(contract.Type, MessageType.Him, TimetableJsonContext.Default.MessageType),
@@ -122,10 +122,10 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     };
 
     /// <summary>
-    /// Parses the Bahn time to a <see cref="DateTime"/>.
+    /// Parses the Bahn time to a <see cref="DateTime"/>
     /// </summary>
-    /// <param name="time">A bahn formatted time.</param>
-    /// <returns>A parsed time.</returns>
+    /// <param name="time">A bahn formatted time</param>
+    /// <returns>A parsed time</returns>
     private static DateTime? ParseBahnTime(string? time) {
         if (string.IsNullOrEmpty(time)) {
             return null;
@@ -135,9 +135,9 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     }
 
     /// <summary>
-    /// Parses a pipe-separated list to an array.
+    /// Parses a pipe-separated list to an array
     /// </summary>
-    /// <param name="list">The list to separate.</param>
-    /// <returns>A parsed list.</returns>
+    /// <param name="list">The list to separate</param>
+    /// <returns>A parsed list</returns>
     private static string[] ParsePipeSeparatedList(string? list) => (string.IsNullOrEmpty(list) ? null : list.Split('|', StringSplitOptions.RemoveEmptyEntries)) ?? [];
 }

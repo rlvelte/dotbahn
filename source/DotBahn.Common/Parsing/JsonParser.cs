@@ -4,9 +4,9 @@ using DotBahn.Common.Parsing.Converters;
 namespace DotBahn.Common.Parsing;
 
 /// <summary>
-/// Generic JSON parser implementation.
+/// Generic JSON parser implementation
 /// </summary>
-/// <typeparam name="TContract">The raw type to deserialize into.</typeparam>
+/// <typeparam name="TContract">The raw type to deserialize into</typeparam>
 public class JsonParser<TContract> : IParser<TContract> where TContract : new() {
     private readonly JsonSerializerOptions _options = new() {
         PropertyNameCaseInsensitive = true,
@@ -16,7 +16,7 @@ public class JsonParser<TContract> : IParser<TContract> where TContract : new() 
     };
 
     /// <inheritdoc />
-    /// <exception cref="JsonException">Thrown when deserialization fails or returns null.</exception>
+    /// <exception cref="JsonException">Thrown when deserialization fails or returns <c>null</c></exception>
     public TContract Parse(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
             return new TContract();

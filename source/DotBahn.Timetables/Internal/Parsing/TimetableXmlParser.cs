@@ -6,7 +6,7 @@ using DotBahn.Timetables.Internal.Contracts;
 namespace DotBahn.Timetables.Internal.Parsing;
 
 /// <summary>
-/// Manual XML parser for <see cref="TimetableResponseContract"/>.
+/// Manual XML parser for <see cref="TimetableResponseContract"/>
 /// </summary>
 internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     private static readonly XName StationName = "timetable";
@@ -17,7 +17,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     private static readonly XName MessageName = "m";
 
     /// <inheritdoc />
-    /// <exception cref="XmlException">Thrown when the XML is malformed or required attributes are missing.</exception>
+    /// <exception cref="XmlException">Thrown when the XML is malformed or required attributes are missing</exception>
     public TimetableResponseContract Parse(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
             return new TimetableResponseContract();
@@ -38,7 +38,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     }
 
     /// <summary>
-    /// Parses a single stop element.
+    /// Parses a single stop element
     /// </summary>
     private static StopDataContract ParseStop(XElement stopElement) {
         var tripInfo = stopElement.Element(TripInfoName) is { } tripInfoElement ? ParseTripInfo(tripInfoElement) : null;
@@ -57,7 +57,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     }
 
     /// <summary>
-    /// Parses a trip label element.
+    /// Parses a trip label element
     /// </summary>
     private static TripInfoContract ParseTripInfo(XElement element) => new() {
         Category = (string?)element.Attribute("c"),
@@ -68,7 +68,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     };
 
     /// <summary>
-    /// Parses an arrival or departure event element.
+    /// Parses an arrival or departure event element
     /// </summary>
     private static EventContract ParseEvent(XElement element) => new() {
         PlannedTime = (string?)element.Attribute("pt"),
@@ -88,7 +88,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     };
 
     /// <summary>
-    /// Parses a message element.
+    /// Parses a message element
     /// </summary>
     private static MessageContract ParseMessage(XElement element) => new() {
         Id = (string?)element.Attribute("id"),
