@@ -1,10 +1,10 @@
 .PHONY: build test coverage pack format clean mutate docs docs-serve
 
-CONFIGURATION 		?= Release
-NUPKG_DIR     		?= nupkgs
-DOCFX_DIR     		?= docs
-TESTS_DIR  		    ?= TestResults
-STRYKER_DIR         ?= StrykerOutput
+CONFIGURATION ?= Release
+NUPKG_DIR     ?= nupkgs
+DOCFX_DIR     ?= docs
+TESTS_DIR  	  ?= TestResults
+STRYKER_DIR   ?= StrykerOutput
 
 build: ## Build all projects (Release)
 	dotnet build --configuration $(CONFIGURATION)

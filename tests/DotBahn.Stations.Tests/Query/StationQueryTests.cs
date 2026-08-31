@@ -1,0 +1,70 @@
+using DotBahn.Stations;
+using DotBahn.Stations.Models.Enumerations;
+
+namespace DotBahn.Stations.Tests.Query;
+
+public class StationQueryTests {
+    [Fact]
+    public void Constructor_ShouldInitializeWithDefaultValues() {
+        var query = new StationQuery();
+
+        Assert.Null(query.Names);
+        Assert.Null(query.Categories);
+        Assert.Null(query.State);
+        Assert.Null(query.Eva);
+        Assert.Null(query.Ril);
+        Assert.Equal(LogicalOperator.And, query.Operator);
+        Assert.Equal(0, query.Offset);
+        Assert.Equal(10000, query.Limit);
+    }
+
+    [Fact]
+    public void ObjectInitializer_ShouldSetAllProperties() {
+        var query = new StationQuery {
+            Names = ["Hamburg"],
+            Categories = "1-3",
+            State = FederalState.Hamburg,
+            Eva = "8002549",
+            Ril = "AH",
+            Operator = LogicalOperator.Or,
+            Offset = 10,
+            Limit = 50
+        };
+
+        Assert.Equal(["Hamburg"], query.Names);
+        Assert.Equal("1-3", query.Categories);
+        Assert.Equal(FederalState.Hamburg, query.State);
+        Assert.Equal("8002549", query.Eva);
+        Assert.Equal("AH", query.Ril);
+        Assert.Equal(LogicalOperator.Or, query.Operator);
+        Assert.Equal(10, query.Offset);
+        Assert.Equal(50, query.Limit);
+    }
+
+    [Fact]
+    public void SkipNegativeOffsetSetsOffset() {
+        var query = new StationQuery();
+
+        query.Skip(-5);
+
+        Assert.Equal(-5, query.Offset);
+    }
+
+    [Fact]
+    public void LimitToZeroSetsLimit() {
+        var query = new StationQuery();
+
+        query.LimitTo(0);
+
+        Assert.Equal(0, query.Limit);
+    }
+
+    [Fact]
+    public void LimitToNegativeSetsLimit() {
+        var query = new StationQuery();
+
+        query.LimitTo(-1);
+
+        Assert.Equal(-1, query.Limit);
+    }
+}

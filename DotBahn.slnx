@@ -21,9 +21,9 @@
     <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="tests/DotBahn.Tests.Facilities/DotBahn.Tests.Facilities.csproj" />
-    <Project Path="tests/DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
-    <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
-    <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
+    <Project Path="tests\DotBahn.Common.Tests\DotBahn.Common.Tests.csproj" />
+    <Project Path="tests\DotBahn.Facilities.Tests\DotBahn.Facilities.Tests.csproj" />
+    <Project Path="tests\DotBahn.Stations.Tests\DotBahn.Stations.Tests.csproj" />
+    <Project Path="tests\DotBahn.Timetables.Tests\DotBahn.Timetables.Tests.csproj" />
   </Folder>
 </Solution>
