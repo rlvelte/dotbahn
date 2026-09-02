@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DotBahn.Stations.Internal.Contracts;
@@ -5,6 +6,7 @@ namespace DotBahn.Stations.Internal.Contracts;
 /// <summary>
 /// Raw structure for geographic coordinates
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record GeographicCoordinatesContract {
     /// <summary>
     /// Gets the type

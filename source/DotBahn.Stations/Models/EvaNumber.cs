@@ -12,8 +12,10 @@ public class EvaNumber {
     public required long Number { get; init; }
 
     /// <summary>
-    /// Whether this is the primary EVA number for the station.
+    /// Whether this is the primary EVA number for the station
+    /// <remarks>
     /// Large stations may have multiple EVA numbers for different platform areas
+    /// </remarks>
     /// </summary>
     public required bool IsMain { get; init; }
 

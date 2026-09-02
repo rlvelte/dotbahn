@@ -24,25 +24,29 @@ public class TrainEvent {
 
     /// <summary>
     /// Planned distant endpoint.
+    /// <remarks>
     /// For international trains, this indicates the final destination beyond the stations listed in the path
+    /// </remarks>
     /// </summary>
     public required ChangedRef<string> DistantEndpoint { get; init; }
 
     /// <summary>
     /// Planned path as a sequence of station names.
-    /// For arrival, the path indicates stations before the current station (the first element is trip's start).
-    /// For departure, the path indicates stations after the current station (the last element is the trip's destination).
+    /// <remarks>
+    /// For arrival, the path indicates stations before the current station (the first element is trip's start)
+    /// For departure, the path indicates stations after the current station (the last element is the trip's destination)
     /// The current station is never included in the path
+    /// </remarks>
     /// </summary>
     public ChangedRef<IEnumerable<string>> Path { get; init; } = new() { Original = [] };
 
     /// <summary>
     /// Wing train IDs. A list of trip IDs for coupled trains (train portions)
     /// </summary>
-    public IEnumerable<string> Wings { get; init; } = [];
+    public IReadOnlyList<string> Wings { get; init; } = [];
 
     /// <summary>
     /// Messages associated with this event
     /// </summary>
-    public IEnumerable<TimetableMessage> Messages { get; init; } = [];
+    public IReadOnlyList<TimetableMessage> Messages { get; init; } = [];
 }

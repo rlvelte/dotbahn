@@ -2,8 +2,8 @@ using System.Net;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
-using DotBahn.Common.Utilities;
 using DotBahn.Common.Tests;
+using DotBahn.Common.Utilities;
 using Moq;
 
 namespace DotBahn.Timetables.Tests.Client;

@@ -1,7 +1,7 @@
 using System.Net;
 using DotBahn.Common.Parsing;
-using DotBahn.Common.Transformer;
 using DotBahn.Common.Tests;
+using DotBahn.Common.Transformer;
 using DotBahn.Timetables;
 using DotBahn.Timetables.Internal.Contracts;
 using DotBahn.Timetables.Models;

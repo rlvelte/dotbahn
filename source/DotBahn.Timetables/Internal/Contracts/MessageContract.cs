@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw message/disruption information
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record MessageContract {
     /// <summary>
     /// Message ID

@@ -48,5 +48,5 @@ public class TimetableStop {
     /// <summary>
     /// Messages associated with this stop
     /// </summary>
-    public IEnumerable<TimetableMessage> Messages { get; init; } = [];
+    public IReadOnlyList<TimetableMessage> Messages { get; init; } = [];
 }

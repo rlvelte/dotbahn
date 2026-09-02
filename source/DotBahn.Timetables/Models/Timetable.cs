@@ -17,5 +17,5 @@ public class Timetable {
     /// <summary>
     /// Station-level messages (disruptions, announcements)
     /// </summary>
-    public IEnumerable<TimetableMessage> Messages { get; init; } = [];
+    public IReadOnlyList<TimetableMessage> Messages { get; init; } = [];
 }

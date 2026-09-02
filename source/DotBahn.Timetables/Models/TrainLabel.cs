@@ -34,6 +34,5 @@ public class TrainLabel {
     /// <summary>
     /// Display the name for the train using category and number
     /// </summary>
-    /// <example>"ICE 4523", "RE 3298", "BRB 62943"</example>
     public string DisplayName => $"{Category} {Number}";
 }

@@ -148,8 +148,10 @@ public class StationTransformerTests {
         var coords = result.EvaNumbers.First().Coordinates;
 
         Assert.NotNull(coords);
-        Assert.Equal(10.0, coords.Longitude);
-        Assert.Equal(53.5, coords.Latitude);
+
+        var c = coords.Value;
+        Assert.Equal(10.0, c.Longitude);
+        Assert.Equal(53.5, c.Latitude);
     }
 
 

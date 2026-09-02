@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DotBahn.Stations.Internal.Contracts;
@@ -5,6 +6,7 @@ namespace DotBahn.Stations.Internal.Contracts;
 /// <summary>
 /// Raw structure for a regional area of the Deutsche Bahn
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record RegionalAreaContract {
     /// <summary>
     /// Gets the number of the regional area

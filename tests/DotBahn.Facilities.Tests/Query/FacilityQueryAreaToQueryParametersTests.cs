@@ -36,7 +36,6 @@ public class FacilityQueryAreaToQueryParametersTests {
         var query = new FacilityQuery {
             LongitudeWest = 8.1,
             LatitudeSouth = 50.2
-            // LongitudeEast and LatitudeNorth are null
         };
 
         var parameters = query.ToQueryParameters();

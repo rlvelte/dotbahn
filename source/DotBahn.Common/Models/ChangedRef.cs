@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Common.Models;
 
 /// <summary>
@@ -18,6 +20,7 @@ public class ChangedRef<T> where T : class {
     /// <summary>
     /// Indicates if there is an updated value
     /// </summary>
+    [MemberNotNullWhen(true, nameof(Updated))]
     public bool HasUpdate => Updated != null;
 
     /// <summary>

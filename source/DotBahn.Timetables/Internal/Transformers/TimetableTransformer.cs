@@ -18,6 +18,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     /// <inheritdoc />
     public Timetable Transform(TimetableResponseContract contracts) {
         ArgumentNullException.ThrowIfNull(contracts);
+
         return new Timetable {
             Station = contracts.Station,
             Stops = contracts.Stops.Select(TransformStop),

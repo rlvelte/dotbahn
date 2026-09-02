@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DotBahn.Facilities.Internal.Contracts;
@@ -5,6 +6,7 @@ namespace DotBahn.Facilities.Internal.Contracts;
 /// <summary>
 /// Raw structure for a station facility (elevator or escalator) in the FaSta API
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record FacilityContract {
     /// <summary>
     /// Gets the unique equipment number

@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw event information (Arrival/Departure)
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record EventContract {
     /// <summary>
     /// Planned time (YYMMDDhhmm format)

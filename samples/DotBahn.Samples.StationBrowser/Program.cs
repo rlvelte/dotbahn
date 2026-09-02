@@ -140,13 +140,12 @@ static IRenderable BuildStationInfo(Station station) {
     }
 
     if (station.Coordinates != null) {
-        infoGrid.AddRow($"[{Gruvbox.Gray}]Coordinates[/]",
-            $"[{Gruvbox.Fg}]{station.Coordinates.Latitude:F6}, {station.Coordinates.Longitude:F6}[/]");
+        var c = station.Coordinates.Value;
+        infoGrid.AddRow($"[{Gruvbox.Gray}]Coordinates[/]", $"[{Gruvbox.Fg}]{c.Latitude:F6}, {c.Longitude:F6}[/]");
     }
 
     if (station.RegionalArea != null) {
-        infoGrid.AddRow($"[{Gruvbox.Gray}]Regional Area[/]",
-            $"[{Gruvbox.Fg}]{Markup.Escape(station.RegionalArea.Name)} ({station.RegionalArea.ShortName})[/]");
+        infoGrid.AddRow($"[{Gruvbox.Gray}]Regional Area[/]", $"[{Gruvbox.Fg}]{Markup.Escape(station.RegionalArea.Name)} ({station.RegionalArea.ShortName})[/]");
     }
 
     rows.Add(infoGrid);

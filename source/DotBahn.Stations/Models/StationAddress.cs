@@ -22,6 +22,5 @@ public class StationAddress {
     /// <summary>
     /// Formatted single-line address
     /// </summary>
-    /// <example>"Bahnhofstraße 1, 12345 Musterstadt"</example>
     public string DisplayAddress => $"{Street}, {ZipCode} {City}";
 }
