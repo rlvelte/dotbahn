@@ -10,6 +10,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsAotCompatible Condition="'$(IsPackable)' == 'true'">true</IsAotCompatible>
+    <IsTrimmable Condition="'$(IsPackable)' == 'true'">true</IsTrimmable>
     <EnableTrimAnalyzer Condition="'$(IsPackable)' == 'true'">true</EnableTrimAnalyzer>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
