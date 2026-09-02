@@ -5,7 +5,7 @@ using DotBahn.Stations.Models.Enumerations;
 namespace DotBahn.Stations.Tests.Models;
 
 public class StationTests {
-    private static Station Make(IEnumerable<Ril100Identifier>? ril100 = null, IEnumerable<EvaNumber>? evaNumbers = null) => new() {
+    private static Station Make(IReadOnlyList<Ril100Identifier>? ril100 = null, IReadOnlyList<EvaNumber>? evaNumbers = null) => new() {
         Number = 1,
         Name = "Test",
         Category = StationCategory.Category1,
@@ -86,6 +86,6 @@ public class StationTests {
         var coords = new Coordinates { Longitude = 10.0, Latitude = 53.5 };
         var eva = new EvaNumber { Number = 8000105, IsMain = true, Coordinates = coords };
 
-        Assert.Same(coords, Make(evaNumbers: [eva]).Coordinates);
+        Assert.Equal(coords, Make(evaNumbers: [eva]).Coordinates);
     }
 }

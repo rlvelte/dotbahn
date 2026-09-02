@@ -28,6 +28,7 @@ public class QueryParameters {
         if (!string.IsNullOrWhiteSpace(value)) {
             _parameters[key] = value;
         }
+
         return this;
     }
 
@@ -47,6 +48,7 @@ public class QueryParameters {
         if (list.Count > 0) {
             _parameters[key] = string.Join(",", list);
         }
+
         return this;
     }
 

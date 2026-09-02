@@ -10,8 +10,10 @@ public class Ril100Identifier {
     public required string Identifier { get; init; }
 
     /// <summary>
-    /// Whether this is the primary RIL 100 identifier for the station.
+    /// Whether this is the primary RIL 100 identifier for the station
+    /// <remarks>
     /// A station may have multiple identifiers for different operational areas
+    /// </remarks>
     /// </summary>
     public required bool IsMain { get; init; }
 }

@@ -1,11 +1,11 @@
 using System.Net;
 using DotBahn.Common.Parsing;
+using DotBahn.Common.Tests;
 using DotBahn.Common.Transformer;
 using DotBahn.Facilities;
 using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
 using DotBahn.Facilities.Models.Enumerations;
-using DotBahn.Common.Tests;
 using Moq;
 
 namespace DotBahn.Facilities.Tests.Client;

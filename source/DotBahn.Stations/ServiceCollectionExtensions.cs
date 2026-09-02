@@ -3,6 +3,7 @@ using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Transformer;
 using DotBahn.Stations.Internal.Contracts;
+using DotBahn.Stations.Internal.Json;
 using DotBahn.Stations.Internal.Transformers;
 using DotBahn.Stations.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,8 +45,8 @@ public static class ServiceCollectionExtensions {
         })
         .AddStandardResilienceHandler();
 
-        services.AddSingleton<IParser<StationsResponseContract>, JsonParser<StationsResponseContract>>();
-        services.AddSingleton<IParser<StationContract>, JsonParser<StationContract>>();
+        services.AddSingleton<IParser<StationsResponseContract>>(_ => new JsonParser<StationsResponseContract>(StationsJsonContext.Default.StationsResponseContract));
+        services.AddSingleton<IParser<StationContract>>(_ => new JsonParser<StationContract>(StationsJsonContext.Default.StationContract));
         services.AddSingleton<ITransformer<IEnumerable<Station>, StationsResponseContract>, StationTransformer>();
 
         return services;

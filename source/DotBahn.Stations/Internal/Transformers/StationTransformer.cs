@@ -27,8 +27,8 @@ internal sealed class StationTransformer : ITransformer<IEnumerable<Station>, St
         Category = TransformCategory(contract.Category),
         Address = TransformAddress(contract.MailingAddress),
         RegionalArea = TransformRegionalArea(contract.RegionalArea),
-        Ril100Identifiers = contract.Ril100Identifiers.Select(TransformRil100Identifier).ToList(),
-        EvaNumbers = contract.EvaNumbers.Select(TransformEvaNumber).ToList(),
+        Ril100Identifiers = [.. contract.Ril100Identifiers.Select(TransformRil100Identifier)],
+        EvaNumbers = [.. contract.EvaNumbers.Select(TransformEvaNumber)],
         Services = TransformServices(contract)
     };
 

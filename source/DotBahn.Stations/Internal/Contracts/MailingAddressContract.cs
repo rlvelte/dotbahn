@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DotBahn.Stations.Internal.Contracts;
@@ -5,6 +6,7 @@ namespace DotBahn.Stations.Internal.Contracts;
 /// <summary>
 /// Raw structure for the mailing address of a station
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record MailingAddressContract {
     /// <summary>
     /// Gets the city

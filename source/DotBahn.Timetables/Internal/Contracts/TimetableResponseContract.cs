@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw timetable response
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record TimetableResponseContract {
     /// <summary>
     /// Station name or ID

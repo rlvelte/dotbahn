@@ -241,7 +241,7 @@ public class TimetableMergerMergeTests {
         Assert.Throws<ArgumentException>(() => _merger.Merge(current, changes));
     }
 
-    private static Timetable CreateTimetable(string station, IEnumerable<TimetableStop> stops, IEnumerable<TimetableMessage>? messages = null) => new() {
+    private static Timetable CreateTimetable(string station, IReadOnlyList<TimetableStop> stops, IReadOnlyList<TimetableMessage>? messages = null) => new() {
         Station = station,
         Stops = stops,
         Messages = messages ?? []
@@ -264,7 +264,7 @@ public class TimetableMergerMergeTests {
         }
     };
 
-    private static TimetableStop CreateStopWithWings(string id, string time, string platform, IEnumerable<string> wings) => new() {
+    private static TimetableStop CreateStopWithWings(string id, string time, string platform, IReadOnlyList<string> wings) => new() {
         Id = id,
         Train = new TrainLabel { Category = "ICE", Number = "1", Owner = "80" },
         Departure = new TrainEvent {

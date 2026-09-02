@@ -1,11 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace DotBahn.Common.Auth;
 
 /// <summary>
 /// Options for authorization
 /// </summary>
-[ExcludeFromCodeCoverage]
 public record AuthorizationOptions {
     /// <summary>
     /// The client ID for your application

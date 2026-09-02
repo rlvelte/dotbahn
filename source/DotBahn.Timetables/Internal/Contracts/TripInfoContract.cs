@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw trip label (train information)
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record TripInfoContract {
     /// <summary>
     /// Filter flags

@@ -3,6 +3,7 @@ using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Transformer;
 using DotBahn.Facilities.Internal.Contracts;
+using DotBahn.Facilities.Internal.Json;
 using DotBahn.Facilities.Internal.Transformers;
 using DotBahn.Facilities.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +43,7 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
     public FacilityClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
-        _parser = new JsonParser<List<FacilityContract>>();
+        _parser = new JsonParser<List<FacilityContract>>(FacilitiesJsonContext.Default.ListFacilityContract);
         _transformer = new FacilityTransformer();
     }
 
@@ -50,6 +51,7 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
     public async Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken cancellation = default) {
         ArgumentNullException.ThrowIfNull(query);
+
         var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false)).ToList();
         return [.. _transformer.Transform(result)];
     }

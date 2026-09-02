@@ -54,7 +54,6 @@ public class FacilityTransformerTests {
         Assert.Equal(FacilityState.Active, facility.State);
         Assert.Equal("Fully operational", facility.StateExplanation);
         Assert.Equal(8000001, facility.StationNumber);
-        Assert.NotNull(facility.Coordinates);
         Assert.Equal(10.0, facility.Coordinates.Longitude);
         Assert.Equal(53.5, facility.Coordinates.Latitude);
         Assert.Equal("DB Station&Service AG", facility.OperatorName);

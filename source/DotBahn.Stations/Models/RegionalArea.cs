@@ -1,7 +1,7 @@
 namespace DotBahn.Stations.Models;
 
 /// <summary>
-/// Regional administrative area of Deutsche Bahn responsible for the station
+/// The regional administrative area of Deutsche Bahn responsible for the station
 /// </summary>
 public class RegionalArea {
     /// <summary>

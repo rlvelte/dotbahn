@@ -72,8 +72,7 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <param name="change">The changed value</param>
     /// <typeparam name="T">The type that can be changed</typeparam>
     /// <returns>Instance with combined values</returns>
-    private static ChangedValue<T> MergeValue<T>(ChangedValue<T> current, ChangedValue<T> change)
-        where T : struct {
+    private static ChangedValue<T> MergeValue<T>(ChangedValue<T> current, ChangedValue<T> change) where T : struct {
         var hasRealUpdate = change.HasUpdate && !EqualityComparer<T>.Default.Equals(change.Updated!.Value, current.Original);
         return new ChangedValue<T> {
             Original = current.Original,
@@ -88,8 +87,7 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <param name="change">The changed value</param>
     /// <typeparam name="T">The type that can be changed</typeparam>
     /// <returns>Instance with combined values</returns>
-    private static ChangedRef<T> MergeRef<T>(ChangedRef<T> current, ChangedRef<T> change)
-        where T : class {
+    private static ChangedRef<T> MergeRef<T>(ChangedRef<T> current, ChangedRef<T> change) where T : class {
         var hasRealUpdate = change.HasUpdate && !Equals(change.Updated, current.Original);
         return new ChangedRef<T> {
             Original = current.Original,
@@ -103,9 +101,11 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
     /// <param name="current">The current messages</param>
     /// <param name="change">The changed messages</param>
     /// <returns>Combined list of messages</returns>
-    private static IEnumerable<TimetableMessage> MergeMessages(IEnumerable<TimetableMessage> current, IEnumerable<TimetableMessage> change) {
+    private static IReadOnlyList<TimetableMessage> MergeMessages(IReadOnlyList<TimetableMessage> current, IReadOnlyList<TimetableMessage> change) {
         var messages = current.ToList();
-        var existing = messages.Select(m => m.Id).ToHashSet();
-        return messages.Concat(change.Where(m => !existing.Contains(m.Id)));
+        var existing = new HashSet<string>(messages.Select(m => m.Id));
+        messages.AddRange(change.Where(m => !existing.Contains(m.Id)));
+
+        return messages.AsReadOnly();
     }
 }

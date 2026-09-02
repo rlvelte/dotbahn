@@ -3,6 +3,7 @@ using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Transformer;
 using DotBahn.Stations.Internal.Contracts;
+using DotBahn.Stations.Internal.Json;
 using DotBahn.Stations.Internal.Transformers;
 using DotBahn.Stations.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +44,7 @@ public class StationClient : ClientBase, IStationClient {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
     public StationClient(ClientOptions options, AuthorizationOptions auth)
         : base(options, auth) {
-        _parser = new JsonParser<StationsResponseContract>();
+        _parser = new JsonParser<StationsResponseContract>(StationsJsonContext.Default.StationsResponseContract);
         _transformer = new StationTransformer();
     }
 

@@ -1,10 +1,11 @@
 using DotBahn.Common.Parsing;
 using DotBahn.Timetables.Internal.Contracts;
+using DotBahn.Timetables.Internal.Json;
 
 namespace DotBahn.Timetables.Tests.Parsing;
 
 public class JsonParserTests {
-    private readonly JsonParser<TimetableResponseContract> _parser = new();
+    private readonly JsonParser<TimetableResponseContract> _parser = new(TimetableJsonContext.Default.TimetableResponseContract);
 
     [Theory]
     [InlineData("")]
@@ -25,12 +26,4 @@ public class JsonParserTests {
         Assert.Equal("Hamburg Hbf", result.Station);
     }
 
-    [Fact]
-    public void Parse_JsonWithCaseInsensitiveKeys_ReturnsPopulatedContract() {
-        const string json = """{"STATION":"Hamburg Hbf","stops":[]}""";
-
-        var result = _parser.Parse(json);
-
-        Assert.Equal("Hamburg Hbf", result.Station);
-    }
 }

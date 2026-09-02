@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
 /// Raw structure for a single stop
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal record StopDataContract {
     /// <summary>
     /// Unique stop ID
