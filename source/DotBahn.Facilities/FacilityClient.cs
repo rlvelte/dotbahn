@@ -17,6 +17,9 @@ public class FacilityClient : ClientBase, IFacilityClient {
     private readonly IParser<IEnumerable<FacilityContract>> _parser;
     private readonly ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> _transformer;
 
+    /// <inheritdoc />
+    protected override string ApiName => "facilities";
+
     /// <summary>
     /// Client for accessing 'Deutsche Bahn FaSta'-API
     /// </summary>

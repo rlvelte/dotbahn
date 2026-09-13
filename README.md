@@ -1,10 +1,13 @@
 <img src="docs/images/logo-256x256.png" width=128 alt="logo">
 
 # DotBahn - .NET Client for Deutsche Bahn APIs
+![NuGet](https://img.shields.io/nuget/v/DotBahn.Common?label=DotBahn.Common&style=flat)
+![NuGet](https://img.shields.io/nuget/v/DotBahn.Telemetry?label=DotBahn.Telemetry&style=flat)
+
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Timetables?label=DotBahn.Timetables&style=flat)
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Stations?label=DotBahn.Stations&style=flat)
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
-[![Docs](https://img.shields.io/badge/docs-github_pages-blue?style=flat)](https://rlvelte.github.io/dotbahn/)
+
 
 DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties.
 
@@ -28,6 +31,9 @@ Install the packages you need from [NuGet](https://www.nuget.org/) or [GitHub Pa
 dotnet add package DotBahn.Timetables
 dotnet add package DotBahn.Stations
 dotnet add package DotBahn.Facilities
+
+# Optional; see below for further details.
+dotnet add package DotBahn.Telemetry
 ```
 
 > [!NOTE]
@@ -72,6 +78,18 @@ using var client = new StationClient(
     });
 ```
 
+### Telemetry
+All clients emit OpenTelemetry-compatible traces and metrics using the built-in `ActivitySource` and `Meter` APIs. The client packages themselves have no OpenTelemetry dependency. Enable collection with the **DotBahn.Telemetry** package, which registers the source and meter with your OpenTelemetry providers:
+
+```csharp
+// OpenTelemetry configuration
+services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddOtlpExporter())
+    .WithMetrics(metrics => metrics.AddOtlpExporter());
+
+// Add dotbahn specific activites
+services.AddDotBahnTelemetry();
+```
 
 ## Authorization
 A Deutsche Bahn API key is required. Register and obtain your credentials at the [DB API Marketplace](https://developers.deutschebahn.com/db-api-marketplace/apis/start).
@@ -79,10 +97,9 @@ A Deutsche Bahn API key is required. Register and obtain your credentials at the
 > [!WARNING]
 > These packages only consume the credentials you provide for API authentication. They do not create, register, or manage credentials on your behalf.
 
-
 ## Samples
 ### ICE Monitor
-A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes in real time. Refreshes automatically every 2 minutes.
+A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id> <your-client-secret>

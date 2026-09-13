@@ -7,9 +7,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\source\DotBahn.Common\DotBahn.Common.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Telemetry/DotBahn.Telemetry.csproj" />
     <ProjectReference Include="../../source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
   </ItemGroup>
 </Project>
