@@ -9,8 +9,8 @@ using DotBahn.Stations;
 using DotBahn.Stations.Internal.Contracts;
 using DotBahn.Stations.Models;
 using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry.Trace;
 using Moq;
+using OpenTelemetry.Trace;
 
 namespace DotBahn.Telemetry.Tests;
 
