@@ -1,4 +1,3 @@
-using DotBahn.Stations;
 using DotBahn.Stations.Models.Enumerations;
 
 namespace DotBahn.Stations.Tests.Query;

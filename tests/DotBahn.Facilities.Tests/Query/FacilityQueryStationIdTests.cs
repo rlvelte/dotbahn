@@ -1,5 +1,3 @@
-using DotBahn.Facilities;
-
 namespace DotBahn.Facilities.Tests.Query;
 
 public class FacilityQueryStationIdTests {

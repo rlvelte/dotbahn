@@ -1,4 +1,3 @@
-using DotBahn.Facilities;
 using DotBahn.Facilities.Models.Enumerations;
 
 namespace DotBahn.Facilities.Tests.Query;
