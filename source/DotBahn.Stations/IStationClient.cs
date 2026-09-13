@@ -10,8 +10,8 @@ public interface IStationClient {
     /// Searches for stations using a query structure
     /// </summary>
     /// <param name="query">The query to specify results with</param>
-    /// <param name="cancellation">Token to cancel the request</param>
+    /// <param name="ct">Token to cancel the request</param>
     /// <returns>List of stations matching the search criteria</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
-    Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken cancellation = default);
+    Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken ct = default);
 }

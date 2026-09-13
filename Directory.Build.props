@@ -46,7 +46,6 @@
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="True" PackagePath="" />
   </ItemGroup>
 
-
   <!-- MiVer versioning -->
   <PropertyGroup>
     <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>

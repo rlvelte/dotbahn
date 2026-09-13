@@ -52,23 +52,23 @@ public class TimetableClient : ClientBase, ITimetableClient {
     }
 
     /// <inheritdoc />
-    public async Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken cancellation = default) {
+    public async Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken ct = default) {
         var dateStr = dateTime.ToString("yyMMdd");
         var hourStr = dateTime.ToString("HH");
-        var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
+        var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml", null, ct).ConfigureAwait(false);
         return _transformer.Transform(response);
     }
 
     /// <inheritdoc />
-    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken cancellation = default) {
-        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
+    public async Task<Timetable> GetFullChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default) {
+        var response = await GetAsync($"/fchg/{eva}", _parser, "application/xml", null, ct).ConfigureAwait(false);
         var changes = _transformer.Transform(response);
         return mergeOn != null ? _merger.Merge(mergeOn, changes) : changes;
     }
 
     /// <inheritdoc />
-    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken cancellation = default) {
-        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml", null, cancellation).ConfigureAwait(false);
+    public async Task<Timetable> GetRecentChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default) {
+        var response = await GetAsync($"/rchg/{eva}", _parser, "application/xml", null, ct).ConfigureAwait(false);
         var changes = _transformer.Transform(response);
         return mergeOn != null ? _merger.Merge(mergeOn, changes) : changes;
     }

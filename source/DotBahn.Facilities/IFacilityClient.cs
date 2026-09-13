@@ -10,8 +10,8 @@ public interface IFacilityClient {
     /// Finds facilities based on optional filter criteria
     /// </summary>
     /// <param name="query">The query to specify results with</param>
-    /// <param name="cancellation">Token to cancel the request</param>
+    /// <param name="ct">Token to cancel the request</param>
     /// <returns>List of facilities matching the criteria</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
-    Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken cancellation = default);
+    Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken ct = default);
 }

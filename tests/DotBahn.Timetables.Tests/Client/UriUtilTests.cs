@@ -20,7 +20,7 @@ public class UriUtilTests : ClientTestBase {
         var client = CreateClient();
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", _parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
+        await client.GetAsync("/test", _parserMock.Object, "application/xml", ct: TestContext.Current.CancellationToken);
 
         var requestUri = HttpHandler.SentRequests[0].RequestUri!.ToString();
         Assert.DoesNotContain("?", requestUri);
@@ -69,7 +69,7 @@ public class UriUtilTests : ClientTestBase {
     private TestClientBase CreateClient() => new(HttpClient, AuthorizationMock.Object);
 
     private class TestClientBase(HttpClient http, IAuthorization authorization) : ClientBase(http, authorization) {
-        public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) =>
-            base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, cancellation);
+        public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken ct = default) =>
+            base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, ct);
     }
 }
