@@ -2,7 +2,6 @@ using System.Net;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Tests;
 using DotBahn.Common.Transformer;
-using DotBahn.Facilities;
 using DotBahn.Facilities.Internal.Contracts;
 using DotBahn.Facilities.Models;
 using DotBahn.Facilities.Models.Enumerations;

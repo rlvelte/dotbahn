@@ -2,7 +2,6 @@ using System.Net;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Tests;
 using DotBahn.Common.Transformer;
-using DotBahn.Stations;
 using DotBahn.Stations.Internal.Contracts;
 using DotBahn.Stations.Models;
 using Moq;

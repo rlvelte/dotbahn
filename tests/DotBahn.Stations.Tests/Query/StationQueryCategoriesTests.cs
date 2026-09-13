@@ -1,5 +1,3 @@
-using DotBahn.Stations;
-
 namespace DotBahn.Stations.Tests.Query;
 
 public class StationQueryCategoriesTests {
