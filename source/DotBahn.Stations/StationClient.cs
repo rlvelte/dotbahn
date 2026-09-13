@@ -17,6 +17,9 @@ public class StationClient : ClientBase, IStationClient {
     private readonly IParser<StationsResponseContract> _parser;
     private readonly ITransformer<IEnumerable<Station>, StationsResponseContract> _transformer;
 
+    /// <inheritdoc />
+    protected override string ApiName => "stations";
+
     /// <summary>
     /// Client for accessing 'Deutsche Bahn StaDa'-API
     /// </summary>
@@ -52,6 +55,7 @@ public class StationClient : ClientBase, IStationClient {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
     public async Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(query);
+
         var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), ct).ConfigureAwait(false);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
         return [.. _transformer.Transform(response)];

@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Parsing;
+using DotBahn.Common.Telemetry;
 using DotBahn.Common.Utilities;
 
 namespace DotBahn.Common.Clients;
@@ -17,6 +19,11 @@ public abstract class ClientBase : IDisposable {
     /// The HTTP client used for requests
     /// </summary>
     protected HttpClient HttpClient { get; }
+
+    /// <summary>
+    /// The API identifier used for telemetry tags
+    /// </summary>
+    protected virtual string ApiName => string.Empty;
 
     /// <summary>
     /// Initializes a new instance with the specified HTTP client and authorization.
@@ -72,10 +79,26 @@ public abstract class ClientBase : IDisposable {
         ArgumentNullException.ThrowIfNull(parser);
 
         var url = queryParams == null || !queryParams.Any() ? relative : $"{relative}?{queryParams.ToQueryString()}";
-
         var requestUri = BuildRequestUri(url);
-        var raw = await ExecuteRequestAsync(requestUri, acceptHeader, ct).ConfigureAwait(false);
-        return parser.Parse(raw);
+        var endpoint = requestUri.ToString();
+
+        using var activity = DotBahnTelemetry.StartRequest(ApiName, endpoint, HttpClient.BaseAddress?.Host);
+        var start = Stopwatch.GetTimestamp();
+
+        try {
+            var raw = await ExecuteRequestAsync(requestUri, acceptHeader, ct).ConfigureAwait(false);
+            var result = parser.Parse(raw);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            return result;
+        } catch (OperationCanceledException) {
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            throw;
+        } catch (Exception exception) {
+            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+            activity?.SetTag(DotBahnTelemetry.ErrorTypeTag, exception.GetType().Name);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, exception.GetType().Name);
+            throw;
+        }
     }
 
     /// <summary>
@@ -116,16 +139,11 @@ public abstract class ClientBase : IDisposable {
 
         return response.StatusCode switch {
             HttpStatusCode.NotFound => string.Empty,
-            HttpStatusCode.Unauthorized =>
-                throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
-            HttpStatusCode.BadRequest =>
-                throw new HttpRequestException($"Bad request: {DescribeBody(body)}", null, response.StatusCode),
-            HttpStatusCode.Forbidden =>
-                throw new HttpRequestException("Access denied.", null, response.StatusCode),
-            HttpStatusCode.TooManyRequests =>
-                throw new HttpRequestException("Rate limit exceeded.", null, response.StatusCode),
-            _ when !response.IsSuccessStatusCode =>
-                throw new HttpRequestException($"The API responded with status {(int)response.StatusCode}: {DescribeBody(body)}", null, response.StatusCode),
+            HttpStatusCode.Unauthorized => throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
+            HttpStatusCode.BadRequest => throw new HttpRequestException($"Bad request: {DescribeBody(body)}", null, response.StatusCode),
+            HttpStatusCode.Forbidden => throw new HttpRequestException("Access denied.", null, response.StatusCode),
+            HttpStatusCode.TooManyRequests => throw new HttpRequestException("Rate limit exceeded.", null, response.StatusCode),
+            _ when !response.IsSuccessStatusCode => throw new HttpRequestException($"The API responded with status {(int)response.StatusCode}: {DescribeBody(body)}", null, response.StatusCode),
             _ => body
         };
     }

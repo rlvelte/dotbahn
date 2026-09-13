@@ -2,11 +2,26 @@ using DotBahn.Common.Auth;
 using DotBahn.Common.Clients;
 using DotBahn.Common.Models;
 using DotBahn.Samples.IceMonitor.Additional;
+using DotBahn.Telemetry;
 using DotBahn.Timetables;
 using DotBahn.Timetables.Models;
 using DotBahn.Timetables.Models.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using Spectre.Console;
 using static DotBahn.Samples.IceMonitor.Additional.ConsoleExtensions;
+
+var services = new ServiceCollection();
+services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddOtlpExporter())
+    .WithMetrics(metrics => metrics.AddOtlpExporter());
+services.AddDotBahnTelemetry();
+await using var telemetry = services.BuildServiceProvider();
+
+_ = telemetry.GetRequiredService<TracerProvider>();
+_ = telemetry.GetRequiredService<MeterProvider>();
 
 string? clientId;
 string? clientSecret;
@@ -87,14 +102,10 @@ while (!cts.Token.IsCancellationRequested) {
             RenderHeader(cached.Station, eva);
             RenderDepartures(departures);
         });
-
-        AnsiConsole.MarkupLine($"[{Gruvbox.Gray}]Next refresh in 2 min. Ctrl+C to exit.[/]");
-        await Task.Delay(TimeSpan.FromMinutes(2), cts.Token);
     } catch (OperationCanceledException) {
         break;
     } catch (HttpRequestException ex) {
         AnsiConsole.MarkupLine($"[{Gruvbox.Red}]Error:[/] {ex.Message}");
-        await Task.Delay(TimeSpan.FromSeconds(30), cts.Token);
     }
 }
 
@@ -183,5 +194,3 @@ static string FormatVia(ChangedRef<IEnumerable<string>> p) {
         ? $"[{Gruvbox.Orange}]{via}[/]"
         : $"[{Gruvbox.Gray}]{via}[/]";
 }
-
-

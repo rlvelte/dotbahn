@@ -18,6 +18,9 @@ public class TimetableClient : ClientBase, ITimetableClient {
     private readonly ITransformer<Timetable, TimetableResponseContract> _transformer;
     private readonly IMerger<Timetable> _merger;
 
+    /// <inheritdoc />
+    protected override string ApiName => "timetables";
+
     /// <summary>
     /// Client for accessing 'Deutsche Bahn Timetables'-API
     /// </summary>
