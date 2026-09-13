@@ -2,7 +2,6 @@ using System.Net;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Tests;
 using DotBahn.Common.Transformer;
-using DotBahn.Timetables;
 using DotBahn.Timetables.Internal.Contracts;
 using DotBahn.Timetables.Models;
 using Moq;
@@ -28,7 +27,7 @@ public class TimetableClientTests : ClientTestBase {
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
         var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
-        var result = await client.GetFullChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
+        var result = await client.GetFullChangesAsync(TestEva, ct: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);
@@ -63,7 +62,7 @@ public class TimetableClientTests : ClientTestBase {
         HttpHandler.RespondWith(HttpStatusCode.OK, "<timetable station=\"TestStation\"/>");
 
         var client = new TimetableClient(HttpClient, AuthorizationMock.Object, _parserMock.Object, transformer, merger);
-        var result = await client.GetRecentChangesAsync(TestEva, cancellation: TestContext.Current.CancellationToken);
+        var result = await client.GetRecentChangesAsync(TestEva, ct: TestContext.Current.CancellationToken);
 
         Assert.Same(_defaultTimetable, result);
         Assert.Equal(1, transformer.TransformCallCount);

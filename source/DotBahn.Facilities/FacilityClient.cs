@@ -49,10 +49,10 @@ public class FacilityClient : ClientBase, IFacilityClient {
 
     /// <inheritdoc />
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
-    public async Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken cancellation = default) {
+    public async Task<IReadOnlyList<Facility>> GetFacilitiesAsync(FacilityQuery query, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(query);
 
-        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false)).ToList();
+        var result = (await GetAsync("/facilities", _parser, "application/json", query.ToQueryParameters(), ct).ConfigureAwait(false)).ToList();
         return [.. _transformer.Transform(result)];
     }
 }

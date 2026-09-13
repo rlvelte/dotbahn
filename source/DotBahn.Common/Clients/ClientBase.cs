@@ -63,18 +63,18 @@ public abstract class ClientBase : IDisposable {
     /// <param name="parser">The parser for deserializing the response</param>
     /// <param name="acceptHeader">The acceptance header value</param>
     /// <param name="queryParams">Optional query parameters</param>
-    /// <param name="cancellation">The cancellation token</param>
+    /// <param name="ct">The ct token</param>
     /// <returns>The parsed response</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c></exception>
     /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="cancellation"/></exception>
-    protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) {
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
+    protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
         var url = queryParams == null || !queryParams.Any() ? relative : $"{relative}?{queryParams.ToQueryString()}";
 
         var requestUri = BuildRequestUri(url);
-        var raw = await ExecuteRequestAsync(requestUri, acceptHeader, cancellation).ConfigureAwait(false);
+        var raw = await ExecuteRequestAsync(requestUri, acceptHeader, ct).ConfigureAwait(false);
         return parser.Parse(raw);
     }
 
@@ -93,15 +93,15 @@ public abstract class ClientBase : IDisposable {
     /// </summary>
     /// <param name="uri">The request URI</param>
     /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="cancellation">The cancellation token</param>
+    /// <param name="ct">The ct token</param>
     /// <returns>The response body as a string</returns>
-    private async Task<string> ExecuteRequestAsync(Uri uri, string acceptHeader, CancellationToken cancellation) {
+    private async Task<string> ExecuteRequestAsync(Uri uri, string acceptHeader, CancellationToken ct) {
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
 
         _authorization.AuthorizeRequest(request);
 
-        using var response = await HttpClient.SendAsync(request, cancellation).ConfigureAwait(false);
+        using var response = await HttpClient.SendAsync(request, ct).ConfigureAwait(false);
         return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 

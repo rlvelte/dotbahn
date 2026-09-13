@@ -79,7 +79,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test/path", parser, "application/xml", cancellation: TestContext.Current.CancellationToken);
+        await client.GetAsync("/test/path", parser, "application/xml", ct: TestContext.Current.CancellationToken);
 
         AssertRequest(HttpMethod.Get, "/test/path", "application/xml");
     }
@@ -104,7 +104,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>", "application/json");
 
-        await client.GetAsync("/test", parser, "application/json", cancellation: TestContext.Current.CancellationToken);
+        await client.GetAsync("/test", parser, "application/json", ct: TestContext.Current.CancellationToken);
 
         AssertRequest(HttpMethod.Get, "/test", "application/json");
     }
@@ -115,7 +115,7 @@ public class ClientBaseTests : ClientTestBase {
         var parser = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response/>");
 
-        await client.GetAsync("/test", parser, "application/xml", cancellation: TestContext.Current.CancellationToken);
+        await client.GetAsync("/test", parser, "application/xml", ct: TestContext.Current.CancellationToken);
 
         AuthorizationMock.Verify(a => a.AuthorizeRequest(It.IsAny<HttpRequestMessage>()), Times.Once);
     }
@@ -128,7 +128,7 @@ public class ClientBaseTests : ClientTestBase {
         parserMock.Setup(p => p.Parse(It.IsAny<string>())).Returns(expectedContract);
         HttpHandler.RespondWith(HttpStatusCode.OK, "<response>data</response>");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", ct: TestContext.Current.CancellationToken);
 
         Assert.Equal(expectedContract, result);
     }
@@ -137,7 +137,7 @@ public class ClientBaseTests : ClientTestBase {
     public async Task GetAsync_WithNullParser_ThrowsArgumentNullException() {
         var client = CreateClient();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetAsync("/test", null!, "application/xml", cancellation: TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => client.GetAsync("/test", null!, "application/xml", ct: TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.Unauthorized, "");
 
-        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.Unauthorized, ex.StatusCode);
         Assert.Contains("not authorized", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -157,7 +157,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.BadRequest, "");
 
-        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
         Assert.Contains("Bad request", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -169,7 +169,7 @@ public class ClientBaseTests : ClientTestBase {
         parserMock.Setup(p => p.Parse("")).Returns("");
         HttpHandler.RespondWith(HttpStatusCode.NotFound, "");
 
-        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", cancellation: TestContext.Current.CancellationToken);
+        var result = await client.GetAsync("/test", parserMock.Object, "application/xml", ct: TestContext.Current.CancellationToken);
 
         Assert.Equal("", result);
         parserMock.Verify(p => p.Parse(""), Times.Once);
@@ -181,7 +181,7 @@ public class ClientBaseTests : ClientTestBase {
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.InternalServerError, "");
 
-        await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", cancellation: TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
     }
 
 
@@ -224,7 +224,7 @@ public class ClientBaseTests : ClientTestBase {
 
         public new HttpClient HttpClient => base.HttpClient;
 
-        public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken cancellation = default) =>
-            base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, cancellation);
+        public Task<string> GetAsync(string relativeUrl, IParser<string> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken ct = default) =>
+            base.GetAsync(relativeUrl, parser, acceptHeader, queryParams, ct);
     }
 }

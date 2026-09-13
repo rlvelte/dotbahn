@@ -50,9 +50,9 @@ public class StationClient : ClientBase, IStationClient {
 
     /// <inheritdoc />
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
-    public async Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken cancellation = default) {
+    public async Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(query);
-        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), cancellation).ConfigureAwait(false);
+        var response = await GetAsync("/stations", _parser, "application/json", query.ToQueryParameters(), ct).ConfigureAwait(false);
         response.Stations.Sort((first, second) => first.Category.CompareTo(second.Category));
         return [.. _transformer.Transform(response)];
     }

@@ -37,7 +37,7 @@ public class MockHttpHandler : HttpMessageHandler {
     }
 
     /// <inheritdoc />
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct) {
         SentRequests.Add(request);
 
         if (_responseFactories.Count == 0) {
