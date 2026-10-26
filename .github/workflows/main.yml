@@ -44,8 +44,11 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Test
-        run: dotnet test --no-build --configuration Release
+      - name: Test & Coverage
+        run: |
+          dotnet test --no-build --configuration Release \
+            --results-directory ./coverage-results \
+            -- --coverage --coverage-output-format cobertura --ignore-exit-code 8
 
       - name: Security audit
         run: dotnet list package --vulnerable --include-transitive
