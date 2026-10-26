@@ -31,7 +31,7 @@
     <PackageProjectUrl>https://github.com/rlvelte/dotbahn</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rlvelte/dotbahn</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>db;bahn;client;deutschebahn;api;rest;http;dotnet;net10;stations;facilities;timetables;client-library</PackageTags>
+    <PackageTags>db;bahn;client;deutschebahn;deutsche-bahn;api;rest;http;dotnet;net10;stations;facilities;timetables;client-library</PackageTags>
     <Copyright>Copyright (c) Robin L. Velte 2026</Copyright>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
