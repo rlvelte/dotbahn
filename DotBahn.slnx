@@ -3,6 +3,7 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="Makefile" />
+    <File Path="nuget.config" />
   </Folder>
   <Folder Name="/Documentation/">
     <File Path="docs/docfx.json" />
@@ -14,18 +15,22 @@
     <Project Path="source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
     <Project Path="source/DotBahn.Stations/DotBahn.Stations.csproj" />
     <Project Path="source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
-    <Project Path="source\DotBahn.Common\DotBahn.Common.csproj" />
+    <Project Path="source/DotBahn.Common/DotBahn.Common.csproj" />
     <Project Path="source/DotBahn.Telemetry/DotBahn.Telemetry.csproj" />
   </Folder>
   <Folder Name="/Samples/">
     <Project Path="samples/DotBahn.Samples.IceMonitor/DotBahn.Samples.IceMonitor.csproj" />
     <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
   </Folder>
+  <Folder Name="/Scripts/">
+    <File Path="scripts/publish.ps1" />
+    <File Path="scripts/publish.sh" />
+  </Folder>
   <Folder Name="/Tests/">
-    <Project Path="tests\DotBahn.Common.Tests\DotBahn.Common.Tests.csproj" />
-    <Project Path="tests\DotBahn.Facilities.Tests\DotBahn.Facilities.Tests.csproj" />
-    <Project Path="tests\DotBahn.Stations.Tests\DotBahn.Stations.Tests.csproj" />
+    <Project Path="tests/DotBahn.Common.Tests/DotBahn.Common.Tests.csproj" />
+    <Project Path="tests/DotBahn.Facilities.Tests/DotBahn.Facilities.Tests.csproj" />
+    <Project Path="tests/DotBahn.Stations.Tests/DotBahn.Stations.Tests.csproj" />
     <Project Path="tests/DotBahn.Telemetry.Tests/DotBahn.Telemetry.Tests.csproj" />
-    <Project Path="tests\DotBahn.Timetables.Tests\DotBahn.Timetables.Tests.csproj" />
+    <Project Path="tests/DotBahn.Timetables.Tests/DotBahn.Timetables.Tests.csproj" />
   </Folder>
 </Solution>

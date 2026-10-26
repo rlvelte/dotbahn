@@ -9,13 +9,14 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsAotCompatible>true</IsAotCompatible>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <!-- Nukpg -->
   <PropertyGroup>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)build/nupkgs</PackageOutputPath>
   </PropertyGroup>
 
   <!-- SNupkg -->
@@ -59,4 +60,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+    <!-- Test projects -->
+  <PropertyGroup Condition="'$(MSBuildProjectName.EndsWith(`.Tests`))' OR '$(MSBuildProjectDirectory.Contains(`tests`))'">
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsAotCompatible>false</IsAotCompatible>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
 </Project>

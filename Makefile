@@ -1,46 +1,88 @@
-.PHONY: build test coverage pack format clean mutate docs docs-serve
-
+# In
+SOLUTION := ./DotBahn.slnx
+SAMPLES_DIR := ./samples
 CONFIGURATION ?= Release
-NUPKG_DIR     ?= nupkgs
-PUBLISH_DIR   ?= publish
-DOCFX_DIR     ?= docs
-TESTS_DIR  	  ?= TestResults
-STRYKER_DIR   ?= StrykerOutput
+NUGET_PACKAGES_DIR ?=
 
-build: ## Build all projects
-	dotnet build --configuration $(CONFIGURATION)
+# Out
+RESULTS_DIR := ./build/tests
+NUPKG_DIR := ./build/nupkgs
+PUBLISH_DIR := ./build/publish
 
-test: build ## Run all tests with coverage
-	dotnet test --no-build --configuration $(CONFIGURATION) \
-		--collect:"XPlat Code Coverage" \
-		--results-directory ./$(TESTS_DIR)
+# OS
+ifeq ($(OS),Windows_NT)
+  RUN := pwsh -NoProfile -File
+  EXT := .ps1
+else
+  RUN := bash
+  EXT := .sh
+endif
 
-coverage: test ## Generate HTML coverage report
+# Export
+export CONFIGURATION
+export SOLUTION
+export SAMPLES_DIR
+export PUBLISH_DIR
+
+# Main
+.DEFAULT_GOAL := build
+.PHONY: format restore build test coverage pack publish mutate
+
+format:
+	dotnet format whitespace $(SOLUTION) \
+		--verbosity diagnostic
+	dotnet format $(SOLUTION) \
+		--verbosity diagnostic
+
+restore:
+	dotnet restore $(SOLUTION) \
+		$(if $(NUGET_PACKAGES_DIR),--packages $(NUGET_PACKAGES_DIR),) \
+		--verbosity minimal
+
+build:
+	dotnet build $(SOLUTION) \
+		--configuration $(CONFIGURATION) \
+		--verbosity minimal
+
+test: build
+	dotnet test --solution $(SOLUTION) \
+		--no-build \
+		--configuration $(CONFIGURATION) \
+		--results-directory $(RESULTS_DIR) \
+		-- --coverage --coverage-output-format cobertura --ignore-exit-code 8
+
+coverage: test
 	dotnet reportgenerator \
-		-reports:./$(TESTS_DIR)/**/coverage.cobertura.xml \
-		-targetdir:./$(TESTS_DIR) \
+		-reports:$(RESULTS_DIR)/**/*.cobertura.xml \
+		-targetdir:$(RESULTS_DIR)/coverage \
 		-reporttypes:Html \
 		-verbosity:Warning \
 		-filefilters:-**/*.g.cs
-	@echo "Coverage report: file://$(CURDIR)/$(TESTS_DIR)/index.html"
+	@echo "file://$(CURDIR)/$(RESULTS_DIR)/coverage/index.html"
 
-pack: build ## Build NuGet packages
-	dotnet pack --no-restore --configuration $(CONFIGURATION) \
-		--output ./$(NUPKG_DIR)
+pack:
+	dotnet pack $(SOLUTION) \
+		--configuration $(CONFIGURATION) \
+		--output $(NUPKG_DIR) \
+		--verbosity minimal
 
-format: ## Auto-fix all code formatting (style, analyzers, whitespace)
-	dotnet format whitespace --verbosity diagnostic
-	dotnet format --verbosity diagnostic
+publish:
+	$(RUN) scripts/publish$(EXT)
 
-clean: ## Remove all build artifacts
-	dotnet clean
-	rm -rf ./$(STRYKER_DIR) ./$(TESTS_DIR) ./$(NUPKG_DIR) ./$(PUBLISH_DIR) ./$(DOCFX_DIR)/_site ./$(DOCFX_DIR)/api
-
-mutate: build ## Run Stryker mutation testing
+mutate:
 	dotnet stryker
 
-docs: build ## Build documentation site
-	dotnet docfx $(DOCFX_DIR)/docfx.json
+# Documentation
+docs-build: build
+	dotnet docfx docs/docfx.json
 
-docs-serve: build ## Build and serve documentation locally (http://localhost:8080)
-	dotnet docfx $(DOCFX_DIR)/docfx.json --serve
+docs-serve: build
+	dotnet docfx docs/docfx.json --serve
+
+# Utility
+clean:
+ifeq ($(OS),Windows_NT)
+	pwsh -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build, StrykerOutput, docs/_site, docs/api"
+else
+	rm -rf build StrykerOutput docs/_site docs/api
+endif

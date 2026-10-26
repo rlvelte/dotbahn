@@ -6,7 +6,7 @@
     <Description>OpenTelemetry registration adapters for DotBahn client packages.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotBahn.Common\DotBahn.Common.csproj" />
+    <ProjectReference Include="../DotBahn.Common/DotBahn.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OpenTelemetry.Api.ProviderBuilderExtensions" />
