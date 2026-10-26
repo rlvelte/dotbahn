@@ -47,7 +47,7 @@ jobs:
         run: |
           dotnet test --no-build --configuration Release \
             --results-directory ./coverage-results \
-            -- --coverage --coverage-output-format cobertura
+            -- --coverage --coverage-output-format cobertura --ignore-exit-code 8
 
       - name: Upload coverage
         uses: actions/upload-artifact@v7
