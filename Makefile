@@ -1,7 +1,6 @@
-.PHONY: build test coverage pack publish-aot format clean mutate docs docs-serve
+.PHONY: build test coverage pack format clean mutate docs docs-serve
 
 CONFIGURATION ?= Release
-AOT           ?= true
 NUPKG_DIR     ?= nupkgs
 PUBLISH_DIR   ?= publish
 DOCFX_DIR     ?= docs
@@ -9,7 +8,7 @@ TESTS_DIR  	  ?= TestResults
 STRYKER_DIR   ?= StrykerOutput
 
 build: ## Build all projects
-	dotnet build --configuration $(CONFIGURATION) -p:PublishAot=$(AOT) -p:IsAotCompatible=$(AOT) -p:EnableTrimAnalyzer=$(AOT) -p:IsTrimmable=$(AOT)
+	dotnet build --configuration $(CONFIGURATION)
 
 test: build ## Run all tests with coverage
 	dotnet test --no-build --configuration $(CONFIGURATION) \
@@ -26,7 +25,7 @@ coverage: test ## Generate HTML coverage report
 	@echo "Coverage report: file://$(CURDIR)/$(TESTS_DIR)/index.html"
 
 pack: build ## Build NuGet packages
-	dotnet pack --no-restore --configuration $(CONFIGURATION) -p:PublishAot=$(AOT) -p:IsAotCompatible=$(AOT) -p:EnableTrimAnalyzer=$(AOT) -p:IsTrimmable=$(AOT) \
+	dotnet pack --no-restore --configuration $(CONFIGURATION) \
 		--output ./$(NUPKG_DIR)
 
 format: ## Auto-fix all code formatting (style, analyzers, whitespace)
