@@ -54,6 +54,16 @@ public class XmlParserTests {
     }
 
     [Fact]
+    public void ParseRootMissingStationDefaultsToEmpty() {
+        var xml = """<?xml version="1.0"?><timetable eva="8000284"/>""";
+
+        var result = _parser.Parse(xml);
+
+        Assert.Equal("", result.Station);
+        Assert.Empty(result.Stops);
+    }
+
+    [Fact]
     public void Parse_ValidXmlWithStop_ReturnsStops() {
         const string xml = """<?xml version="1.0"?><timetable station="Berlin Hbf"><s id="stop-1" eva="8011160"><tl c="ICE" n="100" o="80" /></s></timetable>""";
 
