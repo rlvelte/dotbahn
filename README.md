@@ -9,7 +9,7 @@
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
 
 
-DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties.
+DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties. All libraries are AOT compatible and trimmable.
 
 | API                    | Description |
 |------------------------|-------------|
