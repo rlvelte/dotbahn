@@ -7,12 +7,12 @@ namespace DotBahn.Timetables.Models;
 /// </summary>
 public class TrainLabel {
     /// <summary>
-    /// Trip category (e.g., "ICE", "RE", "RB", "S")
+    /// Trip category (e.g. "ICE", "RE", "RB", "S")
     /// </summary>
     public required string Category { get; init; }
 
     /// <summary>
-    /// Trip/train number (e.g., "4523")
+    /// Trip/train number (e.g. "4523")
     /// </summary>
     public required string Number { get; init; }
 
@@ -22,17 +22,22 @@ public class TrainLabel {
     public required string Owner { get; init; }
 
     /// <summary>
+    /// Customer-facing line name (e.g. "RE14" or "S1")
+    /// </summary>
+    public string? Line { get; init; }
+
+    /// <summary>
     /// Trip type indicating the kind of service
     /// </summary>
     public TripType? Type { get; init; }
 
     /// <summary>
-    /// Filter flags indicating service classification (e.g., "N" for regional, "F" for long-distance, "D" for international)
+    /// Filter flags indicating service classification (e.g. "N" for regional, "F" for long-distance, "D" for international)
     /// </summary>
     public string? FilterFlags { get; init; }
 
     /// <summary>
-    /// Display the name for the train using category and number
+    /// Display the name for the train, preferring customer-facing line.
     /// </summary>
-    public string DisplayName => $"{Category} {Number}";
+    public string DisplayName => !string.IsNullOrWhiteSpace(Line) ? $"{Line}" : $"{Category}{Number}";
 }

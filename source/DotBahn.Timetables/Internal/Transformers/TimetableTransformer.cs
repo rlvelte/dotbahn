@@ -33,7 +33,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     /// <returns>The transformed model</returns>
     private static TimetableStop TransformStop(StopDataContract contract) => new() {
         Id = contract.Id,
-        Train = TransformTrainLabel(contract.TripInfo),
+        Train = TransformTrainLabel(contract.TripInfo, contract),
         Arrival = TransformEvent(contract.Arrival),
         Departure = TransformEvent(contract.Departure),
         Messages = contract.Messages?.Select(TransformMessage).ToList() ?? []
@@ -90,13 +90,15 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
     /// Transforms the <see cref="TripInfoContract"/> into its domain model
     /// </summary>
     /// <param name="contract">The contract to transform</param>
+    /// <param name="stop">The stop contract that owns the trip label</param>
     /// <returns>The transformed model</returns>
-    private static TrainLabel TransformTrainLabel(TripInfoContract? contract) => new() {
+    private static TrainLabel TransformTrainLabel(TripInfoContract? contract, StopDataContract stop) => new() {
         Category = contract?.Category ?? string.Empty,
         Number = contract?.Number ?? string.Empty,
         Owner = contract?.Owner ?? string.Empty,
         Type = string.IsNullOrEmpty(contract?.TripType) ? null : EnumUtil.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
-        FilterFlags = contract?.FilterFlags
+        FilterFlags = contract?.FilterFlags,
+        Line = stop.Departure?.Line ?? stop.Arrival?.Line,
     };
 
     /// <summary>
