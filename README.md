@@ -101,20 +101,22 @@ A Deutsche Bahn API key is required. Register and obtain your credentials at the
 > These packages only consume the credentials you provide for API authentication. They do not create, register, or manage credentials on your behalf.
 
 ## Samples
-### ICE Monitor
-A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes.
+Both samples take credentials via `--client` / `--secret` or, more conveniently, the `DOTBAHN_CLIENT` / `DOTBAHN_SECRET` environment variables.
+
+### TimetablePeek (`dbpeek`)
+Terminal departures board for DB timetable services. Shows customer-facing train names (service line or trip number), planned and actual times, delays, platforms, destinations, and via stops. Optional category filter, upstream time window (`-w`), and `--json` machine-readable output.
 
 ```bash
-dotnet run --project samples/DotBahn.Samples.TimetablePeek -- <EVA> <your-client-id> <your-client-secret>
+dotnet run --project samples/DotBahn.Samples.TimetablePeek -- <EVA> [options]
 ```
 
 <img src="https://i.imgur.com/Z3fKMo5.png" width=500>
 
-### Station Browser
-An interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
+### StationBrowser (`dbstation`)
+Interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status. `--json` output included.
 
 ```bash
-dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> <your-client-id> <your-client-secret>
+dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> [options]
 ```
 
 <img src="https://i.imgur.com/XWwBVr2.png" width=500>
