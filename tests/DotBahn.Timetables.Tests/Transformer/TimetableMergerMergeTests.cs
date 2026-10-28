@@ -131,6 +131,39 @@ public class TimetableMergerMergeTests {
     }
 
     [Fact]
+    public void Merge_WithDuplicateStopIdsInCurrent_TakesLastOccurrence() {
+        var arrivalOnly = new TimetableStop {
+            Id = "stop-1",
+            Train = new TrainLabel { Category = "NX", Number = "22064", Owner = "8000098" },
+            Arrival = new TrainEvent {
+                Time = new ChangedValue<DateTime> { Original = new(2026, 1, 19, 10, 0, 0) },
+                Platform = new ChangedRef<string> { Original = "2" },
+                Status = new ChangedValue<EventStatus> { Original = EventStatus.Unknown },
+                DistantEndpoint = new ChangedRef<string> { Original = string.Empty },
+            },
+        };
+        var withDeparture = new TimetableStop {
+            Id = arrivalOnly.Id,
+            Train = arrivalOnly.Train,
+            Arrival = arrivalOnly.Arrival,
+            Departure = new TrainEvent {
+                Time = new ChangedValue<DateTime> { Original = new(2026, 1, 19, 10, 9, 0) },
+                Platform = new ChangedRef<string> { Original = "2" },
+                Status = new ChangedValue<EventStatus> { Original = EventStatus.Unknown },
+                DistantEndpoint = new ChangedRef<string> { Original = string.Empty },
+            },
+        };
+        var current = CreateTimetable("Essen Hbf", [arrivalOnly, withDeparture]);
+        var changes = CreateTimetable("Essen Hbf", []);
+
+        var result = _merger.Merge(current, changes);
+
+        var stop = Assert.Single(result.Stops);
+        Assert.NotNull(stop.Departure);
+        Assert.Equal(new(2026, 1, 19, 10, 9, 0), stop.Departure!.Time.Original);
+    }
+
+    [Fact]
     public void Merge_PreservesTrainLabel() {
         var current = CreateTimetable("Dresden Hbf", [
             new TimetableStop {
@@ -234,11 +267,14 @@ public class TimetableMergerMergeTests {
     }
 
     [Fact]
-    public void MergeDuplicateStopIdsInCurrentThrowsArgumentException() {
-        var current = CreateTimetable("Test", [CreateStop("dup-id"), CreateStop("dup-id")]);
+    public void Merge_WithDuplicateSimplerStopIdsInCurrent_TakesLastOccurrence() {
+        var current = CreateTimetable("Test", [CreateStop("dup-id"), CreateStopWithDeparture("dup-id", "2501191015", "5")]);
         var changes = CreateTimetable("Test", []);
 
-        Assert.Throws<ArgumentException>(() => _merger.Merge(current, changes));
+        var result = _merger.Merge(current, changes);
+
+        var stop = Assert.Single(result.Stops);
+        Assert.NotNull(stop.Departure);
     }
 
     private static Timetable CreateTimetable(string station, IReadOnlyList<TimetableStop> stops, IReadOnlyList<TimetableMessage>? messages = null) => new() {
