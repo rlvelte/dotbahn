@@ -13,7 +13,7 @@ internal sealed class TimetableMerger : IMerger<Timetable> {
         ArgumentNullException.ThrowIfNull(current);
         ArgumentNullException.ThrowIfNull(changes);
 
-        var stops = current.Stops.ToDictionary(s => s.Id);
+        var stops = current.Stops.GroupBy(s => s.Id).ToDictionary(g => g.Key, g => g.Last());
         foreach (var change in changes.Stops) {
             if (stops.TryGetValue(change.Id, out var existing)) {
                 stops[change.Id] = MergeStop(existing, change);

@@ -30,7 +30,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
         }
 
         var contract = new TimetableResponseContract {
-            Station = RequiredAttr(root, "station"),
+            Station = OptionalAttr(root, "station") ?? string.Empty,
             Stops = root.Elements(StopName).Select(ParseStop).ToList()
         };
 
