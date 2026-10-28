@@ -8,6 +8,7 @@ NUGET_PACKAGES_DIR ?=
 RESULTS_DIR := ./build/tests
 NUPKG_DIR := ./build/nupkgs
 PUBLISH_DIR := ./build/publish
+RPM_DIR := ./build/rpm
 
 # OS
 ifeq ($(OS),Windows_NT)
@@ -23,10 +24,11 @@ export CONFIGURATION
 export SOLUTION
 export SAMPLES_DIR
 export PUBLISH_DIR
+export RPM_DIR
 
 # Main
 .DEFAULT_GOAL := build
-.PHONY: format restore build test coverage pack publish mutate
+.PHONY: format restore build test coverage pack publish rpm mutate
 
 format:
 	dotnet format whitespace $(SOLUTION) \
@@ -69,9 +71,6 @@ pack:
 publish:
 	$(RUN) scripts/publish$(EXT)
 
-mutate:
-	dotnet stryker
-
 # Documentation
 docs-build: build
 	dotnet docfx docs/docfx.json
@@ -85,4 +84,11 @@ ifeq ($(OS),Windows_NT)
 	pwsh -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build, StrykerOutput, docs/_site, docs/api"
 else
 	rm -rf build StrykerOutput docs/_site docs/api
+endif
+
+rpm: publish
+ifeq ($(OS),Windows_NT)
+	@echo "RPM packaging requires 'rpmbuild'." >&2
+else
+	$(RUN) scripts/rpm$(EXT)
 endif

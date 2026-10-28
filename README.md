@@ -11,6 +11,9 @@
 
 DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties. All libraries are AOT compatible and trimmable.
 
+> [!IMPORTANT]
+> If you are just here to use the departure monitor as a standalone tool on your system, there is also a packaged RPM on the [Open Build Service](https://build.opensuse.org/package/show/home:rvelte/dbpeek) for that.
+
 | API                    | Description |
 |------------------------|-------------|
 | **Stations (StaDa)**   | Station data including parking, accessibility, and opening hours. |
@@ -102,7 +105,7 @@ A Deutsche Bahn API key is required. Register and obtain your credentials at the
 A terminal-based departure board for ICE trains at a given station. Displays train numbers, scheduled and actual departure times, platforms, destinations, and routes. Highlights delays and platform changes.
 
 ```bash
-dotnet run --project samples/DotBahn.Samples.IceMonitor -- <EVA> <your-client-id> <your-client-secret>
+dotnet run --project samples/DotBahn.Samples.TimetablePeek -- <EVA> <your-client-id> <your-client-secret>
 ```
 
 <img src="https://i.imgur.com/Z3fKMo5.png" width=500>
