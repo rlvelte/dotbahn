@@ -9,7 +9,7 @@
 ![NuGet](https://img.shields.io/nuget/v/DotBahn.Facilities?label=DotBahn.Facilities&style=flat)
 
 
-DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries, and additional properties. All libraries are AOT compatible and trimmable.
+DotBahn is a collection of unofficial .NET client packages for accessing Deutsche Bahn (DB) APIs. Query train schedules, station details, and facility status directly in your application. It also provides convenience features like timetable merging, fluent queries and some additional properties. All libraries are AOT compatible and trimmable.
 
 > [!IMPORTANT]
 > If you are just here to use the departure monitor as a standalone tool on your system, there is also a packaged RPM on the [Open Build Service](https://build.opensuse.org/package/show/home:rvelte/dbpeek) for that.
@@ -104,7 +104,7 @@ A Deutsche Bahn API key is required. Register and obtain your credentials at the
 Both samples take credentials via `--client` / `--secret` or, more conveniently, the `DOTBAHN_CLIENT` / `DOTBAHN_SECRET` environment variables.
 
 ### TimetablePeek (`dbpeek`)
-Terminal departures board for DB timetable services. Shows customer-facing train names (service line or trip number), planned and actual times, delays, platforms, destinations, and via stops. Optional category filter, upstream time window (`-w`), and `--json` machine-readable output.
+Terminal departures board for DB timetable services. Shows customer-facing train names (service line or trip number), planned and actual times, delays, platforms, destinations, and via stops. Optional category filter, upstream time window and machine-readable JSON output.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.TimetablePeek -- <EVA> [options]
@@ -113,7 +113,7 @@ dotnet run --project samples/DotBahn.Samples.TimetablePeek -- <EVA> [options]
 <img src="https://i.imgur.com/Z3fKMo5.png" width=500>
 
 ### StationBrowser (`dbstation`)
-Interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status. `--json` output included.
+Interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
 
 ```bash
 dotnet run --project samples/DotBahn.Samples.StationBrowser -- <SearchName> [options]
