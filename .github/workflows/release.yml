@@ -15,7 +15,7 @@ permissions:
 jobs:
   check:
     name: Verify
-    uses: ./.github/workflows/shared/dotnet.yml
+    uses: ./.github/workflows/dotnet.yml
 
   publish:
     name: Publish packages
