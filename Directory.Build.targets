@@ -1,5 +1,5 @@
 <Project>
-  <!-- AOT compatibility analyzers (evaluated after the project file, so $(IsPackable) is known) -->
+  <!-- AOT -->
   <PropertyGroup>
     <IsAotCompatible Condition="'$(IsPackable)' == 'true'">true</IsAotCompatible>
     <IsTrimmable Condition="'$(IsPackable)' == 'true'">true</IsTrimmable>
