@@ -9,6 +9,7 @@ RESULTS_DIR := ./build/tests
 NUPKG_DIR := ./build/nupkgs
 PUBLISH_DIR := ./build/publish
 RPM_DIR := ./build/rpm
+SBOM_DIR := ./build/sbom
 
 # OS
 ifeq ($(OS),Windows_NT)
@@ -28,7 +29,7 @@ export RPM_DIR
 
 # Main
 .DEFAULT_GOAL := build
-.PHONY: format restore build test coverage pack publish rpm mutate
+.PHONY: format restore sbom build test coverage pack publish rpm mutate
 
 format:
 	dotnet format whitespace $(SOLUTION) \
@@ -41,7 +42,12 @@ restore:
 		$(if $(NUGET_PACKAGES_DIR),--packages $(NUGET_PACKAGES_DIR),) \
 		--verbosity minimal
 
-build:
+sbom: restore
+	dotnet cyclonedx $(SOLUTION) \
+		-o $(SBOM_DIR) \
+		-F Json
+
+build: sbom
 	dotnet build $(SOLUTION) \
 		--configuration $(CONFIGURATION) \
 		--verbosity minimal
