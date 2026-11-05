@@ -32,18 +32,13 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore
-        run: dotnet restore DotBahn.slnx \
-              --locked-mode
+        run: dotnet restore DotBahn.slnx --locked-mode
 
       - name: Format check
-        run: dotnet format DotBahn.slnx \
-              --verify-no-changes \
-              --verbosity diagnostic
+        run: dotnet format DotBahn.slnx --verify-no-changes --verbosity diagnostic
 
       - name: Build
-        run: dotnet build DotBahn.slnx \
-              --no-restore \
-              --configuration Release
+        run: dotnet build DotBahn.slnx --no-restore --configuration Release
 
       - name: Test & Coverage
         run: |
@@ -61,6 +56,4 @@ jobs:
           retention-days: 14
 
       - name: Security audit
-        run: dotnet list DotBahn.slnx package \
-              --vulnerable \
-              --include-transitive
+        run: dotnet list DotBahn.slnx package --vulnerable --include-transitive

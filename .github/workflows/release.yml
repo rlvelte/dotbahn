@@ -38,14 +38,10 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore
-        run: dotnet restore DotBahn.slnx \
-              --locked-mode
+        run: dotnet restore DotBahn.slnx --locked-mode
 
       - name: Pack NuGet
-        run: dotnet pack DotBahn.slnx \
-              --no-restore \
-              --configuration Release \
-              --output ./nupkgs
+        run: dotnet pack DotBahn.slnx --no-restore --configuration Release --output ./nupkgs
 
       - name: Upload packages (artifact)
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -96,9 +92,7 @@ jobs:
       - name: Build library (produces XML doc files)
         run: |
           dotnet restore DotBahn.slnx --locked-mode
-          dotnet build DotBahn.slnx \
-            --no-restore \
-            --configuration Release
+          dotnet build DotBahn.slnx --no-restore --configuration Release
 
       - name: Build docs
         run: |
