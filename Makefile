@@ -47,7 +47,7 @@ sbom: restore
 		-o $(SBOM_DIR) \
 		-F Json
 
-build: sbom
+build: restore
 	dotnet build $(SOLUTION) \
 		--configuration $(CONFIGURATION) \
 		--verbosity minimal
@@ -77,6 +77,13 @@ pack:
 publish:
 	$(RUN) scripts/publish$(EXT)
 
+rpm: publish
+ifeq ($(OS),Windows_NT)
+	@echo "RPM packaging requires 'rpmbuild'." >&2
+else
+	$(RUN) scripts/rpm$(EXT)
+endif
+
 # Documentation
 docs-build: build
 	dotnet docfx docs/docfx.json
@@ -90,11 +97,4 @@ ifeq ($(OS),Windows_NT)
 	pwsh -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build, StrykerOutput, docs/_site, docs/api"
 else
 	rm -rf build StrykerOutput docs/_site docs/api
-endif
-
-rpm: publish
-ifeq ($(OS),Windows_NT)
-	@echo "RPM packaging requires 'rpmbuild'." >&2
-else
-	$(RUN) scripts/rpm$(EXT)
 endif
