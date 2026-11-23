@@ -25,6 +25,7 @@
   <Folder Name="/Samples/">
     <Project Path="samples/DotBahn.Samples.TimetablePeek/DotBahn.Samples.TimetablePeek.csproj" />
     <Project Path="samples/DotBahn.Samples.StationBrowser/DotBahn.Samples.StationBrowser.csproj" />
+    <Project Path="samples\DotBahn.Samples.Chatbot\DotBahn.Samples.Chatbot.csproj" />
   </Folder>
   <Folder Name="/Scripts/">
     <File Path="scripts/publish.ps1" />

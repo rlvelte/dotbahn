@@ -17,7 +17,6 @@ DotBahn is a collection of unofficial .NET client packages for accessing Deutsch
 | **Stations (StaDa)**   | Station data including parking, accessibility, and opening hours. |
 | **Facilities (FaSta)** | Real-time operational status of elevators and escalators at stations. |
 | **Boards (OpenBoards)** | Scheduled departures and arrivals with real-time delay and platform change information. |
-| **Timetables**         | ~~Scheduled departures and arrivals with real-time delay and platform change information.~~ |
 
 > [!CAUTION]
 > **Deutsche Bahn is shutting down the Timetables API.** It entered parallel operation in November 2026 and is scheduled for shutdown around mid-2027. There is a replacement package with `DotBahn.Boards` that uses the new OpenBoards API.
@@ -28,7 +27,7 @@ DotBahn is a collection of unofficial .NET client packages for accessing Deutsch
 - [Usage](#usage)
 - [Authorization](#authorization)
 - [Samples](#samples)
-- [API Reference](https://rlvelte.github.io/dotbahn/index.html)
+- [Experimental & AI](#experimental--ai)
 
 
 ## Install
@@ -103,7 +102,7 @@ A Deutsche Bahn API key is required. Register and obtain your credentials at the
 > These packages only consume the credentials you provide for API authentication. They do not create, register, or manage credentials on your behalf.
 
 ## Samples
-Both samples take credentials via `--client` / `--secret` or, more conveniently, the `DOTBAHN_CLIENT` / `DOTBAHN_SECRET` environment variables.
+All samples take DB credentials via `--client` / `--secret` or, more conveniently, the `DOTBAHN_CLIENT` / `DOTBAHN_SECRET` environment variables.
 
 ### TimetablePeek (`dbpeek`)
 Terminal departures board for DB timetable services. Shows customer-facing train names (service line or trip number), planned and actual times, delays, platforms, destinations, and via stops. Optional category filter, upstream time window and machine-readable JSON output.
@@ -118,3 +117,10 @@ Terminal departures board for DB timetable services. Shows customer-facing train
 Interactive terminal application for exploring DB station details. Search by name and navigate results with arrow keys. Shows station category, identifiers (EVA/RIL100), address, coordinates, regional area, available services, and real-time elevator/escalator status.
 
 <img src="https://i.imgur.com/XWwBVr2.png" width=500>
+
+## Experimental & AI
+
+The package `DotBahn.Ai` is an early exploration of integrated AI tool support. It is experimental and has no current development priority. If you have experience with .NET AI integrations, tool calling or related designs, feel free to contribute. However, there is a minimal interactive chatbot sample that uses a local Ollama model with these tools. It defaults to `qwen3:4b` at `http://localhost:11434/v1`; override with `--model` and `--endpoint`.
+
+<img src="https://i.imgur.com/o4HSTXs.png" width="800">
+
