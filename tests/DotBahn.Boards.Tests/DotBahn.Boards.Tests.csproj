@@ -1,18 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <RootNamespace>DotBahn.Boards.Tests</RootNamespace>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="xunit.v3.runner.common" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../source/DotBahn.Boards/DotBahn.Boards.csproj" />
     <ProjectReference Include="../../source/DotBahn.Common/DotBahn.Common.csproj" />
     <ProjectReference Include="../DotBahn.Common.Tests/DotBahn.Common.Tests.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="xunit.v3" />
-    <PackageReference Include="xunit.v3.runner.common" />
   </ItemGroup>
 </Project>
