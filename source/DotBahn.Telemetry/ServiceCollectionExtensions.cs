@@ -10,7 +10,7 @@ namespace DotBahn.Telemetry;
 /// </summary>
 public static class ServiceCollectionExtensions {
     /// <summary>
-    /// Registers the DotBahn <see cref="System.Diagnostics.ActivitySource"/> and
+    /// Registers the DotBahn client and AI <see cref="System.Diagnostics.ActivitySource"/> and
     /// <see cref="System.Diagnostics.Metrics.Meter"/> with the OpenTelemetry providers.
     /// </summary>
     /// <param name="services">The service collection to add to</param>
@@ -19,8 +19,12 @@ public static class ServiceCollectionExtensions {
     public static IServiceCollection AddDotBahnTelemetry(this IServiceCollection services) {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.ConfigureOpenTelemetryTracerProvider((_, builder) => builder.AddSource(DotBahnTelemetry.SourceName));
-        services.ConfigureOpenTelemetryMeterProvider((_, builder) => builder.AddMeter(DotBahnTelemetry.MeterName));
+        services.ConfigureOpenTelemetryTracerProvider((_, builder) => builder
+            .AddSource(DotBahnTelemetry.SourceName)
+            .AddSource(DotBahnTelemetry.AiSourceName));
+        services.ConfigureOpenTelemetryMeterProvider((_, builder) => builder
+            .AddMeter(DotBahnTelemetry.MeterName)
+            .AddMeter(DotBahnTelemetry.AiMeterName));
 
         return services;
     }
