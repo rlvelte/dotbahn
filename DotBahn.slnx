@@ -15,6 +15,9 @@
     <Project Path="source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
     <Project Path="source/DotBahn.Stations/DotBahn.Stations.csproj" />
     <Project Path="source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
+    <Project Path="source/DotBahn.Boards/DotBahn.Boards.csproj" />
+  </Folder>
+  <Folder Name="/Packages/Additional/">
     <Project Path="source/DotBahn.Common/DotBahn.Common.csproj" />
     <Project Path="source/DotBahn.Telemetry/DotBahn.Telemetry.csproj" />
   </Folder>
@@ -32,6 +35,7 @@
     <Project Path="tests/DotBahn.Facilities.Tests/DotBahn.Facilities.Tests.csproj" />
     <Project Path="tests/DotBahn.Stations.Tests/DotBahn.Stations.Tests.csproj" />
     <Project Path="tests/DotBahn.Telemetry.Tests/DotBahn.Telemetry.Tests.csproj" />
+    <Project Path="tests/DotBahn.Boards.Tests/DotBahn.Boards.Tests.csproj" />
     <Project Path="tests/DotBahn.Timetables.Tests/DotBahn.Timetables.Tests.csproj" />
   </Folder>
 </Solution>
