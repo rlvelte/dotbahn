@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Telemetry;
@@ -102,6 +105,47 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
+    /// Performs a POST request with a JSON body and parses the response into the specified contract type
+    /// </summary>
+    /// <typeparam name="TRequest">The type to serialize as the request body</typeparam>
+    /// <typeparam name="TResponse">The type to parse the response into</typeparam>
+    /// <param name="relative">The relative request URL</param>
+    /// <param name="request">The request body to serialize</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type</param>
+    /// <param name="parser">The parser for deserializing the response</param>
+    /// <param name="acceptHeader">The acceptance header value</param>
+    /// <param name="ct">The cancellation token</param>
+    /// <returns>The parsed response</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c></exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
+    protected async Task<TResponse> PostAsync<TRequest, TResponse>(string relative, TRequest request, JsonTypeInfo<TRequest> requestType, IParser<TResponse> parser, string acceptHeader, CancellationToken ct = default) {
+        ArgumentNullException.ThrowIfNull(parser);
+        ArgumentNullException.ThrowIfNull(requestType);
+
+        var requestUri = BuildRequestUri(relative);
+        var endpoint = requestUri.ToString();
+
+        using var activity = DotBahnTelemetry.StartRequest(ApiName, endpoint, HttpClient.BaseAddress?.Host);
+        var start = Stopwatch.GetTimestamp();
+
+        try {
+            var raw = await ExecuteRequestAsync(requestUri, request, requestType, acceptHeader, ct).ConfigureAwait(false);
+            var result = parser.Parse(raw);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            return result;
+        } catch (OperationCanceledException) {
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            throw;
+        } catch (Exception exception) {
+            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+            activity?.SetTag(DotBahnTelemetry.ErrorTypeTag, exception.GetType().Name);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, exception.GetType().Name);
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Combines the base address with a relative URL to produce an absolute URI
     /// </summary>
     /// <param name="relativeUrl">The relative URL path</param>
@@ -125,6 +169,27 @@ public abstract class ClientBase : IDisposable {
         _authorization.AuthorizeRequest(request);
 
         using var response = await HttpClient.SendAsync(request, ct).ConfigureAwait(false);
+        return await ProcessResponseAsync(response).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Sends an authorized POST request with a JSON body and processes the response
+    /// </summary>
+    /// <typeparam name="TRequest">The type to serialize as the request body</typeparam>
+    /// <param name="uri">The request URI</param>
+    /// <param name="request">The request body to serialize</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type</param>
+    /// <param name="acceptHeader">The acceptance header value</param>
+    /// <param name="ct">The cancellation token</param>
+    /// <returns>The response body as a string</returns>
+    private async Task<string> ExecuteRequestAsync<TRequest>(Uri uri, TRequest request, JsonTypeInfo<TRequest> requestType, string acceptHeader, CancellationToken ct) {
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+        requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+        requestMessage.Content = JsonContent.Create(request, requestType, MediaTypeHeaderValue.Parse("application/json"));
+
+        _authorization.AuthorizeRequest(requestMessage);
+
+        using var response = await HttpClient.SendAsync(requestMessage, ct).ConfigureAwait(false);
         return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 
