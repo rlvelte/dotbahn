@@ -15,6 +15,7 @@ public interface IBoardsClient {
     /// <returns>The arrival board</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
     /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     Task<Board<ArrivalEntry>> GetArrivalsAsync(BoardQuery query, CancellationToken ct = default);
 
     /// <summary>
@@ -25,5 +26,6 @@ public interface IBoardsClient {
     /// <returns>The departure board</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
     /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     Task<Board<DepartureEntry>> GetDeparturesAsync(BoardQuery query, CancellationToken ct = default);
 }

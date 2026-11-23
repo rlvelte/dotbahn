@@ -43,8 +43,9 @@ public class FacilityClient : ClientBase, IFacilityClient {
     /// </remarks>
     /// <param name="options">The options for this instance</param>
     /// <param name="auth">The auth credentials for the client</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
+    /// </exception>
     public FacilityClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
         _parser = new JsonParser<List<FacilityContract>>(FacilitiesJsonContext.Default.ListFacilityContract);
         _transformer = new FacilityTransformer();

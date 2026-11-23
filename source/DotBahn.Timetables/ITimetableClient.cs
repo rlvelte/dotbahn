@@ -16,6 +16,7 @@ public interface ITimetableClient {
     /// <param name="ct">Token to cancel the request</param>
     /// <returns>A <see cref="Timetable"/> with full change information</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     Task<Timetable> GetFullChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default);
 
     /// <summary>
@@ -27,6 +28,7 @@ public interface ITimetableClient {
     /// <param name="ct">Token to cancel the request</param>
     /// <returns>A <see cref="Timetable"/> with recent change information</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     Task<Timetable> GetRecentChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default);
 
     /// <summary>
@@ -37,5 +39,6 @@ public interface ITimetableClient {
     /// <param name="ct">Token to cancel the request</param>
     /// <returns>A <see cref="Timetable"/> for the specified hour</returns>
     /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken ct = default);
 }

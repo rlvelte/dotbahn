@@ -50,8 +50,9 @@ public class BoardsClient : ClientBase, IBoardsClient {
     /// </remarks>
     /// <param name="options">The options for this instance</param>
     /// <param name="auth">The auth credentials for the client</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
+    /// </exception>
     public BoardsClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
         _arrivalParser = new JsonParser<ArrivalBoardResponseContract>(BoardsJsonContext.Default.ArrivalBoardResponseContract);
         _departureParser = new JsonParser<DepartureBoardResponseContract>(BoardsJsonContext.Default.DepartureBoardResponseContract);

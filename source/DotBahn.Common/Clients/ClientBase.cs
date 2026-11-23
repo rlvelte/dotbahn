@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Parsing;
@@ -34,8 +33,9 @@ public abstract class ClientBase : IDisposable {
     /// </summary>
     /// <param name="http">The HTTP client</param>
     /// <param name="authorization">The authorization provider</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="http"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="authorization"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="http"/> or <paramref name="authorization"/> is <c>null</c>
+    /// </exception>
     protected ClientBase(HttpClient http, IAuthorization authorization) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
@@ -49,8 +49,9 @@ public abstract class ClientBase : IDisposable {
     /// </summary>
     /// <param name="options">The client options containing the base endpoint</param>
     /// <param name="auth">The authorization options containing the API key</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
+    /// </exception>
     protected ClientBase(ClientOptions options, AuthorizationOptions auth) {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
@@ -116,7 +117,9 @@ public abstract class ClientBase : IDisposable {
     /// <param name="acceptHeader">The acceptance header value</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>The parsed response</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="parser"/> or <paramref name="requestType"/> is <c>null</c>
+    /// </exception>
     /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
     /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
     protected async Task<TResponse> PostAsync<TRequest, TResponse>(string relative, TRequest request, JsonTypeInfo<TRequest> requestType, IParser<TResponse> parser, string acceptHeader, CancellationToken ct = default) {
