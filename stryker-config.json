@@ -1,5 +1,6 @@
 {
   "stryker-config": {
+    "test-runner": "mtp",
     "coverage-analysis": "off",
     "mutation-level": "Advanced",
     "additional-timeout": 30000,
