@@ -24,6 +24,7 @@ public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
                 "FALSE" => false,
                 "YES" => true,
                 "NO" => false,
+                "JA" => true,
                 "1" => true,
                 _ => false
             };
