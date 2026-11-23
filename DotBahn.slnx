@@ -18,6 +18,7 @@
     <Project Path="source/DotBahn.Boards/DotBahn.Boards.csproj" />
   </Folder>
   <Folder Name="/Packages/Additional/">
+    <Project Path="source/DotBahn.Ai/DotBahn.Ai.csproj" />
     <Project Path="source/DotBahn.Common/DotBahn.Common.csproj" />
     <Project Path="source/DotBahn.Telemetry/DotBahn.Telemetry.csproj" />
   </Folder>
