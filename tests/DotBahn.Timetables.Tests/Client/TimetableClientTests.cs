@@ -20,6 +20,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetFullChangesAsync_WithoutCurrentTimetable_ReturnsTransformedChanges() {
         var transformer = new StubTransformer(_defaultTimetable);
         var merger = new StubMerger(_defaultTimetable);
@@ -36,6 +37,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetFullChangesAsync_WithCurrentTimetable_CallsMergerMerge() {
         var currentTimetable = new Timetable { Station = "CurrentStation" };
         var changesTimetable = new Timetable { Station = "ChangesStation" };
@@ -55,6 +57,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetRecentChangesAsync_WithoutCurrentTimetable_ReturnsTransformedChanges() {
         var transformer = new StubTransformer(_defaultTimetable);
         var merger = new StubMerger(_defaultTimetable);
@@ -71,6 +74,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetRecentChangesAsync_WithCurrentTimetable_CallsMergerMerge() {
         var currentTimetable = new Timetable { Station = "CurrentStation" };
         var changesTimetable = new Timetable { Station = "RecentChangesStation" };
@@ -90,6 +94,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetTimetableAsync_ValidDateTime_BuildsCorrectUrl() {
         var dateTime = new DateTime(2025, 6, 15, 14, 30, 0);
         var transformer = new StubTransformer(_defaultTimetable);
@@ -105,6 +110,7 @@ public class TimetableClientTests : ClientTestBase {
     }
 
     [Fact]
+    [Obsolete]
     public async Task GetFullChangesAsync_CancellationRequested_ThrowsOperationCanceledException() {
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();

@@ -5,6 +5,7 @@ namespace DotBahn.Timetables;
 /// <summary>
 /// Client for accessing the 'Deutsche Bahn Timetables'-API
 /// </summary>
+[Obsolete("The Deutsche Bahn Timetables API is being shut down. Use DotBahn.Boards instead.", false)]
 public interface ITimetableClient {
     /// <summary>
     /// Gets full changes for a specific station.

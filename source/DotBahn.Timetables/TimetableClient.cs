@@ -13,6 +13,7 @@ namespace DotBahn.Timetables;
 /// <summary>
 /// Client for accessing 'Deutsche Bahn Timetables'-API
 /// </summary>
+[Obsolete("The Deutsche Bahn Timetables API is being shut down. Use DotBahn.Boards instead.", false)]
 public class TimetableClient : ClientBase, ITimetableClient {
     private readonly IParser<TimetableResponseContract> _parser;
     private readonly ITransformer<Timetable, TimetableResponseContract> _transformer;

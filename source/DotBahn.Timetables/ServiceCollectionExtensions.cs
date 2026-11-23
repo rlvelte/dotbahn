@@ -16,7 +16,6 @@ namespace DotBahn.Timetables;
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
-
     private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
 
     /// <summary>
@@ -25,6 +24,7 @@ public static class ServiceCollectionExtensions {
     /// <param name="services">The service collection to add to</param>
     /// <param name="configuration">Optional action to override default client options</param>
     /// <returns>The service collection for chaining</returns>
+    [Obsolete("The Deutsche Bahn Timetables API is being shut down. Use AddDotBahnBoards() from DotBahn.Boards instead.", false)]
     public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {
