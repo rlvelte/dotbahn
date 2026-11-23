@@ -1,14 +1,15 @@
 using System.CommandLine;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DotBahn.Boards;
+using DotBahn.Boards.Models;
+using DotBahn.Boards.Models.Entries;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Clients;
 using DotBahn.Common.Models;
 using DotBahn.Telemetry;
-using DotBahn.Timetables;
-using DotBahn.Timetables.Models;
-using DotBahn.Timetables.Models.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -17,11 +18,15 @@ using Spectre.Console;
 return await TimetablePeekCli.BuildRootCommand().Parse(args).InvokeAsync();
 
 internal static class TimetablePeekCli {
-    private static readonly Uri BaseEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
+    private static readonly Uri BaseEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/open-boards/v1/");
 
     private static readonly Argument<string?> EvaArgument = new("eva") {
         Description = "EVA station number (e.g. 8098160)",
         Arity = ArgumentArity.ZeroOrOne,
+    };
+
+    private static readonly Option<bool> ArrivalsOption = new("--arrivals", "-a") {
+        Description = "Show arrivals instead of departures",
     };
 
     private static readonly Option<string?> CategoryOption = new("--category", "-c") {
@@ -29,13 +34,13 @@ internal static class TimetablePeekCli {
     };
 
     private static readonly Option<int> LimitOption = new("--limit", "-n") {
-        Description = "Maximum number of departures to show (1-100)",
+        Description = "Maximum number of entries to show (1-100)",
         DefaultValueFactory = _ => 20,
     };
 
     private static readonly Option<int> WindowOption = new("--window", "-w") {
-        Description = "Look-ahead window for the timetable, in hours (1-24)",
-        DefaultValueFactory = _ => 24,
+        Description = "Time window for the board, in hours (1-8)",
+        DefaultValueFactory = _ => 8,
     };
 
     private static readonly Option<string?> ClientIdOption = new("--client") {
@@ -47,12 +52,13 @@ internal static class TimetablePeekCli {
     };
 
     private static readonly Option<bool> JsonOption = new("--json", "-j") {
-        Description = "Print departures as JSON instead of a table",
+        Description = "Print entries as JSON instead of a table",
     };
 
     internal static RootCommand BuildRootCommand() {
-        var rootCommand = new RootCommand("Deutsche Bahn departure monitor showing the next departures at a station") {
+        var rootCommand = new RootCommand("Deutsche Bahn arrival/departure board (OpenBoards API)") {
             EvaArgument,
+            ArrivalsOption,
             CategoryOption,
             LimitOption,
             WindowOption,
@@ -90,13 +96,14 @@ internal static class TimetablePeekCli {
             var window = result.GetValue(WindowOption);
             if (window < 1) {
                 result.AddError("--window must be at least 1.");
-            } else if (window > 24) {
-                result.AddError("--window must be at most 24.");
+            } else if (window > 8) {
+                result.AddError("--window must be at most 8 (API limit).");
             }
         });
 
         rootCommand.SetAction(async (parseResult, cancellationToken) => {
             var eva = parseResult.GetValue(EvaArgument);
+            var arrivals = parseResult.GetValue(ArrivalsOption);
             var category = parseResult.GetValue(CategoryOption);
             var limit = parseResult.GetValue(LimitOption);
             var window = parseResult.GetValue(WindowOption);
@@ -104,13 +111,13 @@ internal static class TimetablePeekCli {
             var secret = parseResult.GetValue(SecretOption);
             var json = parseResult.GetValue(JsonOption);
 
-            return await RunAsync(eva, category, limit, window, clientId, secret, json, cancellationToken);
+            return await RunAsync(eva, arrivals, category, limit, window, clientId, secret, json, cancellationToken);
         });
 
         return rootCommand;
     }
 
-    private static async Task<int> RunAsync(string? eva, string? category, int limit, int window, string? clientId, string? secret, bool json, CancellationToken cancellationToken) {
+    private static async Task<int> RunAsync(string? eva, bool arrivals, string? category, int limit, int window, string? clientId, string? secret, bool json, CancellationToken cancellationToken) {
         if (!int.TryParse(eva, out var evaNumber)) {
             throw new UnreachableException("eva was validated but could not be parsed.");
         }
@@ -133,7 +140,7 @@ internal static class TimetablePeekCli {
         _ = telemetry.GetRequiredService<TracerProvider>();
         _ = telemetry.GetRequiredService<MeterProvider>();
 
-        using var client = new TimetableClient(
+        using var client = new BoardsClient(
             new ClientOptions {
                 BaseEndpoint = BaseEndpoint,
             },
@@ -143,22 +150,49 @@ internal static class TimetablePeekCli {
             });
 
         try {
-            var (timetable, departures) = await FetchAsync(client, evaNumber, category, limit, window, cancellationToken);
+            var query = new BoardQuery()
+                .ForEvaNumbers(evaNumber.ToString(CultureInfo.InvariantCulture))
+                .StartingAt(DateTime.Now)
+                .EndingAt(DateTime.Now.AddHours(window))
+                .WithPlatformAccessibility();
+
+            var entries = new List<BoardEntryDto>();
+            string station;
+
+            if (arrivals) {
+                var board = await client.GetArrivalsAsync(query, cancellationToken);
+                station = BoardStation(board.ConsideredStopPlaces, evaNumber);
+                entries.AddRange(board.Entries
+                    .Where(e => Matches(e.Transport.Category, category))
+                    .Select(ToArrivalDto));
+            } else {
+                var board = await client.GetDeparturesAsync(query, cancellationToken);
+                station = BoardStation(board.ConsideredStopPlaces, evaNumber);
+                entries.AddRange(board.Entries
+                    .Where(e => Matches(e.Transport.Category, category))
+                    .Select(ToDepartureDto));
+            }
+
+            entries = entries
+                .Where(e => e.Actual >= DateTime.Now)
+                .OrderBy(e => e.Actual)
+                .Take(limit)
+                .ToList();
 
             if (json) {
-                var payload = new DeparturePayload(evaNumber, timetable.Station, [.. departures.Select(ToDepartureDto)]);
-                Console.WriteLine(JsonSerializer.Serialize(payload, TimetablePeekJsonContext.Default.DeparturePayload));
-                return departures.Count > 0 ? 0 : 1;
+                var payload = new BoardPayload(evaNumber, station, arrivals ? "arrivals" : "departures", entries);
+                Console.WriteLine(JsonSerializer.Serialize(payload, TimetablePeekJsonContext.Default.BoardPayload));
+                return entries.Count > 0 ? 0 : 1;
             }
 
             AnsiConsole.Clear();
-            RenderHeader(timetable.Station, evaNumber);
-            if (departures.Count == 0) {
-                AnsiConsole.MarkupLine("[yellow]No departures found.[/]");
+            RenderHeader(station, evaNumber, arrivals);
+            if (entries.Count == 0) {
+                AnsiConsole.MarkupLine($"[yellow]No {(arrivals ? "arrivals" : "departures")} found.[/]");
                 return 1;
             }
 
-            RenderDepartures(departures);
+            RenderBoard(entries, arrivals);
             return 0;
         } catch (OperationCanceledException) {
             return 130;
@@ -170,6 +204,34 @@ internal static class TimetablePeekCli {
             }
             return 1;
         }
+    }
+
+    private static bool Matches(string category, string? filter) =>
+        filter is null || filter.Equals(category, StringComparison.OrdinalIgnoreCase);
+
+    private static string BoardStation(IReadOnlyList<StopPlace> stopPlaces, int eva) =>
+        stopPlaces.FirstOrDefault()?.Name ?? $"EVA {eva}";
+
+    private static BoardEntryDto ToArrivalDto(ArrivalEntry entry) => CreateDto(
+        entry, entry.Journey.Origin.StopPlace.Name);
+
+    private static BoardEntryDto ToDepartureDto(DepartureEntry entry) => CreateDto(
+        entry, entry.Journey.Destination.StopPlace.Name);
+
+    private static BoardEntryDto CreateDto(BoardEntry entry, string stationName) {
+        var time = entry.Time;
+        return new BoardEntryDto(
+            Train: $"{entry.Transport.Category} {entry.Transport.Number}",
+            Category: entry.Transport.Category,
+            Planned: time.Original,
+            Actual: time.Actual,
+            DelayMinutes: (int)(time.Actual - time.Original).TotalMinutes,
+            Platform: entry.Platform.Actual.Name,
+            Station: stationName,
+            Via: entry.Transport.Via
+                .Take(Math.Max(0, entry.Transport.Via.Count - 1))
+                .Select(v => v.StopPlace.Name)
+                .ToList());
     }
 
     private static bool ResolveCredentials(string? clientId, string? secret, out string resolvedClientId, out string resolvedSecret) {
@@ -185,144 +247,79 @@ internal static class TimetablePeekCli {
         return !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret);
     }
 
-    private static async Task<Timetable> LoadTimetableAsync(TimetableClient client, int eva, int window, CancellationToken cancellationToken) {
-        var start = DateTime.Now;
-        var stops = new Dictionary<string, TimetableStop>();
-        Timetable? first = null;
-
-        for (var h = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0); h < start.AddHours(window); h = h.AddHours(1)) {
-            var data = await client.GetTimetableAsync(eva, h, cancellationToken);
-
-            first ??= data;
-            foreach (var s in data.Stops) {
-                stops[s.Id] = s;
-            }
-        }
-
-        return new Timetable {
-            Station = first?.Station ?? $"EVA {eva}",
-            Stops = stops.Values,
-            Messages = [],
-        };
-    }
-
-    private static async Task<(Timetable Timetable, List<TimetableStop> Departures)> FetchAsync(TimetableClient client, int eva, string? category, int limit, int window, CancellationToken cancellationToken) {
-        var timetable = await LoadTimetableAsync(client, eva, window, cancellationToken);
-        timetable = await client.GetFullChangesAsync(eva, timetable, cancellationToken);
-        return (timetable, SelectDepartures(timetable, category, limit));
-    }
-
-    private static List<TimetableStop> SelectDepartures(Timetable timetable, string? category, int limit) => timetable.Stops
-        .Where(s => category is null || category.Equals(s.Train.Category, StringComparison.OrdinalIgnoreCase))
-        .Where(s => s.Departure is { Status.Actual: not EventStatus.Cancelled })
-        .Where(s => s.Departure!.Time.Actual >= DateTime.Now)
-        .OrderBy(s => s.Departure!.Time.Actual)
-        .Take(limit)
-        .ToList();
-
-    private static DepartureDto ToDepartureDto(TimetableStop stop) {
-        var dep = stop.Departure!;
-        return new DepartureDto(
-            stop.Train.DisplayName,
-            stop.Train.Category,
-            dep.Time.Original,
-            dep.Time.Actual,
-            (int)(dep.Time.Actual - dep.Time.Original).TotalMinutes,
-            dep.Platform.HasUpdate ? dep.Platform.Actual : dep.Platform.Original,
-            dep.Path.Actual.LastOrDefault(),
-            [.. dep.Path.Actual.SkipLast(1)]);
-    }
-
     private static void WriteJsonError(string code, string message) {
         var payload = new ErrorPayload(new ErrorDto(code, message));
         Console.WriteLine(JsonSerializer.Serialize(payload, TimetablePeekJsonContext.Default.ErrorPayload));
     }
 
-    private static void RenderHeader(string station, int eva) {
-        AnsiConsole.Write(new Rule($"Departures \u2013 {Markup.Escape(station)}") {
+    private static void RenderHeader(string station, int eva, bool arrivals) {
+        var title = arrivals ? "Arrivals" : "Departures";
+        AnsiConsole.Write(new Rule($"{title} \u2013 {Markup.Escape(station)}") {
             Justification = Justify.Center,
         });
         AnsiConsole.MarkupLine($"[grey]EVA {eva} | {DateTime.Now:HH:mm}[/]\n");
     }
 
-    private static void RenderDepartures(List<TimetableStop> stops) {
-        if (stops.Count == 0) {
-            AnsiConsole.WriteLine("No departures found.");
-            return;
-        }
-
+    private static void RenderBoard(List<BoardEntryDto> entries, bool arrivals) {
+        var stationHeader = arrivals ? "[bold]Origin[/]" : "[bold]Destination[/]";
         var table = new Table()
             .Border(TableBorder.Rounded)
             .BorderColor(Color.Grey)
             .AddColumn("[bold]Train[/]")
-            .AddColumn("[bold]Departure[/]")
+            .AddColumn(arrivals ? "[bold]Arrival[/]" : "[bold]Departure[/]")
             .AddColumn("[bold]Platf.[/]")
-            .AddColumn("[bold]Destination[/]")
+            .AddColumn(stationHeader)
             .AddColumn("[bold]Via[/]");
 
-        foreach (var stop in stops) {
-            var dep = stop.Departure!;
-            table.AddRow(FormatTrain(stop.Train.DisplayName), FormatTime(dep.Time), FormatPlatform(dep.Platform), FormatDestination(dep.Path), FormatVia(dep.Path));
+        foreach (var entry in entries) {
+            table.AddRow(
+                FormatTrain(entry.Train),
+                FormatTime(entry.Planned, entry.Actual, entry.DelayMinutes),
+                Markup.Escape(entry.Platform ?? "-"),
+                $"[bold]{Markup.Escape(entry.Station)}[/]",
+                FormatVia(entry.Via));
         }
 
         AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine($"[grey]Showing {stops.Count} departure(s)[/]\n");
+        var label = arrivals ? "arrival(s)" : "departure(s)";
+        AnsiConsole.MarkupLine($"[grey]Showing {entries.Count} {label}[/]\n");
     }
 
     private static string FormatTrain(string trainName) => $"[bold]{Markup.Escape(trainName)}[/]";
 
-    private static string FormatTime(ChangedValue<DateTime> t) {
-        var p = t.Original.ToString("HH:mm");
-        if (!t.HasUpdate) {
+    private static string FormatTime(DateTime planned, DateTime actual, int delay) {
+        var p = planned.ToString("HH:mm", CultureInfo.InvariantCulture);
+        if (delay <= 0) {
             return $"[green]{p}[/]";
         }
 
-        var a = t.Actual.ToString("HH:mm");
-        var d = (int)(t.Actual - t.Original).TotalMinutes;
-        return d <= 0 ? $"[green]{a}[/]" : $"[strikethrough grey]{p}[/] [bold red]{a} (+{d})[/]";
+        var a = actual.ToString("HH:mm", CultureInfo.InvariantCulture);
+        return $"[strikethrough grey]{p}[/] [bold red]{a} (+{delay})[/]";
     }
 
-    private static string FormatPlatform(ChangedRef<string> p) {
-        if (!p.HasUpdate || p.Updated == p.Original) {
-            return Markup.Escape(p.Original);
-        }
-
-        return $"[strikethrough grey]{Markup.Escape(p.Original)}[/] [bold red]{Markup.Escape(p.Actual)}[/]";
-    }
-
-    private static string FormatDestination(ChangedRef<IEnumerable<string>> p) {
-        var planned = Markup.Escape(p.Original.LastOrDefault() ?? "-");
-        var actual = Markup.Escape(p.Actual.LastOrDefault() ?? "-");
-        if (!p.HasUpdate || planned == actual) {
-            return $"[bold]{planned}[/]";
-        }
-
-        return $"[strikethrough grey]{planned}[/] [bold red]{actual}[/]";
-    }
-
-    private static string FormatVia(ChangedRef<IEnumerable<string>> p) {
-        var stops = p.Actual.ToList();
-        if (stops.Count <= 1) {
+    private static string FormatVia(IEnumerable<string> stops) {
+        var list = stops.ToList();
+        if (list.Count == 0) {
             return "[grey]-[/]";
         }
 
-        var via = string.Join(" \u2013 ", stops.Take(Math.Min(3, stops.Count - 1)).Select(Markup.Escape));
-        if (stops.Count > 4) {
+        var via = string.Join(" \u2013 ", list.Take(3).Select(Markup.Escape));
+        if (list.Count > 3) {
             via += " \u2026";
         }
 
-        return p.HasUpdate ? $"[orange1]{via}[/]" : $"[grey]{via}[/]";
+        return $"[grey]{via}[/]";
     }
 }
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
-[JsonSerializable(typeof(DeparturePayload))]
+[JsonSerializable(typeof(BoardPayload))]
 [JsonSerializable(typeof(ErrorPayload))]
 internal sealed partial class TimetablePeekJsonContext : JsonSerializerContext;
 
-internal sealed record DeparturePayload(int Eva, string Station, IEnumerable<DepartureDto> Departures);
+internal sealed record BoardPayload(int Eva, string Station, string Board, IEnumerable<BoardEntryDto> Entries);
 
-internal sealed record DepartureDto(string Train, string Category, DateTime Planned, DateTime Actual, int DelayMinutes, string? Platform, string? Destination, IEnumerable<string> Via);
+internal sealed record BoardEntryDto(string Train, string Category, DateTime Planned, DateTime Actual, int DelayMinutes, string? Platform, string Station, IEnumerable<string> Via);
 
 internal sealed record ErrorPayload(ErrorDto Error);
 

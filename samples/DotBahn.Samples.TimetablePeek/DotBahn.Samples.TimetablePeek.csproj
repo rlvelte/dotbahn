@@ -15,6 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="../../source/DotBahn.Common/DotBahn.Common.csproj" />
     <ProjectReference Include="../../source/DotBahn.Telemetry/DotBahn.Telemetry.csproj" />
-    <ProjectReference Include="../../source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
+    <ProjectReference Include="../../source/DotBahn.Boards/DotBahn.Boards.csproj" />
   </ItemGroup>
 </Project>
