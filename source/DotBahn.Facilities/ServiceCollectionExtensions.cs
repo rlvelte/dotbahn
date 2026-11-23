@@ -16,7 +16,6 @@ namespace DotBahn.Facilities;
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Facilities";
-
     private static readonly Uri DefaultFacilitiesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
 
     /// <summary>
