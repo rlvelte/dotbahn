@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<IStationClient, StationClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<StationsResponseContract>>();

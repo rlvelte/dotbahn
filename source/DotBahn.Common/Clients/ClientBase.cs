@@ -55,7 +55,7 @@ public abstract class ClientBase : IDisposable {
             BaseAddress = options.BaseEndpoint
         };
 
-        HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+        HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
         _authorization = new ApiKeyAuthorization(auth);
         _ownsHttpClient = true;
@@ -196,17 +196,13 @@ public abstract class ClientBase : IDisposable {
     /// <returns>The response body for successful requests; <c>string.Empty</c> for 404.</returns>
     /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code with a descriptive message.</exception>
     private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) {
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        if (response.StatusCode == HttpStatusCode.NotFound) {
+            return string.Empty;
+        }
 
-        return response.StatusCode switch {
-            HttpStatusCode.NotFound => string.Empty,
-            HttpStatusCode.Unauthorized => throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
-            HttpStatusCode.BadRequest => throw new HttpRequestException($"Bad request: {DescribeBody(body)}", null, response.StatusCode),
-            HttpStatusCode.Forbidden => throw new HttpRequestException("Access denied.", null, response.StatusCode),
-            HttpStatusCode.TooManyRequests => throw new HttpRequestException("Rate limit exceeded.", null, response.StatusCode),
-            _ when !response.IsSuccessStatusCode => throw new HttpRequestException($"The API responded with status {(int)response.StatusCode}: {DescribeBody(body)}", null, response.StatusCode),
-            _ => body
-        };
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return !response.IsSuccessStatusCode ? throw new HttpRequestException($"The API responded with {(int)response.StatusCode} ({response.ReasonPhrase}): {DescribeBody(body)}", null, response.StatusCode) : body;
+
     }
 
     /// <summary>

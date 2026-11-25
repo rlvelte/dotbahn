@@ -141,25 +141,25 @@ public class ClientBaseTests : ClientTestBase {
     }
 
     [Fact]
-    public async Task GetAsync_With401Status_ThrowsHttpRequestExceptionUnauthorized() {
+    public async Task GetAsync_With401Status_ThrowsHttpRequestExceptionWithStatusAndReason() {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.Unauthorized, "");
 
         var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.Unauthorized, ex.StatusCode);
-        Assert.Contains("not authorized", ex.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("401 (Unauthorized)", ex.Message);
     }
 
     [Fact]
-    public async Task GetAsync_With400Status_ThrowsHttpRequestExceptionBadRequest() {
+    public async Task GetAsync_With400Status_ThrowsHttpRequestExceptionWithStatusAndReason() {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>().Object;
         HttpHandler.RespondWith(HttpStatusCode.BadRequest, "");
 
         var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
         Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
-        Assert.Contains("Bad request", ex.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("400 (Bad Request)", ex.Message);
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class ClientBaseTests : ClientTestBase {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>();
         parserMock.Setup(p => p.Parse("")).Returns("");
-        HttpHandler.RespondWith(HttpStatusCode.NotFound, "");
+        HttpHandler.RespondWith(HttpStatusCode.NotFound, "not-found response");
 
         var result = await client.GetAsync("/test", parserMock.Object, "application/xml", ct: TestContext.Current.CancellationToken);
 
@@ -179,9 +179,11 @@ public class ClientBaseTests : ClientTestBase {
     public async Task GetAsync_With500Status_ThrowsHttpRequestException() {
         var client = CreateClient();
         var parserMock = new Mock<IParser<string>>().Object;
-        HttpHandler.RespondWith(HttpStatusCode.InternalServerError, "");
+        HttpHandler.RespondWith(HttpStatusCode.InternalServerError, "upstream failed");
 
-        await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("/test", parserMock, "application/xml", ct: TestContext.Current.CancellationToken));
+        Assert.Equal(HttpStatusCode.InternalServerError, ex.StatusCode);
+        Assert.Contains("500 (Internal Server Error): upstream failed", ex.Message);
     }
 
 
