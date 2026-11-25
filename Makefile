@@ -29,7 +29,7 @@ export RPM_DIR
 
 # Main
 .DEFAULT_GOAL := build
-.PHONY: format restore sbom build test coverage pack publish rpm mutate
+.PHONY: format restore sbom build test coverage pack vulcheck publish rpm mutate
 
 format:
 	dotnet format whitespace $(SOLUTION) \
@@ -42,6 +42,11 @@ restore:
 		$(if $(NUGET_PACKAGES_DIR),--packages $(NUGET_PACKAGES_DIR),) \
 		--force-evaluate \
 		--verbosity minimal
+
+vulcheck: restore
+	dotnet list $(SOLUTION) package \
+		--vulnerable \
+		--include-transitive
 
 sbom: restore
 	dotnet cyclonedx $(SOLUTION) \
@@ -75,7 +80,7 @@ pack:
 		--output $(NUPKG_DIR) \
 		--verbosity minimal
 
-publish:
+publish: vulcheck
 	$(RUN) scripts/publish$(EXT)
 
 rpm: publish
