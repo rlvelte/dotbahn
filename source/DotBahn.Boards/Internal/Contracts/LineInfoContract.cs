@@ -4,18 +4,18 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Boards.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for a line information
+/// Raw structure for a line information.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record LineInfoContract {
     /// <summary>
-    /// Gets the colour
+    /// Gets the colour.
     /// </summary>
     [JsonPropertyName("colour")]
     public LineColourContract? Colour { get; init; }
 
     /// <summary>
-    /// Gets the name
+    /// Gets the name.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = string.Empty;

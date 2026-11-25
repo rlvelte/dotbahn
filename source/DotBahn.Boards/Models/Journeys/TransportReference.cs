@@ -3,7 +3,7 @@ using DotBahn.Boards.Models.Operators;
 namespace DotBahn.Boards.Models.Journeys;
 
 /// <summary>
-/// Reference to another transport, e.g. for continuation, relief, replacement
+/// Reference to another transport, e.g. for continuation, relief, replacement.
 /// </summary>
 public class TransportReference {
     /// <summary>

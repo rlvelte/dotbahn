@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using DotBahn.Boards.Internal.Contracts;
 
 namespace DotBahn.Boards.Internal.Utilities;
@@ -10,6 +11,7 @@ internal static class QueryUtil {
     /// <summary>
     /// Maps a <see cref="BoardQuery"/> to the internal arrival request contract.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static OpenArrivalBoardRequestContract ToArrivalContract(BoardQuery query) => new() {
         StopPlaceOrStation = MapStopPlaceOrStation(query),
         TimeWindow = MapTimeWindow(query),
@@ -27,6 +29,7 @@ internal static class QueryUtil {
     /// <summary>
     /// Maps a <see cref="BoardQuery"/> to the internal departure request contract.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static OpenDepartureBoardRequestContract ToDepartureContract(BoardQuery query) => new() {
         StopPlaceOrStation = MapStopPlaceOrStation(query),
         TimeWindow = MapTimeWindow(query),
@@ -41,6 +44,7 @@ internal static class QueryUtil {
         IncludePlatformAccessibility = query.IncludePlatformAccessibility
     };
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static StopPlaceOrStationRequestContract MapStopPlaceOrStation(BoardQuery query) => new() {
         EvaNumbers = query.EvaNumbers is { Count: > 0 } ? [.. query.EvaNumbers] : null,
         Stada = query.StadaId,
@@ -49,6 +53,7 @@ internal static class QueryUtil {
         BoardConfigurations = query.BoardConfigurations is { Count: > 0 } ? [.. query.BoardConfigurations] : null
     };
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static TimeWindowContract? MapTimeWindow(BoardQuery query) {
         var start = query.Start;
         var end = query.End;
@@ -65,6 +70,7 @@ internal static class QueryUtil {
         };
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string FormatDateTime(DateTime value) {
         var utc = value.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value, DateTimeKind.Utc) : value.ToUniversalTime();
         return utc.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);

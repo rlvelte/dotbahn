@@ -11,31 +11,28 @@ using DotBahn.Common.Utilities;
 namespace DotBahn.Common.Clients;
 
 /// <summary>
-/// Base class for API clients providing common HTTP functionality
+/// Base class for API clients providing common HTTP functionality.
 /// </summary>
 public abstract class ClientBase : IDisposable {
     private readonly IAuthorization _authorization;
     private readonly bool _ownsHttpClient;
 
     /// <summary>
-    /// The HTTP client used for requests
+    /// The HTTP client used for requests.
     /// </summary>
     protected HttpClient HttpClient { get; }
 
     /// <summary>
-    /// The API identifier used for telemetry tags
+    /// The API identifier used for telemetry tags.
     /// </summary>
     protected virtual string ApiName => string.Empty;
 
     /// <summary>
     /// Initializes a new instance with the specified HTTP client and authorization.
-    /// The <see cref="HttpClient"/> is not owned by this instance and will not be disposed
     /// </summary>
-    /// <param name="http">The HTTP client</param>
-    /// <param name="authorization">The authorization provider</param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="http"/> or <paramref name="authorization"/> is <c>null</c>
-    /// </exception>
+    /// <param name="http">The HTTP client.</param>
+    /// <param name="authorization">The authorization provider.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="http"/> or <paramref name="authorization"/> is <c>null</c>.</exception>
     protected ClientBase(HttpClient http, IAuthorization authorization) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
@@ -45,13 +42,11 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Initializes a new instance that creates and owns its own <see cref="HttpClient"/>
+    /// Initializes a new instance that creates and owns its own <see cref="HttpClient"/>.
     /// </summary>
-    /// <param name="options">The client options containing the base endpoint</param>
-    /// <param name="auth">The authorization options containing the API key</param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
-    /// </exception>
+    /// <param name="options">The client options containing the base endpoint.</param>
+    /// <param name="auth">The authorization options containing the API key.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>.</exception>
     protected ClientBase(ClientOptions options, AuthorizationOptions auth) {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
@@ -67,18 +62,18 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Performs a GET request and parses the response into the specified contract type
+    /// Performs a GET request and parses the response into the specified contract type.
     /// </summary>
-    /// <typeparam name="TContract">The type to parse the response into</typeparam>
-    /// <param name="relative">The relative request URL</param>
-    /// <param name="parser">The parser for deserializing the response</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="queryParams">Optional query parameters</param>
-    /// <param name="ct">The ct token</param>
-    /// <returns>The parsed response</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c></exception>
-    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
+    /// <typeparam name="TContract">The type to parse the response into.</typeparam>
+    /// <param name="relative">The relative request URL.</param>
+    /// <param name="parser">The parser for deserializing the response.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="queryParams">Optional query parameters.</param>
+    /// <param name="ct">The ct token.</param>
+    /// <returns>The parsed response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c>.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/>.</exception>
     protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
@@ -106,22 +101,20 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Performs a POST request with a JSON body and parses the response into the specified contract type
+    /// Performs a POST request with a JSON body and parses the response into the specified contract type.
     /// </summary>
-    /// <typeparam name="TRequest">The type to serialize as the request body</typeparam>
-    /// <typeparam name="TResponse">The type to parse the response into</typeparam>
-    /// <param name="relative">The relative request URL</param>
-    /// <param name="request">The request body to serialize</param>
-    /// <param name="requestType">The source-generated JSON type info for the request type</param>
-    /// <param name="parser">The parser for deserializing the response</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="ct">The cancellation token</param>
-    /// <returns>The parsed response</returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="parser"/> or <paramref name="requestType"/> is <c>null</c>
-    /// </exception>
-    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
+    /// <typeparam name="TRequest">The type to serialize as the request body.</typeparam>
+    /// <typeparam name="TResponse">The type to parse the response into.</typeparam>
+    /// <param name="relative">The relative request URL.</param>
+    /// <param name="request">The request body to serialize.</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type.</param>
+    /// <param name="parser">The parser for deserializing the response.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>The parsed response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> or <paramref name="requestType"/> is <c>null</c>.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/>.</exception>
     protected async Task<TResponse> PostAsync<TRequest, TResponse>(string relative, TRequest request, JsonTypeInfo<TRequest> requestType, IParser<TResponse> parser, string acceptHeader, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(parser);
         ArgumentNullException.ThrowIfNull(requestType);
@@ -149,22 +142,22 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Combines the base address with a relative URL to produce an absolute URI
+    /// Combines the base address with a relative URL to produce an absolute URI.
     /// </summary>
-    /// <param name="relativeUrl">The relative URL path</param>
-    /// <returns>An absolute URI</returns>
+    /// <param name="relativeUrl">The relative URL path.</param>
+    /// <returns>An absolute URI.</returns>
     private static Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
         return new Uri(path, UriKind.Relative);
     }
 
     /// <summary>
-    /// Sends an authorized GET request and processes the response
+    /// Sends an authorized GET request and processes the response.
     /// </summary>
-    /// <param name="uri">The request URI</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="ct">The ct token</param>
-    /// <returns>The response body as a string</returns>
+    /// <param name="uri">The request URI.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The ct token.</param>
+    /// <returns>The response body as a string.</returns>
     private async Task<string> ExecuteRequestAsync(Uri uri, string acceptHeader, CancellationToken ct) {
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
@@ -176,15 +169,15 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Sends an authorized POST request with a JSON body and processes the response
+    /// Sends an authorized POST request with a JSON body and processes the response.
     /// </summary>
-    /// <typeparam name="TRequest">The type to serialize as the request body</typeparam>
-    /// <param name="uri">The request URI</param>
-    /// <param name="request">The request body to serialize</param>
-    /// <param name="requestType">The source-generated JSON type info for the request type</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="ct">The cancellation token</param>
-    /// <returns>The response body as a string</returns>
+    /// <typeparam name="TRequest">The type to serialize as the request body.</typeparam>
+    /// <param name="uri">The request URI.</param>
+    /// <param name="request">The request body to serialize.</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>The response body as a string.</returns>
     private async Task<string> ExecuteRequestAsync<TRequest>(Uri uri, TRequest request, JsonTypeInfo<TRequest> requestType, string acceptHeader, CancellationToken ct) {
         using var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
         requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
@@ -197,11 +190,11 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Processes the HTTP response, returning the body for success status codes or throwing on errors
+    /// Processes the HTTP response, returning the body for success status codes or throwing on errors.
     /// </summary>
-    /// <param name="response">The HTTP response message</param>
-    /// <returns>The response body for successful requests; <c>string.Empty</c> for 404</returns>
-    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code with a descriptive message</exception>
+    /// <param name="response">The HTTP response message.</param>
+    /// <returns>The response body for successful requests; <c>string.Empty</c> for 404.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code with a descriptive message.</exception>
     private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) {
         var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -217,10 +210,10 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Truncates the response body for inclusion in exception messages
+    /// Truncates the response body for inclusion in exception messages.
     /// </summary>
-    /// <param name="body">The raw response body</param>
-    /// <returns>The body unchanged if 200 characters or fewer; otherwise the first 200 characters with an ellipsis</returns>
+    /// <param name="body">The raw response body.</param>
+    /// <returns>The body unchanged if 200 characters or fewer; otherwise the first 200 characters with an ellipsis.</returns>
     private static string DescribeBody(string body) => string.IsNullOrEmpty(body) ? string.Empty : body.Length <= 200 ? body : body[..200] + "...";
 
     /// <inheritdoc />

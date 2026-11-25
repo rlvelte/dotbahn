@@ -22,9 +22,9 @@ public static class ServiceCollectionExtensions {
     /// <summary>
     /// Registers the <see cref="IBoardsClient"/> with its parser and transformer services.
     /// </summary>
-    /// <param name="services">The service collection to add to</param>
-    /// <param name="configuration">Optional action to override default client options</param>
-    /// <returns>The service collection for chaining</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configuration">Optional action to override default client options.</param>
+    /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddDotBahnBoards(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {

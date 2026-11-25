@@ -9,9 +9,9 @@ public static class ToolErrorUtil {
     /// <summary>
     /// Maps an exception to a structured tool error.
     /// </summary>
-    /// <param name="exception">The exception to map</param>
-    /// <returns>The structured tool error</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception"/> is <c>null</c></exception>
+    /// <param name="exception">The exception to map.</param>
+    /// <returns>The structured tool error.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception"/> is <c>null</c>.</exception>
     public static ToolError FromException(Exception exception) {
         ArgumentNullException.ThrowIfNull(exception);
         return exception switch {

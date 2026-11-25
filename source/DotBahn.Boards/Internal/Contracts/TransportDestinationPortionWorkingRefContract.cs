@@ -4,96 +4,96 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Boards.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for a transport destination reference for portion-working journeys
+/// Raw structure for a transport destination reference for portion-working journeys.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record TransportDestinationPortionWorkingRefContract {
     /// <summary>
-    /// Gets the administration identifier
+    /// Gets the administration identifier.
     /// </summary>
     [JsonPropertyName("administrationId")]
     public string AdministrationId { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the category
+    /// Gets the category.
     /// </summary>
     [JsonPropertyName("category")]
     public string Category { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the internal category
+    /// Gets the internal category.
     /// </summary>
     [JsonPropertyName("categoryInternal")]
     public string CategoryInternal { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the destination
+    /// Gets the destination.
     /// </summary>
     [JsonPropertyName("destination")]
     public StopPlaceRefWithCancelContract Destination { get; init; } = new();
 
     /// <summary>
-    /// Gets the DFID
+    /// Gets the DFID.
     /// </summary>
     [JsonPropertyName("dfid")]
     public string? Dfid { get; init; }
 
     /// <summary>
-    /// Gets the differing destination
+    /// Gets the differing destination.
     /// </summary>
     [JsonPropertyName("differingDestination")]
     public StopPlaceRefContract? DifferingDestination { get; init; }
 
     /// <summary>
-    /// Gets the DTID
+    /// Gets the DTID.
     /// </summary>
     [JsonPropertyName("dtid")]
     public string? Dtid { get; init; }
 
     /// <summary>
-    /// Gets the journey description
+    /// Gets the journey description.
     /// </summary>
     [JsonPropertyName("journeyDescription")]
     public string JourneyDescription { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the journey identifier
+    /// Gets the journey identifier.
     /// </summary>
     [JsonPropertyName("journeyID")]
     public string JourneyId { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the journey number
+    /// Gets the journey number.
     /// </summary>
     [JsonPropertyName("journeyNumber")]
     public int JourneyNumber { get; init; }
 
     /// <summary>
-    /// Gets the label
+    /// Gets the label.
     /// </summary>
     [JsonPropertyName("label")]
     public string? Label { get; init; }
 
     /// <summary>
-    /// Gets the line
+    /// Gets the line.
     /// </summary>
     [JsonPropertyName("line")]
     public LineInfoContract? Line { get; init; }
 
     /// <summary>
-    /// Gets the operational journey number
+    /// Gets the operational journey number.
     /// </summary>
     [JsonPropertyName("operationalJourneyNumber")]
     public string OperationalJourneyNumber { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the separation at
+    /// Gets the separation at.
     /// </summary>
     [JsonPropertyName("separationAt")]
     public StopPlaceRefContract? SeparationAt { get; init; }
 
     /// <summary>
-    /// Gets the type
+    /// Gets the type.
     /// </summary>
     [JsonPropertyName("type")]
     public string Type { get; init; } = string.Empty;

@@ -4,24 +4,24 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Boards.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for a platform
+/// Raw structure for a platform.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record PlatformContract {
     /// <summary>
-    /// Gets the accessibility
+    /// Gets the accessibility.
     /// </summary>
     [JsonPropertyName("accessibility")]
     public PlatformAccessibilityContract? Accessibility { get; init; }
 
     /// <summary>
-    /// Gets the IFOPT
+    /// Gets the IFOPT.
     /// </summary>
     [JsonPropertyName("ifopt")]
     public string? Ifopt { get; init; }
 
     /// <summary>
-    /// Gets the name
+    /// Gets the name.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = string.Empty;

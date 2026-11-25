@@ -3,77 +3,77 @@ using System.Diagnostics.CodeAnalysis;
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
-/// Raw event information (Arrival/Departure)
+/// Raw event information (Arrival/Departure).
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record EventContract {
     /// <summary>
-    /// Planned time (YYMMDDhhmm format)
+    /// Planned time (YYMMDDhhmm format).
     /// </summary>
     public string? PlannedTime { get; init; }
 
     /// <summary>
-    /// Planned platform
+    /// Planned platform.
     /// </summary>
     public string? PlannedPlatform { get; init; }
 
     /// <summary>
-    /// Planned status (e.g., "p" for planned)
+    /// Planned status (e.g., "p" for planned).
     /// </summary>
     public string? PlannedStatus { get; init; }
 
     /// <summary>
-    /// Changed time (YYMMDDhhmm format)
+    /// Changed time (YYMMDDhhmm format).
     /// </summary>
     public string? ChangedTime { get; init; }
 
     /// <summary>
-    /// Changed platform
+    /// Changed platform.
     /// </summary>
     public string? ChangedPlatform { get; init; }
 
     /// <summary>
-    /// Changed status (e.g., "c" for canceled)
+    /// Changed status (e.g., "c" for canceled).
     /// </summary>
     public string? ChangedStatus { get; init; }
 
     /// <summary>
-    /// Hidden (0 or 1)
+    /// Hidden (0 or 1).
     /// </summary>
     public string? IsHidden { get; init; }
 
     /// <summary>
-    /// Line
+    /// Line.
     /// </summary>
     public string? Line { get; init; }
 
     /// <summary>
-    /// Planned path (pipe-separated station list)
+    /// Planned path (pipe-separated station list).
     /// </summary>
     public string? PlannedPath { get; init; }
 
     /// <summary>
-    /// Changed path (pipe-separated station list)
+    /// Changed path (pipe-separated station list).
     /// </summary>
     public string? ChangedPath { get; init; }
 
     /// <summary>
-    /// Wing train information
+    /// Wing train information.
     /// </summary>
     public string? Wings { get; init; }
 
     /// <summary>
-    /// Transition information
+    /// Transition information.
     /// </summary>
     public string? Transition { get; init; }
 
     /// <summary>
-    /// Planned distant endpoint
+    /// Planned distant endpoint.
     /// </summary>
     public string? PlannedDistantEndpoint { get; init; }
 
     /// <summary>
-    /// Changed distant endpoint
+    /// Changed distant endpoint.
     /// </summary>
     public string? ChangedDistantEndpoint { get; init; }
 }

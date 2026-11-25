@@ -6,7 +6,7 @@ using DotBahn.Stations.Models.Enumerations;
 namespace DotBahn.Stations.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for station contracts and enums
+/// Source-generated JSON serialization metadata for station contracts and enums.
 /// </summary>
 [ExcludeFromCodeCoverage]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]

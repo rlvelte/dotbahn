@@ -95,120 +95,120 @@ public sealed record BoardQuery {
     /// <summary>
     /// Restricts the board to one or more EVA numbers.
     /// </summary>
-    /// <param name="evaNumbers">EVA numbers of stop places</param>
-    /// <returns>A new query with the selector applied</returns>
+    /// <param name="evaNumbers">EVA numbers of stop places.</param>
+    /// <returns>A new query with the selector applied.</returns>
     public BoardQuery ForEvaNumbers(params string[] evaNumbers) => this with { EvaNumbers = evaNumbers };
 
     /// <summary>
     /// Restricts the board to a Stada station id.
     /// </summary>
-    /// <param name="stadaId">Stada identifier</param>
-    /// <returns>A new query with the selector applied</returns>
+    /// <param name="stadaId">Stada identifier.</param>
+    /// <returns>A new query with the selector applied.</returns>
     public BoardQuery ForStada(string stadaId) => this with { StadaId = stadaId };
 
     /// <summary>
     /// Restricts the board to one or more DHIDs.
     /// </summary>
-    /// <param name="dhids">DHIDs of stop places</param>
-    /// <returns>A new query with the selector applied</returns>
+    /// <param name="dhids">DHIDs of stop places.</param>
+    /// <returns>A new query with the selector applied.</returns>
     public BoardQuery ForDhids(params string[] dhids) => this with { Dhids = dhids };
 
     /// <summary>
     /// Filters the board to one or more platforms.
     /// </summary>
-    /// <param name="platforms">Platform names</param>
-    /// <returns>A new query with the selector applied</returns>
+    /// <param name="platforms">Platform names.</param>
+    /// <returns>A new query with the selector applied.</returns>
     public BoardQuery OnPlatforms(params string[] platforms) => this with { Platforms = platforms };
 
     /// <summary>
     /// Sets the board configuration modes for extending the board to nearby stop places.
     /// </summary>
-    /// <param name="configurations">Configuration modes</param>
-    /// <returns>A new query with the selector applied</returns>
+    /// <param name="configurations">Configuration modes.</param>
+    /// <returns>A new query with the selector applied.</returns>
     public BoardQuery WithBoardConfigurations(params string[] configurations) => this with { BoardConfigurations = configurations };
 
     /// <summary>
     /// Sets the start of the time window.
     /// </summary>
-    /// <param name="start">Start date and time</param>
-    /// <returns>A new query with the time window applied</returns>
+    /// <param name="start">Start date and time.</param>
+    /// <returns>A new query with the time window applied.</returns>
     public BoardQuery StartingAt(DateTime start) => this with { Start = start };
 
     /// <summary>
     /// Sets the end of the time window.
     /// </summary>
-    /// <param name="end">End date and time</param>
-    /// <returns>A new query with the time window applied</returns>
+    /// <param name="end">End date and time.</param>
+    /// <returns>A new query with the time window applied.</returns>
     public BoardQuery EndingAt(DateTime end) => this with { End = end };
 
     /// <summary>
     /// Requests a fixed number of entries starting at <see cref="Start"/>.
     /// </summary>
-    /// <param name="entryCount">Number of entries</param>
-    /// <returns>A new query with the time window applied</returns>
+    /// <param name="entryCount">Number of entries.</param>
+    /// <returns>A new query with the time window applied.</returns>
     public BoardQuery ForNext(int entryCount) => this with { EntryCount = entryCount };
 
     /// <summary>
     /// Sets the transport types to include.
     /// </summary>
-    /// <param name="transportTypes">Transport types</param>
-    /// <returns>A new query with the transport types applied</returns>
+    /// <param name="transportTypes">Transport types.</param>
+    /// <returns>A new query with the transport types applied.</returns>
     public BoardQuery WithTransportTypes(params string[] transportTypes) => this with { TransportTypes = transportTypes };
 
     /// <summary>
     /// Sets the requested languages.
     /// </summary>
-    /// <param name="languages">ISO-639-3 language codes</param>
-    /// <returns>A new query with the languages applied</returns>
+    /// <param name="languages">ISO-639-3 language codes.</param>
+    /// <returns>A new query with the languages applied.</returns>
     public BoardQuery InLanguages(params string[] languages) => this with { Languages = languages };
 
     /// <summary>
     /// Sets the maximum number of entries per transport type.
     /// </summary>
-    /// <param name="max">Maximum entries</param>
-    /// <returns>A new query with the limit applied</returns>
+    /// <param name="max">Maximum entries.</param>
+    /// <returns>A new query with the limit applied.</returns>
     public BoardQuery WithMaxEntriesPerTransportType(int max) => this with { MaxEntriesPerTransportType = max };
 
     /// <summary>
     /// Sets the maximum number of via stops per journey.
     /// </summary>
-    /// <param name="max">Maximum via stops</param>
-    /// <returns>A new query with the limit applied</returns>
+    /// <param name="max">Maximum via stops.</param>
+    /// <returns>A new query with the limit applied.</returns>
     public BoardQuery WithMaxViaStops(int max) => this with { MaxViaStops = max };
 
     /// <summary>
     /// Requests line colors in the response.
     /// </summary>
-    /// <returns>A new query with the flag applied</returns>
+    /// <returns>A new query with the flag applied.</returns>
     public BoardQuery WithLineColours() => this with { IncludeLineColours = true };
 
     /// <summary>
     /// Requests platform accessibility information in the response.
     /// </summary>
-    /// <returns>A new query with the flag applied</returns>
+    /// <returns>A new query with the flag applied.</returns>
     public BoardQuery WithPlatformAccessibility() => this with { IncludePlatformAccessibility = true };
 
     /// <summary>
     /// Excludes canceled entries from the response.
     /// </summary>
-    /// <returns>A new query with the flag applied</returns>
+    /// <returns>A new query with the flag applied.</returns>
     public BoardQuery WithoutCancellations() => this with { NoCancellations = true };
 
     /// <summary>
     /// Requests only replacement transports.
     /// </summary>
-    /// <returns>A new query with the flag applied</returns>
+    /// <returns>A new query with the flag applied.</returns>
     public BoardQuery WithOnlyReplacementTransports() => this with { OnlyReplacementTransports = true };
 
     /// <summary>
     /// Sorts results by best-known time.
     /// </summary>
-    /// <returns>A new query with the sort order applied</returns>
+    /// <returns>A new query with the sort order applied.</returns>
     public BoardQuery SortByTime() => this with { SortBy = "TIME" };
 
     /// <summary>
     /// Sorts results by scheduled time.
     /// </summary>
-    /// <returns>A new query with the sort order applied</returns>
+    /// <returns>A new query with the sort order applied.</returns>
     public BoardQuery SortByTimeSchedule() => this with { SortBy = "TIME_SCHEDULE" };
 }

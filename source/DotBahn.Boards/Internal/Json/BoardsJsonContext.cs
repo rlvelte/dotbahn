@@ -5,7 +5,7 @@ using DotBahn.Boards.Internal.Contracts;
 namespace DotBahn.Boards.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for OpenBoards internal contracts
+/// Source-generated JSON serialization metadata for OpenBoards internal contracts.
 /// </summary>
 [ExcludeFromCodeCoverage]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]

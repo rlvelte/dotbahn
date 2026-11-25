@@ -25,14 +25,14 @@ public class BoardsClient : ClientBase, IBoardsClient {
     protected override string ApiName => "boards";
 
     /// <summary>
-    /// Client for accessing the Deutsche Bahn OpenBoards API
+    /// Client for accessing the Deutsche Bahn OpenBoards API.
     /// </summary>
-    /// <param name="http">The HTTP client used for requests</param>
-    /// <param name="authorization">The provider used for retrieving access tokens</param>
-    /// <param name="arrivalParser">The parser for arrival-board responses</param>
-    /// <param name="departureParser">The parser for departure-board responses</param>
-    /// <param name="arrivalTransformer">The transformer for arrival-board responses</param>
-    /// <param name="departureTransformer">The transformer for departure-board responses</param>
+    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="authorization">The provider used for retrieving access tokens.</param>
+    /// <param name="arrivalParser">The parser for arrival-board responses.</param>
+    /// <param name="departureParser">The parser for departure-board responses.</param>
+    /// <param name="arrivalTransformer">The transformer for arrival-board responses.</param>
+    /// <param name="departureTransformer">The transformer for departure-board responses.</param>
     [ActivatorUtilitiesConstructor]
     internal BoardsClient(HttpClient http, IAuthorization authorization, IParser<ArrivalBoardResponseContract> arrivalParser, IParser<DepartureBoardResponseContract> departureParser, ITransformer<Board<ArrivalEntry>, ArrivalBoardResponseContract> arrivalTransformer, ITransformer<Board<DepartureEntry>, DepartureBoardResponseContract> departureTransformer) : base(http, authorization) {
         _arrivalParser = arrivalParser;
@@ -42,17 +42,15 @@ public class BoardsClient : ClientBase, IBoardsClient {
     }
 
     /// <summary>
-    /// Client for accessing the Deutsche Bahn OpenBoards API
+    /// Client for accessing the Deutsche Bahn OpenBoards API.
     /// </summary>
     /// <remarks>
     /// Creates and owns its own <see cref="HttpClient"/>. Dispose this instance to release it.
-    /// Use only when instantiating manually without a DI container
+    /// Use only when instantiating manually without a DI container.
     /// </remarks>
-    /// <param name="options">The options for this instance</param>
-    /// <param name="auth">The auth credentials for the client</param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
-    /// </exception>
+    /// <param name="options">The options for this instance.</param>
+    /// <param name="auth">The auth credentials for the client.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>.</exception>
     public BoardsClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
         _arrivalParser = new JsonParser<ArrivalBoardResponseContract>(BoardsJsonContext.Default.ArrivalBoardResponseContract);
         _departureParser = new JsonParser<DepartureBoardResponseContract>(BoardsJsonContext.Default.DepartureBoardResponseContract);

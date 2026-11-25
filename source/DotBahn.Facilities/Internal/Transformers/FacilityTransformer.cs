@@ -9,7 +9,7 @@ using DotBahn.Facilities.Models.Enumerations;
 namespace DotBahn.Facilities.Internal.Transformers;
 
 /// <summary>
-/// Transforms facility contracts into domain models
+/// Transforms facility contracts into domain models.
 /// </summary>
 internal sealed class FacilityTransformer : ITransformer<IEnumerable<Facility>, IEnumerable<FacilityContract>> {
     /// <inheritdoc />
@@ -19,10 +19,10 @@ internal sealed class FacilityTransformer : ITransformer<IEnumerable<Facility>, 
     }
 
     /// <summary>
-    /// Transforms the <see cref="FacilityContract"/> into its domain model
+    /// Transforms the <see cref="FacilityContract"/> into its domain model.
     /// </summary>
-    /// <param name="contract">The contract to transform</param>
-    /// <returns>The transformed model</returns>
+    /// <param name="contract">The contract to transform.</param>
+    /// <returns>The transformed model.</returns>
     private static Facility TransformFacility(FacilityContract contract) => new() {
         EquipmentNumber = contract.EquipmentNumber,
         Type = EnumUtil.Parse(contract.Type, FacilityType.Unknown, FacilitiesJsonContext.Default.FacilityType),

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DotBahn.Ai;
 
 /// <summary>
-/// Extension methods for registering the DotBahn AI tools
+/// Extension methods for registering the DotBahn AI tools.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private static readonly JsonSerializerOptions FunctionJsonOptions = CreateFunctionJsonOptions();
@@ -15,10 +15,10 @@ public static class ServiceCollectionExtensions {
     /// <summary>
     /// Adds function invocation middleware with safe defaults for DotBahn tools.
     /// </summary>
-    /// <param name="builder">The chat client builder to configure</param>
-    /// <param name="factory">Optional logger factory for function invocation logging</param>
-    /// <returns>The chat client builder for chaining</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is <c>null</c></exception>
+    /// <param name="builder">The chat client builder to configure.</param>
+    /// <param name="factory">Optional logger factory for function invocation logging.</param>
+    /// <returns>The chat client builder for chaining.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is <c>null</c>.</exception>
     public static ChatClientBuilder UseDotBahnAiTools(this ChatClientBuilder builder, ILoggerFactory? factory = null) {
         ArgumentNullException.ThrowIfNull(builder);
         return builder.UseFunctionInvocation(factory, configure: client => {
@@ -33,9 +33,9 @@ public static class ServiceCollectionExtensions {
     /// <summary>
     /// Registers the DotBahn AI tools and their <see cref="AIFunction"/> adapters.
     /// </summary>
-    /// <param name="services">The service collection to add to</param>
-    /// <returns>The service collection for chaining</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="services"/> is <c>null</c></exception>
+    /// <param name="services">The service collection to add to.</param>
+    /// <returns>The service collection for chaining.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="services"/> is <c>null</c>.</exception>
     public static IServiceCollection AddDotBahnAiTools(this IServiceCollection services) {
         ArgumentNullException.ThrowIfNull(services);
 

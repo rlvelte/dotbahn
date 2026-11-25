@@ -3,17 +3,17 @@ using System.Diagnostics.CodeAnalysis;
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
-/// Raw timetable response
+/// Raw timetable response.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record TimetableResponseContract {
     /// <summary>
-    /// Station name or ID
+    /// Station name or ID.
     /// </summary>
     public string Station { get; init; } = string.Empty;
 
     /// <summary>
-    /// List of stops in the timetable
+    /// List of stops in the timetable.
     /// </summary>
     public List<StopDataContract> Stops { get; init; } = [];
 }

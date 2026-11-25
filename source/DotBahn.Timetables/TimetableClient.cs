@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DotBahn.Timetables;
 
 /// <summary>
-/// Client for accessing 'Deutsche Bahn Timetables'-API
+/// Client for accessing 'Deutsche Bahn Timetables'-API.
 /// </summary>
 [Obsolete("The Deutsche Bahn Timetables API is being shut down. Use DotBahn.Boards instead.", false)]
 public class TimetableClient : ClientBase, ITimetableClient {
@@ -23,13 +23,13 @@ public class TimetableClient : ClientBase, ITimetableClient {
     protected override string ApiName => "timetables";
 
     /// <summary>
-    /// Client for accessing 'Deutsche Bahn Timetables'-API
+    /// Client for accessing 'Deutsche Bahn Timetables'-API.
     /// </summary>
-    /// <param name="http">The HTTP client used for requests</param>
-    /// <param name="authorization">The provider used for retrieving access tokens</param>
-    /// <param name="parser">The parser for this contract type</param>
-    /// <param name="transformer">The transformer for this model and contract types</param>
-    /// <param name="merger">The merger for the target type</param>
+    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="authorization">The provider used for retrieving access tokens.</param>
+    /// <param name="parser">The parser for this contract type.</param>
+    /// <param name="transformer">The transformer for this model and contract types.</param>
+    /// <param name="merger">The merger for the target type.</param>
     [ActivatorUtilitiesConstructor]
     internal TimetableClient(HttpClient http, IAuthorization authorization, IParser<TimetableResponseContract> parser, ITransformer<Timetable, TimetableResponseContract> transformer, IMerger<Timetable> merger)
         : base(http, authorization) {
@@ -39,17 +39,15 @@ public class TimetableClient : ClientBase, ITimetableClient {
     }
 
     /// <summary>
-    /// Client for accessing 'Deutsche Bahn Timetables'-API
+    /// Client for accessing 'Deutsche Bahn Timetables'-API.
     /// </summary>
     /// <remarks>
     /// Creates and owns its own <see cref="HttpClient"/>. Dispose this instance to release it.
-    /// Use only when instantiating manually without a DI container
+    /// Use only when instantiating manually without a DI container.
     /// </remarks>
-    /// <param name="options">The options for this instance</param>
-    /// <param name="auth">The auth credentials for the client</param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>
-    /// </exception>
+    /// <param name="options">The options for this instance.</param>
+    /// <param name="auth">The auth credentials for the client.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>.</exception>
     public TimetableClient(ClientOptions options, AuthorizationOptions auth) : base(options, auth) {
         _parser = new TimetableXmlParser();
         _transformer = new TimetableTransformer();

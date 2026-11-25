@@ -4,18 +4,18 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Boards.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for a RIS cause-code description
+/// Raw structure for a RIS cause-code description.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record MessageRisCauseCodeDescriptionContract {
     /// <summary>
-    /// Gets the language
+    /// Gets the language.
     /// </summary>
     [JsonPropertyName("language")]
     public string Language { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the text
+    /// Gets the text.
     /// </summary>
     [JsonPropertyName("text")]
     public string Text { get; init; } = string.Empty;

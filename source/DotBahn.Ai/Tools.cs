@@ -16,18 +16,18 @@ namespace DotBahn.Ai;
 /// <summary>
 /// AI tools backed by the DotBahn clients.
 /// </summary>
-/// <param name="stations">The client used for station lookups</param>
-/// <param name="boards">The client used for arrival and departure boards</param>
-/// <param name="facilities">The client used for facility status lookups</param>
+/// <param name="stations">The client used for station lookups.</param>
+/// <param name="boards">The client used for arrival and departure boards.</param>
+/// <param name="facilities">The client used for facility status lookups.</param>
 public sealed class Tools(IStationClient stations, IBoardsClient boards, IFacilityClient facilities) {
     /// <summary>
     /// Searches for railway stations by name.
     /// </summary>
-    /// <param name="query">Station name or fragment to search for</param>
-    /// <param name="maxResults">Maximum number of stations to return (1-20)</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A result containing the matching stations, or an invalid_argument error</returns>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
+    /// <param name="query">Station name or fragment to search for.</param>
+    /// <param name="maxResults">Maximum number of stations to return (1-20).</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A result containing the matching stations, or an invalid_argument error.</returns>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     public Task<ToolResult<IReadOnlyList<Station>>> SearchStationsAsync(string query, int maxResults = 20, CancellationToken ct = default) =>
         ExecuteToolAsync("dotbahn_search_stations", async token => {
             var input = new StationSearchInput { Query = query, MaxResults = maxResults };
@@ -39,13 +39,13 @@ public sealed class Tools(IStationClient stations, IBoardsClient boards, IFacili
     /// <summary>
     /// Gets the operational status of facilities at a station.
     /// </summary>
-    /// <param name="stationNumber">DB station number returned by search_stations</param>
-    /// <param name="type">Optional facility type filter</param>
-    /// <param name="state">Optional facility state filter</param>
-    /// <param name="maxResults">Maximum number of facilities to return (1-25)</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A result containing the matching facilities, or an invalid_argument error</returns>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
+    /// <param name="stationNumber">DB station number returned by search_stations.</param>
+    /// <param name="type">Optional facility type filter.</param>
+    /// <param name="state">Optional facility state filter.</param>
+    /// <param name="maxResults">Maximum number of facilities to return (1-25).</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A result containing the matching facilities, or an invalid_argument error.</returns>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     public Task<ToolResult<IReadOnlyList<Facility>>> GetFacilityStatusAsync(int stationNumber, FacilityType? type = null, FacilityState? state = null, int maxResults = 25, CancellationToken ct = default) =>
         ExecuteToolAsync<IReadOnlyList<Facility>>("dotbahn_get_facility_status", async token => {
             var input = new FacilityStatusInput { StationNumber = stationNumber, Type = type, State = state, MaxResults = maxResults };
@@ -67,13 +67,13 @@ public sealed class Tools(IStationClient stations, IBoardsClient boards, IFacili
     /// <summary>
     /// Gets the departure board for a station.
     /// </summary>
-    /// <param name="stationId">Identifier returned by search_stations</param>
-    /// <param name="stationKind">Identifier scheme used by stationId</param>
-    /// <param name="start">Optional start of the time window in ISO 8601 format</param>
-    /// <param name="maxEntries">Maximum number of board entries to return (1-25)</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A result containing the departure board, or an invalid_argument error</returns>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
+    /// <param name="stationId">Identifier returned by search_stations.</param>
+    /// <param name="stationKind">Identifier scheme used by stationId.</param>
+    /// <param name="start">Optional start of the time window in ISO 8601 format.</param>
+    /// <param name="maxEntries">Maximum number of board entries to return (1-25).</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A result containing the departure board, or an invalid_argument error.</returns>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     public Task<ToolResult<Board<DepartureEntry>>> GetDeparturesAsync(string stationId, StationIdentifierKind stationKind, DateTime? start = null, int maxEntries = 10, CancellationToken ct = default) =>
         ExecuteToolAsync("dotbahn_get_departures", async token => {
             var input = new BoardToolInput { StationId = stationId, StationKind = stationKind, Start = start, MaxEntries = maxEntries };
@@ -85,13 +85,13 @@ public sealed class Tools(IStationClient stations, IBoardsClient boards, IFacili
     /// <summary>
     /// Gets the arrival board for a station.
     /// </summary>
-    /// <param name="stationId">Identifier returned by search_stations</param>
-    /// <param name="stationKind">Identifier scheme used by stationId</param>
-    /// <param name="start">Optional start of the time window in ISO 8601 format</param>
-    /// <param name="maxEntries">Maximum number of board entries to return (1-25)</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A result containing the arrival board, or an invalid_argument error</returns>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
+    /// <param name="stationId">Identifier returned by search_stations.</param>
+    /// <param name="stationKind">Identifier scheme used by stationId.</param>
+    /// <param name="start">Optional start of the time window in ISO 8601 format.</param>
+    /// <param name="maxEntries">Maximum number of board entries to return (1-25).</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A result containing the arrival board, or an invalid_argument error.</returns>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     public Task<ToolResult<Board<ArrivalEntry>>> GetArrivalsAsync(string stationId, StationIdentifierKind stationKind, DateTime? start = null, int maxEntries = 10, CancellationToken ct = default) =>
         ExecuteToolAsync("dotbahn_get_arrivals", async token => {
             var input = new BoardToolInput { StationId = stationId, StationKind = stationKind, Start = start, MaxEntries = maxEntries };

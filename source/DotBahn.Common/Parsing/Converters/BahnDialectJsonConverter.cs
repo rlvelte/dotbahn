@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace DotBahn.Common.Parsing.Converters;
 
 /// <summary>
-/// Converts dialect in the contracts to real types (e.g. 'yes' as 'true')
+/// Converts dialect in the contracts to real types (e.g. 'yes' as 'true').
 /// </summary>
 public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
     /// <inheritdoc />
@@ -36,7 +36,6 @@ public sealed class BahnDialectJsonConverter : JsonConverter<bool> {
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) {
         ArgumentNullException.ThrowIfNull(writer);
-
         writer.WriteBooleanValue(value);
     }
 }

@@ -6,7 +6,7 @@ using DotBahn.Facilities.Models.Enumerations;
 namespace DotBahn.Facilities.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for facility contracts and enums
+/// Source-generated JSON serialization metadata for facility contracts and enums.
 /// </summary>
 [ExcludeFromCodeCoverage]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
