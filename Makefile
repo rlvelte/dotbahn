@@ -40,6 +40,7 @@ format:
 restore:
 	dotnet restore $(SOLUTION) \
 		$(if $(NUGET_PACKAGES_DIR),--packages $(NUGET_PACKAGES_DIR),) \
+		--force-evaluate \
 		--verbosity minimal
 
 sbom: restore
