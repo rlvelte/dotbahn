@@ -38,7 +38,9 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore
-        run: dotnet restore DotBahn.slnx --locked-mode
+        run: |
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
 
       - name: Pack NuGet
         run: dotnet pack DotBahn.slnx --no-restore --configuration Release --output ./nupkgs
@@ -91,7 +93,8 @@ jobs:
 
       - name: Build library (produces XML doc files)
         run: |
-          dotnet restore DotBahn.slnx --locked-mode
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
           dotnet build DotBahn.slnx --no-restore --configuration Release
 
       - name: Build docs
@@ -174,7 +177,8 @@ jobs:
       - name: Generate dependency SBOM
         run: |
           dotnet tool restore
-          dotnet restore DotBahn.slnx --locked-mode
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
           dotnet cyclonedx DotBahn.slnx -o ./build/sbom -F Json
 
       - name: Download packages

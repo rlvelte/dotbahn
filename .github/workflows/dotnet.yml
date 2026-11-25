@@ -32,7 +32,9 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore
-        run: dotnet restore DotBahn.slnx --locked-mode
+        run: |
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
 
       - name: Format check
         run: dotnet format DotBahn.slnx --verify-no-changes --verbosity diagnostic
