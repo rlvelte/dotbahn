@@ -98,7 +98,7 @@ internal sealed class TimetableTransformer : ITransformer<Timetable, TimetableRe
         Owner = contract?.Owner ?? string.Empty,
         Type = string.IsNullOrEmpty(contract?.TripType) ? null : EnumUtil.Parse(contract.TripType, TripType.Passenger, TimetableJsonContext.Default.TripType),
         FilterFlags = contract?.FilterFlags,
-        Line = stop.Departure?.Line ?? stop.Arrival?.Line,
+        Line = stop.Departure?.Line ?? stop.Arrival?.Line
     };
 
     /// <summary>

@@ -66,7 +66,7 @@ public class FacilityQueryAreaToQueryParametersTests {
         { "C1—lngw_null", null, 50.0, 9.0, 51.0, false },
         { "C2—lats_null", 8.0, null, 9.0, 51.0, false },
         { "C3—lnge_null", 8.0, 50.0, null, 51.0, false },
-        { "C4—latn_null", 8.0, 50.0, 9.0, null, false },
+        { "C4—latn_null", 8.0, 50.0, 9.0, null, false }
     };
 
     [Theory]

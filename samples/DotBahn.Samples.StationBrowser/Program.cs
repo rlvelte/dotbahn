@@ -21,19 +21,19 @@ namespace DotBahn.Samples.StationBrowser {
     internal static class StationBrowserCli {
         private static readonly Argument<string?> SearchArgument = new("search") {
             Description = "Station name to search for (e.g. würzburg)",
-            Arity = ArgumentArity.ZeroOrOne,
+            Arity = ArgumentArity.ZeroOrOne
         };
 
         private static readonly Option<string?> ClientIdOption = new("--client") {
-            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable",
+            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable"
         };
 
         private static readonly Option<string?> SecretOption = new("--secret") {
-            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable",
+            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable"
         };
 
         private static readonly Option<bool> JsonOption = new("--json", "-j") {
-            Description = "Print the matched stations as JSON instead of starting the interactive browser",
+            Description = "Print the matched stations as JSON instead of starting the interactive browser"
         };
 
         internal static RootCommand BuildRootCommand() {
@@ -41,7 +41,7 @@ namespace DotBahn.Samples.StationBrowser {
                 SearchArgument,
                 ClientIdOption,
                 SecretOption,
-                JsonOption,
+                JsonOption
             };
 
             rootCommand.Validators.Add(result => {
@@ -215,7 +215,7 @@ namespace DotBahn.Samples.StationBrowser {
 
         private static void RenderStation(Station station, List<Facility> facilities, int index, int total) {
             var rule = new Rule(Markup.Escape(station.Name)) {
-                Justification = Justify.Center,
+                Justification = Justify.Center
             };
 
             AnsiConsole.Write(rule);
@@ -275,13 +275,13 @@ namespace DotBahn.Samples.StationBrowser {
                 rows.Add(new Text(""));
             }
 
-            if (station.EvaNumbers.Count() > 1) {
+            if (station.EvaNumbers.Count > 1) {
                 rows.Add(new Markup("[grey]EVA Numbers:[/]"));
-                rows.AddRange(station.EvaNumbers.Select(eva => new Text($"  {eva.Number}{(eva.IsMain ? " (main)" : "")}")).Cast<IRenderable>());
+                rows.AddRange(station.EvaNumbers.Select(eva => new Text($"  {eva.Number}{(eva.IsMain ? " (main)" : "")}")));
                 rows.Add(new Text(""));
             }
 
-            if (station.Ril100Identifiers.Count() <= 1) {
+            if (station.Ril100Identifiers.Count <= 1) {
                 return new Rows(rows);
             }
 

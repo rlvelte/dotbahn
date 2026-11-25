@@ -23,37 +23,37 @@ namespace DotBahn.Samples.TimetablePeek {
 
         private static readonly Argument<string?> EvaArgument = new("eva") {
             Description = "EVA station number (e.g. 8098160)",
-            Arity = ArgumentArity.ZeroOrOne,
+            Arity = ArgumentArity.ZeroOrOne
         };
 
         private static readonly Option<bool> ArrivalsOption = new("--arrivals", "-a") {
-            Description = "Show arrivals instead of departures",
+            Description = "Show arrivals instead of departures"
         };
 
         private static readonly Option<string?> CategoryOption = new("--category", "-c") {
-            Description = "Train category to filter for (e.g. ICE, RB); defaults to all categories",
+            Description = "Train category to filter for (e.g. ICE, RB); defaults to all categories"
         };
 
         private static readonly Option<int> LimitOption = new("--limit", "-n") {
             Description = "Maximum number of entries to show (1-100)",
-            DefaultValueFactory = _ => 20,
+            DefaultValueFactory = _ => 20
         };
 
         private static readonly Option<int> WindowOption = new("--window", "-w") {
             Description = "Time window for the board, in hours (1-8)",
-            DefaultValueFactory = _ => 8,
+            DefaultValueFactory = _ => 8
         };
 
         private static readonly Option<string?> ClientIdOption = new("--client") {
-            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable",
+            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable"
         };
 
         private static readonly Option<string?> SecretOption = new("--secret") {
-            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable",
+            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable"
         };
 
         private static readonly Option<bool> JsonOption = new("--json", "-j") {
-            Description = "Print entries as JSON instead of a table",
+            Description = "Print entries as JSON instead of a table"
         };
 
         internal static RootCommand BuildRootCommand() {
@@ -65,7 +65,7 @@ namespace DotBahn.Samples.TimetablePeek {
                 WindowOption,
                 ClientIdOption,
                 SecretOption,
-                JsonOption,
+                JsonOption
             };
 
             rootCommand.Validators.Add(result => {
@@ -143,11 +143,11 @@ namespace DotBahn.Samples.TimetablePeek {
 
             using var client = new BoardsClient(
                 new ClientOptions {
-                    BaseEndpoint = BaseEndpoint,
+                    BaseEndpoint = BaseEndpoint
                 },
                 new AuthorizationOptions {
                     ClientId = resolvedClientId,
-                    ApiKey = resolvedSecret,
+                    ApiKey = resolvedSecret
                 });
 
             try {
@@ -256,7 +256,7 @@ namespace DotBahn.Samples.TimetablePeek {
         private static void RenderHeader(string station, int eva, bool arrivals) {
             var title = arrivals ? "Arrivals" : "Departures";
             AnsiConsole.Write(new Rule($"{title} \u2013 {Markup.Escape(station)}") {
-                Justification = Justify.Center,
+                Justification = Justify.Center
             });
             AnsiConsole.MarkupLine($"[grey]EVA {eva} | {DateTime.Now:HH:mm}[/]\n");
         }

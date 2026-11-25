@@ -6,7 +6,7 @@ public class QueryParametersTests {
     public static TheoryData<string, IEnumerable<string>?, bool> AddCollectionEdgeCases => new() {
         { "BL—non_empty", ["a", "b"], true },
         { "C1—null", null, false },
-        { "C2—empty", [], false },
+        { "C2—empty", [], false }
     };
 
     [Theory]
@@ -27,7 +27,7 @@ public class QueryParametersTests {
         { "BL—valid", "val", true },
         { "C1—null", null, false },
         { "C2—empty", "", false },
-        { "C3—whitespace", " ", false },
+        { "C3—whitespace", " ", false }
     };
 
     [Theory]

@@ -22,26 +22,26 @@ namespace DotBahn.Samples.Chatbot {
             "If a tool returns a structured error, explain the problem and ask for corrected input.";
 
         private static readonly Option<string?> ClientIdOption = new("--client") {
-            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable",
+            Description = "DB API client id; falls back to the DOTBAHN_CLIENT environment variable"
         };
 
         private static readonly Option<string?> SecretOption = new("--secret") {
-            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable",
+            Description = "DB API secret; falls back to the DOTBAHN_SECRET environment variable"
         };
 
         private static readonly Option<string> ApiKeyOption = new("--api-key") {
             Description = "Model API key; defaults to OPENAI_API_KEY or 'ollama' for local models",
-            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "ollama",
+            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "ollama"
         };
 
         private static readonly Option<string> EndpointOption = new("--endpoint", "-e") {
             Description = "OpenAI-compatible endpoint",
-            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("DOTBAHN_AI_ENDPOINT") ?? "http://localhost:11434/v1",
+            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("DOTBAHN_AI_ENDPOINT") ?? "http://localhost:11434/v1"
         };
 
         private static readonly Option<string> ModelOption = new("--model", "-m") {
             Description = "Model name; defaults to DOTBAHN_AI_MODEL or 'qwen3:4b'",
-            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("DOTBAHN_AI_MODEL") ?? "qwen3:4b",
+            DefaultValueFactory = _ => Environment.GetEnvironmentVariable("DOTBAHN_AI_MODEL") ?? "qwen3:4b"
         };
 
         internal static RootCommand BuildRootCommand() {
@@ -50,7 +50,7 @@ namespace DotBahn.Samples.Chatbot {
                 SecretOption,
                 ApiKeyOption,
                 EndpointOption,
-                ModelOption,
+                ModelOption
             };
 
             EndpointOption.Validators.Add(result => {

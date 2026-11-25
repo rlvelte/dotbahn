@@ -190,7 +190,7 @@ public class ClientBaseTests : ClientTestBase {
     public static TheoryData<string, bool, bool> GetAsyncUrlQueryParamHandlingCases => new() {
         { "BL—has_params", true, true },
         { "C1—null_params", false, false },
-        { "C2—empty_params", true, false },
+        { "C2—empty_params", true, false }
     };
 
     [Theory]

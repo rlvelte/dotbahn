@@ -22,8 +22,8 @@ public static class ToolErrorUtil {
     }
 
     private static ToolError FromHttp(HttpRequestException http) => http.StatusCode switch {
-        HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden => new ToolError("unauthorized", "DotBahn API credentials are missing or invalid.", null, false),
-        HttpStatusCode.NotFound => new ToolError("not_found", "The requested station or board was not found.", null, false),
+        HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden => new ToolError("unauthorized", "DotBahn API credentials are missing or invalid."),
+        HttpStatusCode.NotFound => new ToolError("not_found", "The requested station or board was not found."),
         HttpStatusCode.TooManyRequests => new ToolError("rate_limited", "The DotBahn API rate limit was reached. Retry later.", null, true),
         { } value when (int)value >= 500 => new ToolError("upstream_error", "The DotBahn API is temporarily unavailable.", null, true),
         _ => new ToolError("upstream_error", "The DotBahn API request failed.", null, true)

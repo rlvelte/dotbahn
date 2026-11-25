@@ -1,0 +1,51 @@
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+
+#################################################################################
+#              WARNING: Do not store sensitive information in this file,        #
+#               as its contents will be included in the Qodana report.          #
+#################################################################################
+version: "1.0"
+
+# Replaces the deprecated `ide: QDNET` notation. Native mode (no container).
+# Requires an Ultimate license and QODANA_TOKEN; use `qodana-cdnet` for the
+# free Community linter (which does not support `failureConditions`).
+linter: qodana-dotnet
+withinDocker: false
+
+# Pin the solution explicitly so .slnx does not rely on auto-detection.
+dotnet:
+  solution: DotBahn.slnx
+  # configuration: Release # optional; drop if your IDE schema complains
+
+# Inspection profile and tuning
+profile:
+  name: qodana.recommended
+  inspections:
+    # Roslyn rules are already enforced by .editorconfig + `dotnet format`
+    # in CI, so don't report them a second time here.
+    - group: RoslynAnalyzersToExclude
+      enabled: false
+
+# Build first: the JSON type-info contexts are source-generated, so analysis
+# needs a completed build to see them.
+bootstrap: |
+  dotnet restore DotBahn.slnx
+  dotnet build DotBahn.slnx --no-restore --configuration Release
+
+# Align the license audit with this project's MIT license.
+projectLicenses:
+  - key: MIT
+
+# Fail the run on internal Qodana errors (exit code 70).
+failOnErrorNotification: true
+
+# Quality gate. Start permissive, then tighten after generating a baseline
+# (`qodana scan` -> select problems in the report -> save SARIF ->
+# pass `--baseline <path>` in the workflow args).
+failureConditions:
+  severityThresholds:
+    critical: 0
+    high: 0

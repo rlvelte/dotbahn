@@ -38,3 +38,64 @@ csharp_style_pattern_matching_over_as_with_null_check = true
 csharp_style_inlined_variable_declaration = true
 csharp_style_var_for_built_in_types = true
 csharp_style_var_when_type_is_apparent = true
+csharp_style_var_elsewhere = true
+
+# Namespaces & usings
+csharp_style_namespace_declarations = file_scoped
+csharp_using_directive_placement = outside_namespace
+
+# Qualification & accessibility
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_event = false
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+dotnet_style_readonly_field = true
+
+# Modern expressions & initializers
+dotnet_style_coalesce_expression = true
+dotnet_style_null_propagation = true
+dotnet_style_object_initializer = true
+dotnet_style_collection_initializer = true
+dotnet_style_prefer_auto_properties = true
+csharp_prefer_simple_using_statement = true
+csharp_style_prefer_collection_expression = true
+
+# Naming: private instance fields -> _camelCase
+dotnet_naming_rule.private_instance_fields.symbols = private_instance_fields
+dotnet_naming_rule.private_instance_fields.style = underscore_camel_case
+dotnet_naming_rule.private_instance_fields.severity = suggestion
+dotnet_naming_symbols.private_instance_fields.applicable_kinds = field
+dotnet_naming_symbols.private_instance_fields.applicable_accessibilities = private
+
+# Naming: private const fields -> PascalCase
+dotnet_naming_rule.private_const_fields.symbols = private_const_fields
+dotnet_naming_rule.private_const_fields.style = pascal_case
+dotnet_naming_rule.private_const_fields.severity = suggestion
+dotnet_naming_symbols.private_const_fields.applicable_kinds = field
+dotnet_naming_symbols.private_const_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_const_fields.required_modifiers = const
+
+# Naming: private static readonly fields -> PascalCase
+dotnet_naming_rule.private_static_readonly_fields.symbols = private_static_readonly_fields
+dotnet_naming_rule.private_static_readonly_fields.style = pascal_case
+dotnet_naming_rule.private_static_readonly_fields.severity = suggestion
+dotnet_naming_symbols.private_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly_fields.required_modifiers = static, readonly
+
+# Naming: interfaces -> I-prefixed PascalCase
+dotnet_naming_rule.interfaces.symbols = interfaces
+dotnet_naming_rule.interfaces.style = i_prefix_pascal_case
+dotnet_naming_rule.interfaces.severity = suggestion
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.i_prefix_pascal_case.capitalization = pascal_case
+dotnet_naming_style.i_prefix_pascal_case.required_prefix = I
+
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+# Sample top-level programs require block-scoped namespaces.
+[samples/**/Program.cs]
+csharp_style_namespace_declarations = block_scoped

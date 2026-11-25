@@ -44,7 +44,7 @@ foreach ($projectDir in Get-ChildItem (Join-Path $root $samplesDir) -Directory) 
             -p:StripSymbols=true `
             --verbosity minimal
         dotnet restore
-        
+
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
         Copy-Item -Path (Join-Path $source '*') -Destination $out -Force

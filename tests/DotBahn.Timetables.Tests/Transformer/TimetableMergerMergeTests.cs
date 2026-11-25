@@ -94,7 +94,7 @@ public class TimetableMergerMergeTests {
 
         var result = _merger.Merge(current, changes);
 
-        Assert.Equal(3, result.Messages.Count());
+        Assert.Equal(3, result.Messages.Count);
         Assert.Contains(result.Messages, m => m.Id == "msg-1");
         Assert.Contains(result.Messages, m => m.Id == "msg-2");
         Assert.Contains(result.Messages, m => m.Id == "msg-3");
@@ -107,7 +107,7 @@ public class TimetableMergerMergeTests {
 
         var result = _merger.Merge(current, changes);
 
-        Assert.Equal(2, result.Messages.Count());
+        Assert.Equal(2, result.Messages.Count);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class TimetableMergerMergeTests {
 
         var result = _merger.Merge(current, changes);
 
-        Assert.Equal(2, result.Messages.Count());
+        Assert.Equal(2, result.Messages.Count);
     }
 
     [Fact]
@@ -136,22 +136,22 @@ public class TimetableMergerMergeTests {
             Id = "stop-1",
             Train = new TrainLabel { Category = "NX", Number = "22064", Owner = "8000098" },
             Arrival = new TrainEvent {
-                Time = new ChangedValue<DateTime> { Original = new(2026, 1, 19, 10, 0, 0) },
+                Time = new ChangedValue<DateTime> { Original = new DateTime(2026, 1, 19, 10, 0, 0) },
                 Platform = new ChangedRef<string> { Original = "2" },
                 Status = new ChangedValue<EventStatus> { Original = EventStatus.Unknown },
-                DistantEndpoint = new ChangedRef<string> { Original = string.Empty },
-            },
+                DistantEndpoint = new ChangedRef<string> { Original = string.Empty }
+            }
         };
         var withDeparture = new TimetableStop {
             Id = arrivalOnly.Id,
             Train = arrivalOnly.Train,
             Arrival = arrivalOnly.Arrival,
             Departure = new TrainEvent {
-                Time = new ChangedValue<DateTime> { Original = new(2026, 1, 19, 10, 9, 0) },
+                Time = new ChangedValue<DateTime> { Original = new DateTime(2026, 1, 19, 10, 9, 0) },
                 Platform = new ChangedRef<string> { Original = "2" },
                 Status = new ChangedValue<EventStatus> { Original = EventStatus.Unknown },
-                DistantEndpoint = new ChangedRef<string> { Original = string.Empty },
-            },
+                DistantEndpoint = new ChangedRef<string> { Original = string.Empty }
+            }
         };
         var current = CreateTimetable("Essen Hbf", [arrivalOnly, withDeparture]);
         var changes = CreateTimetable("Essen Hbf", []);
@@ -160,7 +160,7 @@ public class TimetableMergerMergeTests {
 
         var stop = Assert.Single(result.Stops);
         Assert.NotNull(stop.Departure);
-        Assert.Equal(new(2026, 1, 19, 10, 9, 0), stop.Departure!.Time.Original);
+        Assert.Equal(new DateTime(2026, 1, 19, 10, 9, 0), stop.Departure!.Time.Original);
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class TimetableMergerMergeTests {
         var result = _merger.Merge(current, changes);
 
         var wings = result.Stops.First().Departure!.Wings;
-        Assert.Equal(2, wings.Count());
+        Assert.Equal(2, wings.Count);
         Assert.Contains("A", wings);
         Assert.Contains("B", wings);
         Assert.DoesNotContain("C", wings);

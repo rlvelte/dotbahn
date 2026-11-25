@@ -27,7 +27,7 @@ public class XmlParserTests {
     public static TheoryData<string, string, string> ParseRootRequiresTimetableTagCases => new()
     {
         { "BL—valid_tag", """<?xml version="1.0"?><timetable station="Frankfurt Hbf"/>""", "Frankfurt Hbf" },
-        { "C2—wrong_tag", """<?xml version="1.0"?><not-timetable station="Frankfurt Hbf"/>""", "" },
+        { "C2—wrong_tag", """<?xml version="1.0"?><not-timetable station="Frankfurt Hbf"/>""", "" }
     };
 
     [Theory]

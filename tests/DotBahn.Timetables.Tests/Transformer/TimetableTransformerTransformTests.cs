@@ -301,7 +301,7 @@ public class TimetableTransformerTransformTests {
         { "B8—invalid_minute", "2501190060", null },
         { "B9—year_rollover", "9912311200", new DateTime(1999, 12, 31, 12, 0, 0) },
         { "B10—century_leap", "0002291200", new DateTime(2000, 2, 29, 12, 0, 0) },
-        { "B11—invalid_century_day", "0102291200", null },
+        { "B11—invalid_century_day", "0102291200", null }
     };
 
     [Theory]
@@ -309,7 +309,7 @@ public class TimetableTransformerTransformTests {
     public void ParseBahnTimeEdge(string _, string plannedTime, DateTime? expected) {
         var contract = new TimetableResponseContract {
             Station = "Test",
-            Stops = [new StopDataContract { Id = "s1", Departure = new EventContract { PlannedTime = plannedTime } }],
+            Stops = [new StopDataContract { Id = "s1", Departure = new EventContract { PlannedTime = plannedTime } }]
         };
         var result = _transformer.Transform(contract);
         var departure = result.Stops.First().Departure!;

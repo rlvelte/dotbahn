@@ -115,7 +115,7 @@ public class TimetableTransformerMessageTests {
         { "BL—internal", "1", "secret info", "secret info", null },
         { "C1—external", "0", "public info", null, "public info" },
         { "C2—null_flag", null, "some text", null, "some text" },
-        { "C3—empty_flag", "", "other text", null, "other text" },
+        { "C3—empty_flag", "", "other text", null, "other text" }
     };
 
     [Theory]
@@ -156,7 +156,7 @@ public class TimetableTransformerMessageTests {
         { "B5—unknown", "5", MessagePriority.Unknown },
         { "C1—undefined", "6", (MessagePriority)6 },
         { "C2—negative", "-1", (MessagePriority)(-1) },
-        { "C3—unparseable", "abc", null },
+        { "C3—unparseable", "abc", null }
     };
 
     [Theory]

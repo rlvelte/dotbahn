@@ -124,7 +124,7 @@ public class DotBahnTelemetryTests : ClientTestBase {
         var listener = new MeterListener {
             InstrumentPublished = (instrument, meterListener) => {
                 if (instrument.Meter.Name == DotBahnTelemetry.MeterName) {
-                    meterListener.EnableMeasurementEvents(instrument, null);
+                    meterListener.EnableMeasurementEvents(instrument);
                 }
             }
         };

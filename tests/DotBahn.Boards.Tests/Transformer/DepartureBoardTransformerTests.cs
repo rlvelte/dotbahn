@@ -1,3 +1,4 @@
+using System.Globalization;
 using DotBahn.Boards.Internal.Contracts;
 using DotBahn.Boards.Internal.Transformers;
 using DotBahn.Boards.Models.Entries;
@@ -30,7 +31,7 @@ public class DepartureBoardTransformerTests {
         Assert.True(entry.Journey.Destination.Cancelled);
         Assert.Equal("Wolfsburg Hbf", entry.Journey.DifferingOrigin?.Name);
         Assert.Equal("Hannover Hbf", entry.Journey.DifferingDestination?.Name);
-        Assert.Equal(DateTime.Parse("2026-11-23T09:45:00+01:00"), entry.Journey.ScheduledStartTime);
+        Assert.Equal(DateTime.Parse("2026-11-23T09:45:00+01:00", CultureInfo.InvariantCulture), entry.Journey.ScheduledStartTime);
         Assert.Equal("ICE", entry.Journey.TransportAtStart.Category);
         Assert.Equal("Deutsche Bahn", entry.Journey.HeaderAdministration?.OperatorName);
         Assert.Equal(701, entry.Journey.HeaderJourneyNumber);
@@ -152,16 +153,16 @@ public class DepartureBoardTransformerTests {
 
         var entry = Assert.IsType<DepartureEntry>(Assert.Single(_transformer.Transform(Board([departure])).Entries));
 
-        Assert.Equal(DateTime.Parse(schedule), entry.Time.Original);
+        Assert.Equal(DateTime.Parse(schedule, CultureInfo.InvariantCulture), entry.Time.Original);
         Assert.Equal(expectedHasUpdate, entry.Time.HasUpdate);
-        Assert.Equal(expectedHasUpdate ? DateTime.Parse(actual) : null, entry.Time.Updated);
+        Assert.Equal(expectedHasUpdate ? DateTime.Parse(actual, CultureInfo.InvariantCulture) : null, entry.Time.Updated);
     }
 
     [Fact]
     public void Transform_PlatformChange_PreservesScheduledAndActual() {
         var departure = BoardContractFixtures.Departure() with {
-            PlatformSchedule = new() { Name = "2", Accessibility = new() { StepFreeAccess = true } },
-            Platform = new() { Name = "5", Accessibility = new() { BoardingAid = true } }
+            PlatformSchedule = new PlatformContract { Name = "2", Accessibility = new PlatformAccessibilityContract { StepFreeAccess = true } },
+            Platform = new PlatformContract { Name = "5", Accessibility = new PlatformAccessibilityContract { BoardingAid = true } }
         };
 
         var entry = Assert.IsType<DepartureEntry>(Assert.Single(_transformer.Transform(Board([departure])).Entries));
@@ -178,7 +179,7 @@ public class DepartureBoardTransformerTests {
         var platform = new PlatformContract { Name = "2" };
         var departure = BoardContractFixtures.Departure() with {
             PlatformSchedule = platform,
-            Platform = new() { Name = "2" }
+            Platform = new PlatformContract { Name = "2" }
         };
 
         var entry = Assert.IsType<DepartureEntry>(Assert.Single(_transformer.Transform(Board([departure])).Entries));
@@ -205,9 +206,9 @@ public class DepartureBoardTransformerTests {
         var departure = BoardContractFixtures.Departure();
         var response = new DepartureBoardResponseContract {
             StopPlaces = [
-                new() { EvaNumber = "1", LocalizedNames = [new() { Language = "eng", Name = "English" }, new() { Language = "deu", Name = "German" }] },
-                new() { EvaNumber = "2", LocalizedNames = [new() { Language = "eng", Name = "English" }, new() { Language = "ita", Name = "Italian" }] },
-                new() { EvaNumber = "3", LocalizedNames = [new() { Language = "ita", Name = "Italian" }, new() { Language = "fra", Name = "French" }] }
+                new StopPlaceMultiLanguageContract { EvaNumber = "1", LocalizedNames = [new StopPlaceNameMultiLanguageContract { Language = "eng", Name = "English" }, new StopPlaceNameMultiLanguageContract { Language = "deu", Name = "German" }] },
+                new StopPlaceMultiLanguageContract { EvaNumber = "2", LocalizedNames = [new StopPlaceNameMultiLanguageContract { Language = "eng", Name = "English" }, new StopPlaceNameMultiLanguageContract { Language = "ita", Name = "Italian" }] },
+                new StopPlaceMultiLanguageContract { EvaNumber = "3", LocalizedNames = [new StopPlaceNameMultiLanguageContract { Language = "ita", Name = "Italian" }, new StopPlaceNameMultiLanguageContract { Language = "fra", Name = "French" }] }
             ],
             Stations = [],
             Administrations = [],

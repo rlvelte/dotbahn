@@ -142,7 +142,7 @@ public class StationQueryCategoriesTests {
         { "C1—start_lt_1", "0-3", true },
         { "C2—start_gt_7", "8-8", true },
         { "C4—end_gt_7", "1-8", true },
-        { "C5—start_gt_end", "3-1", true },
+        { "C5—start_gt_end", "3-1", true }
     };
 
     [Theory]

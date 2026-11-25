@@ -17,13 +17,13 @@ internal static class BoardContractFixtures {
             Ifopt = "de:03241:8000105",
             Stada = HannoverStada,
             LocalizedNames = [
-                new() { Language = "eng", Name = "Hannover Central Station", Symbol = "H", SymbolName = "Hannover" },
-                new() { Language = "deu", Name = "Hannover Hbf", Symbol = "H", SymbolName = "Hannover" }
+                new StopPlaceNameMultiLanguageContract { Language = "eng", Name = "Hannover Central Station", Symbol = "H", SymbolName = "Hannover" },
+                new StopPlaceNameMultiLanguageContract { Language = "deu", Name = "Hannover Hbf", Symbol = "H", SymbolName = "Hannover" }
             ]
         },
         new() {
             EvaNumber = WolfsburgEva,
-            LocalizedNames = [new() { Language = "deu", Name = "Wolfsburg Hbf" }]
+            LocalizedNames = [new StopPlaceNameMultiLanguageContract { Language = "deu", Name = "Wolfsburg Hbf" }]
         }
     ];
 
@@ -31,8 +31,8 @@ internal static class BoardContractFixtures {
         new() {
             Stada = HannoverStada,
             LocalizedNames = [
-                new() { Language = "eng", Name = "Hannover" },
-                new() { Language = "deu", Name = "Hannover" }
+                new StationNameMultiLanguageContract { Language = "eng", Name = "Hannover" },
+                new StationNameMultiLanguageContract { Language = "deu", Name = "Hannover" }
             ]
         }
     ];
@@ -43,7 +43,7 @@ internal static class BoardContractFixtures {
             OperatorCode = "DB",
             OperatorName = "Deutsche Bahn",
             TransportCompanies = [
-                new() {
+                new TransportCompanyMultiLanguageContract {
                     Language = "deu",
                     Name = "Deutsche Bahn AG",
                     ShortName = "DB",
@@ -59,19 +59,19 @@ internal static class BoardContractFixtures {
 
     public static MessagesMultiLanguageContract Messages() => new() {
         Attributes = [
-            new() {
+            new MessageAttributeMultiLanguageContract {
                 MessageId = 101,
                 Code = "HELP",
                 DisplayPriority = 1,
                 DisplayPriorityDetail = 2,
                 Descriptions = [
-                    new() { Language = "deu", Text = "Barrierefreier Einstieg" },
-                    new() { Language = "eng", Text = "Step-free boarding" }
+                    new MessageAttributeDescriptionContract { Language = "deu", Text = "Barrierefreier Einstieg" },
+                    new MessageAttributeDescriptionContract { Language = "eng", Text = "Step-free boarding" }
                 ]
             }
         ],
         Disruptions = [
-            new() {
+            new MessageDisruptionCommunicationMultiLanguageContract {
                 MessageId = 102,
                 Cause = "Construction",
                 Effect = "Delay",
@@ -80,40 +80,40 @@ internal static class BoardContractFixtures {
                 DisruptionCommunicationId = "DC-1",
                 HasAlternatives = true,
                 Descriptions = [
-                    new() {
+                    new MessageDisruptionCommunicationDescriptionContract {
                         Language = "deu",
                         Text = "Bauarbeiten",
                         TextShort = "Bauarh.",
-                        Links = [new() { Label = "Info", Url = "https://bahn.de/info" }],
-                        Attachments = [new() { Label = "PDF", Url = "https://bahn.de/plan.pdf" }],
-                        Images = [new() { Label = "Map", Url = "https://bahn.de/map.png" }]
+                        Links = [new DisruptionCommunicationLinkContract { Label = "Info", Url = "https://bahn.de/info" }],
+                        Attachments = [new DisruptionCommunicationAttachmentContract { Label = "PDF", Url = "https://bahn.de/plan.pdf" }],
+                        Images = [new DisruptionCommunicationImageContract { Label = "Map", Url = "https://bahn.de/map.png" }]
                     }
                 ]
             }
         ],
         Notes = [
-            new() {
+            new MessageNoteMultiLanguageContract {
                 MessageId = 103,
                 Category = "GENERAL",
                 Code = "BIKE",
                 DisplayPriority = 5,
                 DisruptionId = "D-2",
                 DisruptionCommunicationId = "DC-2",
-                Descriptions = [new() { Language = "deu", Text = "Fahrradmitnahme moeglich" }]
+                Descriptions = [new MessageNoteDescriptionContract { Language = "deu", Text = "Fahrradmitnahme moeglich" }]
             }
         ],
         RisCauseCodes = [
-            new() {
+            new MessageRisCauseCodeMultiLanguageContract {
                 MessageId = 104,
                 Code = "1",
-                Descriptions = [new() { Language = "deu", Text = "Bauarbeiten" }]
+                Descriptions = [new MessageRisCauseCodeDescriptionContract { Language = "deu", Text = "Bauarbeiten" }]
             }
         ],
         RisQualityDeviations = [
-            new() {
+            new MessageRisQualityDeviationMultiLanguageContract {
                 MessageId = 105,
                 Code = "Q1",
-                Descriptions = [new() { Language = "deu", Text = "Verspaetung" }]
+                Descriptions = [new MessageRisQualityDeviationDescriptionContract { Language = "deu", Text = "Verspaetung" }]
             }
         ]
     };
@@ -124,12 +124,12 @@ internal static class BoardContractFixtures {
     };
 
     public static JourneyInfoContract JourneyInfo() => new() {
-        Origin = new() { EvaNumber = WolfsburgEva },
-        Destination = new() { EvaNumber = HannoverEva, Cancelled = true },
-        DifferingOrigin = new() { EvaNumber = WolfsburgEva },
-        DifferingDestination = new() { EvaNumber = HannoverEva },
+        Origin = new StopPlaceRefWithCancelContract { EvaNumber = WolfsburgEva },
+        Destination = new StopPlaceRefWithCancelContract { EvaNumber = HannoverEva, Cancelled = true },
+        DifferingOrigin = new StopPlaceRefContract { EvaNumber = WolfsburgEva },
+        DifferingDestination = new StopPlaceRefContract { EvaNumber = HannoverEva },
         ScheduledStartTime = "2026-11-23T09:45:00+01:00",
-        TransportAtStart = new() {
+        TransportAtStart = new TransportContract {
             AdministrationId = "db-fahrdienst",
             Category = "ICE",
             CategoryInternal = "ICE",
@@ -155,29 +155,29 @@ internal static class BoardContractFixtures {
         Label = "ICE 701",
         Dfid = "dfid-1",
         Dtid = "dtid-1",
-        Line = new() {
+        Line = new LineInfoContract {
             Name = "ICE 701",
-            Colour = new() {
+            Colour = new LineColourContract {
                 PrimaryColour = "#000000",
                 PrimaryTextColour = "#FFFFFF",
-                ChipVisualization = new() {
+                ChipVisualization = new LineChipVisualizationContract {
                     DifferingBoundaryColour = "#111111",
                     DifferingFillColour = "#222222",
                     DifferingTextColour = "#333333",
                     SecondaryFillColour = "#444444"
                 },
-                StrokeVisualization = new() {
+                StrokeVisualization = new LineStrokeVisualizationContract {
                     DifferingBoundaryColour = "#555555",
                     SecondaryFillColour = "#666666"
                 }
             }
         },
-        Direction = new() {
+        Direction = new DirectionInfoContract {
             Texts = ["Wolfsburg Hbf"],
-            StopPlaces = [new() { EvaNumber = WolfsburgEva }]
+            StopPlaces = [new StopPlaceRefContract { EvaNumber = WolfsburgEva }]
         },
-        Via = [new() { EvaNumber = WolfsburgEva, Additional = true, DisplayPriority = 7 }],
-        ReplacementTransport = new() { RealType = "BUS" }
+        Via = [new StopPlaceRefViaContract { EvaNumber = WolfsburgEva, Additional = true, DisplayPriority = 7 }],
+        ReplacementTransport = new ReplacementTransportContract { RealType = "BUS" }
     };
 
     public static ArrivalContract Arrival(string id = "a-1", string eva = HannoverEva) => new() {
@@ -187,8 +187,8 @@ internal static class BoardContractFixtures {
         TimeSchedule = "2026-11-23T10:00:00+01:00",
         Time = "2026-11-23T10:05:00+01:00",
         TimeType = "REAL",
-        PlatformSchedule = new() { Name = "2", Accessibility = new() { StepFreeAccess = true, BoardingAid = true } },
-        Platform = new() { Name = "2" },
+        PlatformSchedule = new PlatformContract { Name = "2", Accessibility = new PlatformAccessibilityContract { StepFreeAccess = true, BoardingAid = true } },
+        Platform = new PlatformContract { Name = "2" },
         Transport = Transport(),
         JourneyInfo = JourneyInfo(),
         Messages = [101, 102, 103, 104, 105, 999],
@@ -198,7 +198,7 @@ internal static class BoardContractFixtures {
         NoPassengerChange = false,
         VehicleSequenceAvailable = true,
         PastDisruptions = true,
-        Codeshares = [new() { AirlineCode = "LH", Flightnumber = 1234 }],
+        Codeshares = [new CodeShareContract { AirlineCode = "LH", Flightnumber = 1234 }],
         ContinuationBy = [DestinationRef()],
         ReliefBy = [OriginRef()],
         ReliefFor = [OriginRef()],
@@ -214,8 +214,8 @@ internal static class BoardContractFixtures {
         TimeSchedule = "2026-11-23T10:00:00+01:00",
         Time = "2026-11-23T10:05:00+01:00",
         TimeType = "REAL",
-        PlatformSchedule = new() { Name = "2", Accessibility = new() { StepFreeAccess = true, BoardingAid = true } },
-        Platform = new() { Name = "2" },
+        PlatformSchedule = new PlatformContract { Name = "2", Accessibility = new PlatformAccessibilityContract { StepFreeAccess = true, BoardingAid = true } },
+        Platform = new PlatformContract { Name = "2" },
         Transport = Transport(),
         JourneyInfo = JourneyInfo(),
         Messages = [101, 102, 103, 104, 105, 999],
@@ -225,7 +225,7 @@ internal static class BoardContractFixtures {
         NoPassengerChange = false,
         VehicleSequenceAvailable = true,
         FutureDisruptions = true,
-        Codeshares = [new() { AirlineCode = "LH", Flightnumber = 1234 }],
+        Codeshares = [new CodeShareContract { AirlineCode = "LH", Flightnumber = 1234 }],
         ContinuationFor = [OriginRef()],
         ReliefBy = [DestinationRef()],
         ReliefFor = [DestinationRef()],
@@ -246,8 +246,8 @@ internal static class BoardContractFixtures {
         Label = "RB 4",
         Dfid = "dfid-2",
         Dtid = "dtid-2",
-        Origin = new() { EvaNumber = WolfsburgEva },
-        DifferingOrigin = new() { EvaNumber = HannoverEva }
+        Origin = new StopPlaceRefWithCancelContract { EvaNumber = WolfsburgEva },
+        DifferingOrigin = new StopPlaceRefContract { EvaNumber = HannoverEva }
     };
 
     public static TransportDestinationRefContract DestinationRef(string journeyId = "ref-2") => new() {
@@ -262,8 +262,8 @@ internal static class BoardContractFixtures {
         Label = "RB 5",
         Dfid = "dfid-3",
         Dtid = "dtid-3",
-        Destination = new() { EvaNumber = WolfsburgEva, Cancelled = true },
-        DifferingDestination = new() { EvaNumber = HannoverEva }
+        Destination = new StopPlaceRefWithCancelContract { EvaNumber = WolfsburgEva, Cancelled = true },
+        DifferingDestination = new StopPlaceRefContract { EvaNumber = HannoverEva }
     };
 
     public static TransportDestinationPortionWorkingRefContract PortionRef(string journeyId = "ref-3") => new() {
@@ -278,8 +278,8 @@ internal static class BoardContractFixtures {
         Label = "RB 6",
         Dfid = "dfid-4",
         Dtid = "dtid-4",
-        Destination = new() { EvaNumber = WolfsburgEva },
-        DifferingDestination = new() { EvaNumber = HannoverEva },
-        SeparationAt = new() { EvaNumber = HannoverEva }
+        Destination = new StopPlaceRefWithCancelContract { EvaNumber = WolfsburgEva },
+        DifferingDestination = new StopPlaceRefContract { EvaNumber = HannoverEva },
+        SeparationAt = new StopPlaceRefContract { EvaNumber = HannoverEva }
     };
 }

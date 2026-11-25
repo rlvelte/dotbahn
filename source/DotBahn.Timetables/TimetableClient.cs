@@ -1,3 +1,4 @@
+using System.Globalization;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
@@ -56,8 +57,8 @@ public class TimetableClient : ClientBase, ITimetableClient {
 
     /// <inheritdoc />
     public async Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken ct = default) {
-        var dateStr = dateTime.ToString("yyMMdd");
-        var hourStr = dateTime.ToString("HH");
+        var dateStr = dateTime.ToString("yyMMdd", CultureInfo.InvariantCulture);
+        var hourStr = dateTime.ToString("HH", CultureInfo.InvariantCulture);
         var response = await GetAsync($"/plan/{eva}/{dateStr}/{hourStr}", _parser, "application/xml", null, ct).ConfigureAwait(false);
         return _transformer.Transform(response);
     }

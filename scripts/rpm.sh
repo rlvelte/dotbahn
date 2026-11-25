@@ -7,7 +7,6 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root"
 
-configuration="${CONFIGURATION:-Release}"
 samples_dir="${SAMPLES_DIR:-./samples}"
 publish_dir="${PUBLISH_DIR:-./build/publish}"
 rpm_dir="${RPM_DIR:-./build/rpm}"
