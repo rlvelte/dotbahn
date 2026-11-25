@@ -82,7 +82,6 @@ pack:
 
 publish: vulcheck
 	$(RUN) scripts/publish$(EXT)
-	make restore
 
 rpm: publish
 ifeq ($(OS),Windows_NT)

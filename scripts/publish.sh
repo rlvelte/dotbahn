@@ -40,6 +40,7 @@ for csproj in "$root/$samples_dir"/*/*.csproj; do
     -p:PublishAot=true \
     -p:StripSymbols=true \
     --verbosity minimal
+  dotnet restore
 
   cp -a "$source/." "$out/"
   echo "published: $out"
