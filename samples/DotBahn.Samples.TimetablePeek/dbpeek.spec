@@ -19,6 +19,7 @@ DotBahn (https://github.com/rlvelte/dotbahn) using the OpenBoards API.
 
 %install
 install -Dm755 dbpeek %{buildroot}%{_bindir}/dbpeek
+install -Dm644 bom.json %{buildroot}%{_datadir}/%{name}/bom.json
 
 %check
 :
@@ -26,6 +27,7 @@ install -Dm755 dbpeek %{buildroot}%{_bindir}/dbpeek
 %files
 %license LICENSE
 %{_bindir}/dbpeek
+%{_datadir}/%{name}/bom.json
 
 %changelog
 * Sun Nov 22 2026 Robin L. Velte <rlvelte@users.noreply.github.com> - 2.2.0-0

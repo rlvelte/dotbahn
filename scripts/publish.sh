@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# Publishes all '*.csproj' marked as executable in the 'SAMPLES_DIR' as binaries.
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -12,8 +12,8 @@ detect_rid() {
   local os arch
   case "$(uname -s)" in
     Linux*) os=linux ;;
-    MINGW*|MSYS*|CYGWIN*) os=win ;;
-    *) echo "unsupported OS: $(uname -s)" >&2; exit 1 ;;
+    MINGW*|MSYS*|CYGWIN*) os=win ;; # really need this?
+    *) echo "unsupported os: $(uname -s)" >&2; exit 1 ;;
   esac
   case "$(uname -m)" in
     x86_64|amd64) arch=x64 ;;
@@ -28,9 +28,11 @@ rid="$(detect_rid)"
 for csproj in "$root/$samples_dir"/*/*.csproj; do
   name="$(basename "$csproj" .csproj)"
   grep -q '<OutputType>Exe</OutputType>' "$csproj" || continue
+
   project_dir="$(dirname "$csproj")"
   source="$project_dir/bin/$configuration/net10.0/$rid/publish"
   out="$root/$publish_dir/$rid/$name"
+
   mkdir -p "$out"
 
   dotnet publish "$csproj" \
@@ -40,8 +42,8 @@ for csproj in "$root/$samples_dir"/*/*.csproj; do
     -p:PublishAot=true \
     -p:StripSymbols=true \
     --verbosity minimal
+
   dotnet restore
 
   cp -a "$source/." "$out/"
-  echo "published: $out"
 done

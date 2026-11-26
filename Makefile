@@ -6,6 +6,8 @@ NUGET_PACKAGES_DIR ?=
 
 # Out
 RESULTS_DIR := ./build/tests
+BENCH_DIR := ./build/benchmarks
+MUTATE_DIR := ./build/mutations
 NUPKG_DIR := ./build/nupkgs
 PUBLISH_DIR := ./build/publish
 RPM_DIR := ./build/rpm
@@ -29,11 +31,9 @@ export RPM_DIR
 
 # Main
 .DEFAULT_GOAL := build
-.PHONY: format restore sbom build test coverage pack vulcheck publish rpm mutate
+.PHONY: format restore vulcheck sbom build test mutate pack publish rpm
 
 format:
-	dotnet format whitespace $(SOLUTION) \
-		--verbosity diagnostic
 	dotnet format $(SOLUTION) \
 		--verbosity diagnostic
 
@@ -43,12 +43,12 @@ restore:
 		--force-evaluate \
 		--verbosity minimal
 
-vulcheck: restore
+vulcheck:
 	dotnet list $(SOLUTION) package \
 		--vulnerable \
 		--include-transitive
 
-sbom: restore
+sbom:
 	dotnet cyclonedx $(SOLUTION) \
 		-o $(SBOM_DIR) \
 		-F Json
@@ -60,47 +60,39 @@ build: restore
 
 test: build
 	dotnet test --solution $(SOLUTION) \
-		--no-build \
 		--configuration $(CONFIGURATION) \
 		--results-directory $(RESULTS_DIR) \
-		-- --coverage --coverage-output-format cobertura --ignore-exit-code 8
+		--no-build \
+		-- --coverage --coverage-output-format cobertura
 
-coverage: test
-	dotnet reportgenerator \
-		-reports:$(RESULTS_DIR)/**/*.cobertura.xml \
-		-targetdir:$(RESULTS_DIR)/coverage \
-		-reporttypes:Html \
-		-verbosity:Warning \
-		-filefilters:-**/*.g.cs
-	@echo "file://$(CURDIR)/$(RESULTS_DIR)/coverage/index.html"
+mutate: build
+	mkdir -p $(MUTATE_DIR)
+	dotnet stryker \
+		--output $(MUTATE_DIR)
 
-pack:
+pack: build
 	dotnet pack $(SOLUTION) \
 		--configuration $(CONFIGURATION) \
 		--output $(NUPKG_DIR) \
+		--no-build \
 		--verbosity minimal
 
-publish: vulcheck
+publish:
 	$(RUN) scripts/publish$(EXT)
 
-rpm: publish
+rpm:
 ifeq ($(OS),Windows_NT)
-	@echo "RPM packaging requires 'rpmbuild'." >&2
+	@echo "Windows does not support 'rpmbuild'." >&2
 else
 	$(RUN) scripts/rpm$(EXT)
 endif
 
-# Documentation
-docs-build: build
-	dotnet docfx docs/docfx.json
-
-docs-serve: build
-	dotnet docfx docs/docfx.json --serve
-
-# Utility
 clean:
+	dotnet clean $(SOLUTION) \
+		--configuration $(CONFIGURATION) \
+		--verbosity minimal
 ifeq ($(OS),Windows_NT)
-	pwsh -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build, StrykerOutput, docs/_site, docs/api"
+	powershell -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build, docs/_site, docs/api"
 else
-	rm -rf build StrykerOutput docs/_site docs/api
+	rm -rf build docs/_site docs/api
 endif
