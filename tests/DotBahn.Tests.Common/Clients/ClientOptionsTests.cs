@@ -1,7 +1,7 @@
 using DotBahn.Common.Clients;
 using Shouldly;
 
-namespace DotBahn.Common.Tests.Clients;
+namespace DotBahn.Tests.Common.Clients;
 
 public class ClientOptionsTests {
     [Fact]

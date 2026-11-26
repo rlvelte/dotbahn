@@ -1,7 +1,7 @@
 using DotBahn.Common.Utilities;
 using Shouldly;
 
-namespace DotBahn.Common.Tests.Utilities;
+namespace DotBahn.Tests.Common.Utilities;
 
 public class QueryParametersTests {
     [Fact]

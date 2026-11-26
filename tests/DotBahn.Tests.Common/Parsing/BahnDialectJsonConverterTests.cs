@@ -2,7 +2,7 @@ using DotBahn.Common.Parsing.Converters;
 using Shouldly;
 using System.Text.Json;
 
-namespace DotBahn.Common.Tests.Parsing;
+namespace DotBahn.Tests.Common.Parsing;
 
 public class BahnDialectJsonConverterTests {
     private readonly JsonSerializerOptions _options = new() {

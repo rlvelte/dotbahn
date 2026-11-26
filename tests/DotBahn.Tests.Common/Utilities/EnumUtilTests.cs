@@ -4,7 +4,7 @@ using System.Text.Json.Serialization.Metadata;
 using DotBahn.Tests.Shared;
 using DotBahn.Tests.Shared.Contracts;
 
-namespace DotBahn.Common.Tests.Utilities;
+namespace DotBahn.Tests.Common.Utilities;
 
 public class EnumUtilTests {
     private static JsonTypeInfo<TestEnum> TypeInfo => (JsonTypeInfo<TestEnum>)TestsJsonContext.Default.GetTypeInfo(typeof(TestEnum))!;

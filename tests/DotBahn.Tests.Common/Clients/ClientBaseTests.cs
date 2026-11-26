@@ -10,7 +10,7 @@ using System.Text.Json.Serialization.Metadata;
 using DotBahn.Tests.Shared.Contracts;
 using DotBahn.Tests.Shared.Http;
 
-namespace DotBahn.Common.Tests.Clients;
+namespace DotBahn.Tests.Common.Clients;
 
 public class ClientBaseTests {
     private static JsonTypeInfo<SimpleDto> SimpleTypeInfo => (JsonTypeInfo<SimpleDto>)TestsJsonContext.Default.GetTypeInfo(typeof(SimpleDto))!;

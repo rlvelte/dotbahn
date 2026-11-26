@@ -1,7 +1,7 @@
 using DotBahn.Common.Auth;
 using Shouldly;
 
-namespace DotBahn.Common.Tests.Auth;
+namespace DotBahn.Tests.Common.Auth;
 
 public class ApiKeyAuthorizationTests {
     [Theory]

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization.Metadata;
 using DotBahn.Tests.Shared;
 using DotBahn.Tests.Shared.Contracts;
 
-namespace DotBahn.Common.Tests.Parsing;
+namespace DotBahn.Tests.Common.Parsing;
 
 public class JsonParserTests {
     private static JsonTypeInfo<SimpleDto> SimpleTypeInfo => (JsonTypeInfo<SimpleDto>)TestsJsonContext.Default.GetTypeInfo(typeof(SimpleDto))!;

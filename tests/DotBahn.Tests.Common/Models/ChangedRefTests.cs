@@ -1,7 +1,7 @@
 using DotBahn.Common.Models;
 using Shouldly;
 
-namespace DotBahn.Common.Tests.Models;
+namespace DotBahn.Tests.Common.Models;
 
 public class ChangedRefTests {
     [Fact]
