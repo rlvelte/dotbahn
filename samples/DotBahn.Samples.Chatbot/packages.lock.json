@@ -12,23 +12,6 @@
           "OpenAI": "2.15.0"
         }
       },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[11.0.0, )",
-        "resolved": "11.0.0",
-        "contentHash": "gK2aq4XvChj5kvozpPHrkfKkr7zc5Z4xoTrJb4GPZzDEPMlCk0TX632bwY3LsWcX2UVcVRQBBGzsBGC2lq6YhA=="
-      },
-      "Microsoft.SourceLink.GitHub": {
-        "type": "Direct",
-        "requested": "[11.0.100, )",
-        "resolved": "11.0.100",
-        "contentHash": "aBHHGAxLog2OC1nbXyCFyfy1lG9qwYO/COBPc/5cJEqbXpiznmz+wxLU+TVrI+2LzQYFSKpn7pk+RHtx9eHe9w==",
-        "dependencies": {
-          "Microsoft.Build.Tasks.Git": "11.0.100",
-          "Microsoft.SourceLink.Common": "11.0.100",
-          "System.IO.Hashing": "11.0.0"
-        }
-      },
       "MinVer": {
         "type": "Direct",
         "requested": "[8.0.0, )",
@@ -49,14 +32,6 @@
         "requested": "[3.0.0, )",
         "resolved": "3.0.0",
         "contentHash": "swNpSTl0iYJeBuvYYfaY+VxzZ5YC8wklwkqDCNOq2aTQqJzjauJfh/O3Zw93nwxspWrxvZTjT45f8VPR0ParEA=="
-      },
-      "Microsoft.Build.Tasks.Git": {
-        "type": "Transitive",
-        "resolved": "11.0.100",
-        "contentHash": "juE7HH7MfWolKodshqdxaJjFK3A4wp/UqMN69sVtBBU2hT2Bs1vwjAy0dwdsIUFlff0jEOqT7qcXQiD8l3+z3A==",
-        "dependencies": {
-          "System.IO.Hashing": "11.0.0"
-        }
       },
       "Microsoft.Extensions.AmbientMetadata.Application": {
         "type": "Transitive",
@@ -291,11 +266,6 @@
           "Microsoft.Extensions.Options": "10.0.15"
         }
       },
-      "Microsoft.SourceLink.Common": {
-        "type": "Transitive",
-        "resolved": "11.0.100",
-        "contentHash": "7BbbX7EWxjEEU1Evc5hPF7aoncC/qq0avTgyUQN7fXXexWbfy4PgDFd35U90wdomwBGkn1zaYTW7kdwxiVdtnQ=="
-      },
       "OpenAI": {
         "type": "Transitive",
         "resolved": "2.15.0",
@@ -349,11 +319,6 @@
         "resolved": "11.0.0",
         "contentHash": "+boRR9uSKiIPtFeRLGwO5xylhDF80xpwM+dmk5jgIqqeUKLbujGkGICMTKqQrBzKO6fIp8BU8DV6YZkQukqo3A=="
       },
-      "System.IO.Hashing": {
-        "type": "Transitive",
-        "resolved": "11.0.0",
-        "contentHash": "U+Bv2qCYt6eONi+arSP0QIp4uTO6os6uceBsqiAwruZ+Wo2HrRhO/0tj38M9URJtS+4DhAtT3ka2TGNFYsnhyQ=="
-      },
       "System.Memory.Data": {
         "type": "Transitive",
         "resolved": "10.0.10",
@@ -376,8 +341,7 @@
           "DotBahn.Facilities": "[1.0.0, )",
           "DotBahn.Stations": "[1.0.0, )",
           "Microsoft.Extensions.AI": "[11.0.1, )",
-          "Microsoft.Extensions.AI.Abstractions": "[11.0.1, )",
-          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
+          "Microsoft.Extensions.AI.Abstractions": "[11.0.1, )"
         }
       },
       "dotbahn.boards": {
@@ -386,16 +350,14 @@
           "DotBahn.Common": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[11.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[11.0.1, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )",
-          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )"
         }
       },
       "dotbahn.common": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Http": "[11.0.0, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )",
-          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )"
         }
       },
       "dotbahn.facilities": {
@@ -404,8 +366,7 @@
           "DotBahn.Common": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[11.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[11.0.1, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )",
-          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )"
         }
       },
       "dotbahn.stations": {
@@ -414,8 +375,7 @@
           "DotBahn.Common": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[11.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[11.0.1, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )",
-          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )"
         }
       },
       "Microsoft.Extensions.AI": {

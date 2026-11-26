@@ -1,5 +1,4 @@
 <Solution>
-  <Folder Name="/Benchmarks/" />
   <Folder Name="/Configuration/">
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
@@ -43,4 +42,5 @@
   <Folder Name="/Tests/Additional/">
     <Project Path="tests/DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
   </Folder>
+  <Project Path="bench/DotBahn.Benchmarks/DotBahn.Benchmarks.csproj" />
 </Solution>

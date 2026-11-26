@@ -9,7 +9,6 @@
     <ProjectReference Include="../DotBahn.Common/DotBahn.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
     <PackageReference Include="OpenTelemetry.Api.ProviderBuilderExtensions" />
   </ItemGroup>
 </Project>

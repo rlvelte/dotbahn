@@ -1,9 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit.v3" />

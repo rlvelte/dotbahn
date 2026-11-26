@@ -41,9 +41,8 @@ for csproj in "$root/$samples_dir"/*/*.csproj; do
     --self-contained \
     -p:PublishAot=true \
     -p:StripSymbols=true \
+    -p:NuGetLockFilePath=obj/aot.lock.json \
     --verbosity minimal
-
-  dotnet restore
 
   cp -a "$source/." "$out/"
 done

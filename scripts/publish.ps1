@@ -50,9 +50,8 @@ foreach ($projectDir in Get-ChildItem (Join-Path $root $samplesDir) -Directory) 
             --self-contained `
             -p:PublishAot=true `
             -p:StripSymbols=true `
+            -p:NuGetLockFilePath=obj/aot.lock.json `
             --verbosity minimal
-
-        dotnet restore
 
         if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE

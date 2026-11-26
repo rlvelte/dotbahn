@@ -5,11 +5,11 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Deterministic>true</Deterministic>
+    <Optimize>true</Optimize>
     <ImplicitUsings>enable</ImplicitUsings>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IsAotCompatible>true</IsAotCompatible>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
@@ -36,7 +36,7 @@
     <PackageProjectUrl>https://github.com/rlvelte/dotbahn</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rlvelte/dotbahn</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>db;bahn;client;deutschebahn;deutsche-bahn;api;rest;http;dotnet;net10;stations;facilities;timetables;client-library</PackageTags>
+    <PackageTags>db;bahn;client;deutschebahn;deutsche-bahn;api;rest;http;dotnet;net10;stations;facilities;timetables;boards;ai</PackageTags>
     <Copyright>Copyright (c) Robin L. Velte 2026</Copyright>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -58,16 +58,8 @@
     <PackageReference Include="MinVer" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- GitHub -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-    <!-- Test projects -->
-  <PropertyGroup Condition="'$(MSBuildProjectName.EndsWith(`.Tests`))' OR '$(MSBuildProjectDirectory.Contains(`tests`))'">
+  <!-- Test/Benchmark projects -->
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(`Tests`))' OR '$(MSBuildProjectName.Contains(`Benchmarks`))'">
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <IsAotCompatible>false</IsAotCompatible>
