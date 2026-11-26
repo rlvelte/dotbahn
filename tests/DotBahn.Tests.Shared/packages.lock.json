@@ -122,6 +122,11 @@
         "resolved": "11.0.0",
         "contentHash": "HH2akbW2HeY/xeZJA5UceuQQX+1Pv/Kxrz/x4XPoH6wYDtgPIlBeOTZlQXlT+b50b1Ym/xfP+WJCX9FW4uLBXQ=="
       },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Transitive",
+        "resolved": "11.0.0",
+        "contentHash": "gK2aq4XvChj5kvozpPHrkfKkr7zc5Z4xoTrJb4GPZzDEPMlCk0TX632bwY3LsWcX2UVcVRQBBGzsBGC2lq6YhA=="
+      },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
         "resolved": "11.0.100",
@@ -141,7 +146,8 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Http": "[11.0.0, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )",
+          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
         }
       },
       "Microsoft.Extensions.Http": {

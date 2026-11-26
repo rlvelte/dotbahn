@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace DotBahn.Tests.Shared;
+namespace DotBahn.Tests.Shared.Http;
 
 /// <summary>
 /// Configurable HttpMessageHandler that returns predefined responses and captures requests for verification.
@@ -12,6 +12,16 @@ public class FakeHttpHandler : HttpMessageHandler {
     /// Gets the list of all sent HTTP requests.
     /// </summary>
     public List<HttpRequestMessage> SentRequests { get; } = [];
+
+    /// <summary>
+    /// Gets the captured request body content for each sent request.
+    /// </summary>
+    public List<string> SentRequestBodies { get; } = [];
+
+    /// <summary>
+    /// Gets the captured request content type media type for each sent request.
+    /// </summary>
+    public List<string?> SentRequestContentTypes { get; } = [];
 
     /// <summary>
     /// Configures the handler to respond with a specific status code and content.
@@ -34,14 +44,22 @@ public class FakeHttpHandler : HttpMessageHandler {
     }
 
     /// <inheritdoc />
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct) {
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct) {
         SentRequests.Add(request);
+
+        if (request.Content != null) {
+            SentRequestBodies.Add(await request.Content.ReadAsStringAsync(ct).ConfigureAwait(false));
+            SentRequestContentTypes.Add(request.Content.Headers.ContentType?.MediaType);
+        } else {
+            SentRequestBodies.Add(string.Empty);
+            SentRequestContentTypes.Add(null);
+        }
 
         if (_responses.Count == 0) {
             throw new InvalidOperationException("No response configured.");
         }
 
         var factory = _responses.Dequeue();
-        return Task.FromResult(factory(request));
+        return factory(request);
     }
 }

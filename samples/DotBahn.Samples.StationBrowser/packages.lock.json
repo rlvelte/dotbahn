@@ -4,9 +4,9 @@
     "net10.0": {
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.15, )",
-        "resolved": "10.0.15",
-        "contentHash": "u0WnRcZgBZYHlVFpbe/3Adpmb9rmNJ8/fmEwqc/xjB7fFppq+gfaLJd3Sdaw+J02zV0eP/T9dneQ3Dv5jWw6bw=="
+        "requested": "[11.0.0, )",
+        "resolved": "11.0.0",
+        "contentHash": "gK2aq4XvChj5kvozpPHrkfKkr7zc5Z4xoTrJb4GPZzDEPMlCk0TX632bwY3LsWcX2UVcVRQBBGzsBGC2lq6YhA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -326,7 +326,8 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Http": "[11.0.0, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )",
+          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
         }
       },
       "dotbahn.facilities": {
@@ -335,7 +336,8 @@
           "DotBahn.Common": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[11.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[11.0.1, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )",
+          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
         }
       },
       "dotbahn.stations": {
@@ -344,7 +346,8 @@
           "DotBahn.Common": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[11.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[11.0.1, )",
-          "Microsoft.Extensions.Options": "[11.0.0, )"
+          "Microsoft.Extensions.Options": "[11.0.0, )",
+          "Microsoft.NET.ILLink.Tasks": "[11.0.0, )"
         }
       },
       "Microsoft.Extensions.Http": {

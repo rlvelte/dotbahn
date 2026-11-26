@@ -1,4 +1,4 @@
-namespace DotBahn.Tests.Shared;
+namespace DotBahn.Tests.Shared.Http;
 
 /// <summary>
 /// Shared fixture that provides an <see cref="HttpClient"/> wired to a configurable <see cref="FakeHttpHandler"/>.
