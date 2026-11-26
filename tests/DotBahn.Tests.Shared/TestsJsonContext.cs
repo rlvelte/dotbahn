@@ -9,6 +9,6 @@ namespace DotBahn.Tests.Shared;
 [JsonSourceGenerationOptions(UseStringEnumConverter = true)]
 [JsonSerializable(typeof(SimpleDto))]
 [JsonSerializable(typeof(AlwaysNullDto))]
-[JsonSerializable(typeof(TestEnum))]
 [JsonSerializable(typeof(PostRequestDto))]
-public partial class TestsJsonContext : JsonSerializerContext { }
+[JsonSerializable(typeof(TestEnum))]
+public partial class TestsJsonContext : JsonSerializerContext;

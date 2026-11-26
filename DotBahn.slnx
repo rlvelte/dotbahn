@@ -34,7 +34,10 @@
     <Project Path="samples/DotBahn.Samples.Chatbot/DotBahn.Samples.Chatbot.csproj" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="tests/DotBahn.Tests.Boards/DotBahn.Tests.Boards.csproj" />
+    <Project Path="tests/DotBahn.Tests.Facilities/DotBahn.Tests.Facilities.csproj" />
     <Project Path="tests/DotBahn.Tests.Stations/DotBahn.Tests.Stations.csproj" />
+    <Project Path="tests/DotBahn.Tests.Timetables/DotBahn.Tests.Timetables.csproj" />
     <Project Path="tests\DotBahn.Tests.Common\DotBahn.Tests.Common.csproj" />
   </Folder>
   <Folder Name="/Tests/Additional/">
