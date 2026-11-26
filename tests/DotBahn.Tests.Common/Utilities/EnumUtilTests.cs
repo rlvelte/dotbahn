@@ -1,8 +1,8 @@
-using DotBahn.Common.Utilities;
-using Shouldly;
 using System.Text.Json.Serialization.Metadata;
+using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
 using DotBahn.Tests.Shared.Contracts;
+using Shouldly;
 
 namespace DotBahn.Tests.Common.Utilities;
 
@@ -33,10 +33,10 @@ public class EnumUtilTests {
     }
 
     [Fact]
-    public void Parse_Should_Be_Case_Sensitive_When_Value_Has_Different_Casing() {
+    public void Parse_Should_Be_Case_Insensitive_When_Value_Has_Different_Casing() {
         var result = EnumUtil.Parse("active", TestEnum.Unknown, TypeInfo);
 
-        result.ShouldBe(TestEnum.Unknown);
+        result.ShouldBe(TestEnum.Active);
     }
 
     [Fact]

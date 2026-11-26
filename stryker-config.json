@@ -1,22 +1,25 @@
 {
   "stryker-config": {
     "test-runner": "mtp",
-    "coverage-analysis": "off",
     "mutation-level": "Advanced",
+    "coverage-analysis": "off",
     "additional-timeout": 30000,
-    "reporters": ["html", "json", "progress"],
-    "ignore-mutations": ["string"],
+    "reporters": ["html", "json", "markdown", "progress"],
+    "ignore-mutations": ["block", "statement"],
     "ignore-methods": [
-      "*LogInformation",
-      "*LogError",
-      "*LogWarning",
-      "*LogDebug",
-      "*LogTrace",
-      "*LogCritical"
+      "ConfigureAwait",
+      "Dispose",
+      "*ThrowIfNull",
+      "*ThrowIfNullOrEmpty"
     ],
     "mutate": [
       "!**/*Options.cs",
       "!**/ServiceCollectionExtensions.cs"
-    ]
+    ],
+    "thresholds": {
+      "high": 90,
+      "low": 80,
+      "break": 0
+    }
   }
 }

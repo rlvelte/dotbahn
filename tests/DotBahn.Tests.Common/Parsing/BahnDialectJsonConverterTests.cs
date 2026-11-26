@@ -1,6 +1,6 @@
+using System.Text.Json;
 using DotBahn.Common.Parsing.Converters;
 using Shouldly;
-using System.Text.Json;
 
 namespace DotBahn.Tests.Common.Parsing;
 

@@ -120,7 +120,9 @@ Interactive terminal application for exploring DB station details. Search by nam
 
 ## Experimental & AI
 
-The package `DotBahn.Ai` is an early exploration of integrated AI tool support. It is experimental and has no current development priority. If you have experience with .NET AI integrations, tool calling or related designs, feel free to contribute. However, there is a minimal interactive chatbot sample that uses a local Ollama model with these tools. It defaults to `qwen3:4b` at `http://localhost:11434/v1`; override with `--model` and `--endpoint`.
+The package `DotBahn.Ai` is an early exploration of integrated AI tool support. It is experimental and has no current development priority. If you have experience with .NET AI integrations, tool calling or related designs, feel free to contribute.
+
+However, there is a minimal interactive chatbot sample that uses a local Ollama model with these tools. It defaults to `qwen3:4b` at `http://localhost:11434/v1`; override with `--model` and `--endpoint`.
 
 <img src="https://i.imgur.com/o4HSTXs.png" width="800">
 

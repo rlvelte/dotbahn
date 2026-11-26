@@ -1,14 +1,14 @@
+using System.Net;
+using System.Text.Json.Serialization.Metadata;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Clients;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Utilities;
 using DotBahn.Tests.Shared;
-using NSubstitute;
-using Shouldly;
-using System.Net;
-using System.Text.Json.Serialization.Metadata;
 using DotBahn.Tests.Shared.Contracts;
 using DotBahn.Tests.Shared.Http;
+using NSubstitute;
+using Shouldly;
 
 namespace DotBahn.Tests.Common.Clients;
 

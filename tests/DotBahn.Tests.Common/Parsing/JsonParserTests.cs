@@ -1,9 +1,9 @@
-using DotBahn.Common.Parsing;
-using Shouldly;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using DotBahn.Common.Parsing;
 using DotBahn.Tests.Shared;
 using DotBahn.Tests.Shared.Contracts;
+using Shouldly;
 
 namespace DotBahn.Tests.Common.Parsing;
 

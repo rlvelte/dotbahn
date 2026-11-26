@@ -45,6 +45,8 @@ public class FakeHttpHandler : HttpMessageHandler {
 
     /// <inheritdoc />
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct) {
+        ct.ThrowIfCancellationRequested();
+
         SentRequests.Add(request);
 
         if (request.Content != null) {
