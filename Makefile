@@ -65,6 +65,7 @@ test: build
 		--no-build \
 		-- --coverage --coverage-output-format cobertura
 
+mutate: export MinVerVersionOverride = 1.0.0
 mutate: build
 	mkdir -p $(MUTATE_DIR)
 	dotnet stryker \
