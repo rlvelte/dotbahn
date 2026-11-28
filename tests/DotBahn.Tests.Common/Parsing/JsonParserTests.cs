@@ -38,12 +38,7 @@ public class JsonParserTests {
     [Fact]
     public void Parse_Should_Return_Populated_Contract_When_Input_Is_Valid_Json() {
         var sut = new JsonParser<SimpleDto>(SimpleTypeInfo);
-        const string json = """
-                            {
-                                "Name":"test",
-                                "Value":42
-                            }
-                            """;
+        const string json = """{"Name":"test","Value":42}""";
 
         var result = sut.Parse(json);
 
@@ -52,15 +47,19 @@ public class JsonParserTests {
     }
 
     [Theory]
-    [InlineData("{invalid")]
-    [InlineData("not json")]
-    [InlineData("null, extra")]
-    public void Parse_Should_Throw_JsonException_When_Input_Is_Invalid_Json(string input) {
+    [InlineData("{invalid", false)]
+    [InlineData("not json", false)]
+    [InlineData("null, extra", false)]
+    [InlineData("null", true)]
+    public void Parse_Should_Throw_JsonException_When_Input_Is_Invalid_Json(string input, bool deserializesToNull) {
         var sut = new JsonParser<SimpleDto>(SimpleTypeInfo);
 
         var act = () => sut.Parse(input);
 
-        act.ShouldThrow<JsonException>();
+        var exception = Should.Throw<JsonException>(() => act());
+        if (deserializesToNull) {
+            exception.Message.ShouldContain("Deserialization of API response returned null");
+        }
     }
 
     [Fact]

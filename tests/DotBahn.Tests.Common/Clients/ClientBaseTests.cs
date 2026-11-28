@@ -142,18 +142,24 @@ public class ClientBaseTests {
     }
 
     [Theory]
-    [InlineData(HttpStatusCode.BadRequest)]
-    [InlineData(HttpStatusCode.Unauthorized)]
-    [InlineData(HttpStatusCode.InternalServerError)]
-    public async Task GetAsync_Should_ThrowHttpRequestException_When_ApiReturnsError(HttpStatusCode statusCode) {
+    [InlineData(HttpStatusCode.BadRequest, 0, false)]
+    [InlineData(HttpStatusCode.Unauthorized, 3, false)]
+    [InlineData(HttpStatusCode.InternalServerError, 250, true)]
+    [InlineData(HttpStatusCode.BadGateway, 200, false)]
+    public async Task GetAsync_Should_ThrowHttpRequestException_When_ApiReturnsError(HttpStatusCode statusCode, int bodyLength, bool truncated) {
         using var client = CreateHttpClient(out var handler);
         var authorization = Substitute.For<IAuthorization>();
         var sut = new TestClientBase(client, authorization);
-        handler.RespondWith(statusCode, "bad");
+        var body = new string('x', bodyLength);
+        handler.RespondWith(statusCode, body);
 
         var exception = await Should.ThrowAsync<HttpRequestException>(() => sut.GetAsyncWrapper("path", Substitute.For<IParser<string>>(), "application/json"));
 
         exception.StatusCode.ShouldBe(statusCode);
+        var reasonPhrase = new HttpResponseMessage(statusCode).ReasonPhrase;
+        var expectedBody = truncated ? new string('x', 200) + "..." : body;
+        exception.Message.ShouldBe($"The API responded with {(int)statusCode} ({reasonPhrase}): {expectedBody}");
+        handler.SentRequestBodies.ShouldHaveSingleItem().ShouldBeEmpty();
     }
 
     [Fact]
