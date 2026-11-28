@@ -11,6 +11,7 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../source/DotBahn.Facilities/DotBahn.Facilities.csproj" />
     <ProjectReference Include="../DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
   </ItemGroup>
 </Project>
