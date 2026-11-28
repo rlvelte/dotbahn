@@ -42,5 +42,4 @@
   <Folder Name="/Tests/Additional/">
     <Project Path="tests/DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
   </Folder>
-  <Project Path="bench/DotBahn.Benchmarks/DotBahn.Benchmarks.csproj" />
 </Solution>
