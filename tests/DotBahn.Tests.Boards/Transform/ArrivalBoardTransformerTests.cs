@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using DotBahn.Boards;
 using DotBahn.Boards.Models;
@@ -71,7 +72,7 @@ public class ArrivalBoardTransformerTests {
         var board = await GetBoardAsync(entry);
 
         var time = board.Entries.ShouldHaveSingleItem().Time;
-        time.Original.ShouldBe(new DateTime(2024, 12, 31, 12, 0, 0, DateTimeKind.Unspecified));
+        time.Original.ShouldBe(DateTimeOffset.Parse("2024-12-31T12:00:00+01:00", CultureInfo.InvariantCulture).LocalDateTime);
         time.HasUpdate.ShouldBe(hasUpdate);
     }
 

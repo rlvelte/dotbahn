@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using DotBahn.Boards;
 using DotBahn.Boards.Models;
@@ -33,7 +34,7 @@ public class DepartureBoardTransformerTests {
         entry.Id.ShouldBe("d1");
         entry.StopPlace.Name.ShouldBe("Hamburg Hbf");
         entry.Journey.Id.ShouldBe("j1");
-        entry.Journey.ScheduledStartTime.ShouldBe(new DateTime(2024, 12, 31, 10, 0, 0, DateTimeKind.Unspecified));
+        entry.Journey.ScheduledStartTime.ShouldBe(DateTimeOffset.Parse("2024-12-31T10:00:00+01:00", CultureInfo.InvariantCulture).LocalDateTime);
         entry.Journey.Type.ShouldBe("REGULAR");
         entry.Time.HasUpdate.ShouldBeTrue();
         entry.Platform.HasUpdate.ShouldBeTrue();
