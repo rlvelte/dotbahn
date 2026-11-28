@@ -10,7 +10,11 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../source/DotBahn.Timetables/DotBahn.Timetables.csproj" />
     <ProjectReference Include="../DotBahn.Tests.Shared/DotBahn.Tests.Shared.csproj" />
   </ItemGroup>
 </Project>
