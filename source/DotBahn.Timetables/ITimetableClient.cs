@@ -3,38 +3,42 @@ using DotBahn.Timetables.Models;
 namespace DotBahn.Timetables;
 
 /// <summary>
-/// Client for accessing the 'Deutsche Bahn Timetables'-API
+/// Client for accessing the 'Deutsche Bahn Timetables'-API.
 /// </summary>
+[Obsolete("The Deutsche Bahn Timetables API is being shut down. Use DotBahn.Boards instead.", false)]
 public interface ITimetableClient {
     /// <summary>
     /// Gets full changes for a specific station.
-    /// If a <see cref="Timetable"/> is supplied, the changes are merged onto this instance
+    /// If a <see cref="Timetable"/> is supplied, the changes are merged onto this instance.
     /// </summary>
-    /// <param name="eva">The EVA station number</param>
-    /// <param name="mergeOn">Current timetable on which these changes should apply</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A <see cref="Timetable"/> with full change information</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <param name="eva">The EVA station number.</param>
+    /// <param name="mergeOn">Current timetable on which these changes should apply.</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A <see cref="Timetable"/> with full change information.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     Task<Timetable> GetFullChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets recent changes for a specific station.
-    /// If a <see cref="Timetable"/> is supplied, the changes are merged onto this instance
+    /// If a <see cref="Timetable"/> is supplied, the changes are merged onto this instance.
     /// </summary>
-    /// <param name="eva">The EVA station number</param>
-    /// <param name="mergeOn">Current timetable on which these changes should apply</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A <see cref="Timetable"/> with recent change information</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <param name="eva">The EVA station number.</param>
+    /// <param name="mergeOn">Current timetable on which these changes should apply.</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A <see cref="Timetable"/> with recent change information.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     Task<Timetable> GetRecentChangesAsync(int eva, Timetable? mergeOn = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets the timetable for a specific station and time
+    /// Gets the timetable for a specific station and time.
     /// </summary>
-    /// <param name="eva">The EVA station number</param>
-    /// <param name="dateTime">The date and hour (only YYMMDD/HH are used)</param>
-    /// <param name="ct">Token to cancel the request</param>
-    /// <returns>A <see cref="Timetable"/> for the specified hour</returns>
-    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur</exception>
+    /// <param name="eva">The EVA station number.</param>
+    /// <param name="dateTime">The date and hour (only YYMMDD/HH are used).</param>
+    /// <param name="ct">Token to cancel the request.</param>
+    /// <returns>A <see cref="Timetable"/> for the specified hour.</returns>
+    /// <exception cref="HttpRequestException">Thrown when non-success status codes occur.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
     Task<Timetable> GetTimetableAsync(int eva, DateTime dateTime, CancellationToken ct = default);
 }

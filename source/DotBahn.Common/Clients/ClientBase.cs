@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization.Metadata;
 using DotBahn.Common.Auth;
 using DotBahn.Common.Parsing;
 using DotBahn.Common.Telemetry;
@@ -9,30 +11,28 @@ using DotBahn.Common.Utilities;
 namespace DotBahn.Common.Clients;
 
 /// <summary>
-/// Base class for API clients providing common HTTP functionality
+/// Base class for API clients providing common HTTP functionality.
 /// </summary>
 public abstract class ClientBase : IDisposable {
     private readonly IAuthorization _authorization;
     private readonly bool _ownsHttpClient;
 
     /// <summary>
-    /// The HTTP client used for requests
+    /// The HTTP client used for requests.
     /// </summary>
     protected HttpClient HttpClient { get; }
 
     /// <summary>
-    /// The API identifier used for telemetry tags
+    /// The API identifier used for telemetry tags.
     /// </summary>
     protected virtual string ApiName => string.Empty;
 
     /// <summary>
     /// Initializes a new instance with the specified HTTP client and authorization.
-    /// The <see cref="HttpClient"/> is not owned by this instance and will not be disposed
     /// </summary>
-    /// <param name="http">The HTTP client</param>
-    /// <param name="authorization">The authorization provider</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="http"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="authorization"/> is <c>null</c></exception>
+    /// <param name="http">The HTTP client.</param>
+    /// <param name="authorization">The authorization provider.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="http"/> or <paramref name="authorization"/> is <c>null</c>.</exception>
     protected ClientBase(HttpClient http, IAuthorization authorization) {
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(authorization);
@@ -42,12 +42,11 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Initializes a new instance that creates and owns its own <see cref="HttpClient"/>
+    /// Initializes a new instance that creates and owns its own <see cref="HttpClient"/>.
     /// </summary>
-    /// <param name="options">The client options containing the base endpoint</param>
-    /// <param name="auth">The authorization options containing the API key</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
+    /// <param name="options">The client options containing the base endpoint.</param>
+    /// <param name="auth">The authorization options containing the API key.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>.</exception>
     protected ClientBase(ClientOptions options, AuthorizationOptions auth) {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(auth);
@@ -56,25 +55,25 @@ public abstract class ClientBase : IDisposable {
             BaseAddress = options.BaseEndpoint
         };
 
-        HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+        HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
         _authorization = new ApiKeyAuthorization(auth);
         _ownsHttpClient = true;
     }
 
     /// <summary>
-    /// Performs a GET request and parses the response into the specified contract type
+    /// Performs a GET request and parses the response into the specified contract type.
     /// </summary>
-    /// <typeparam name="TContract">The type to parse the response into</typeparam>
-    /// <param name="relative">The relative request URL</param>
-    /// <param name="parser">The parser for deserializing the response</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="queryParams">Optional query parameters</param>
-    /// <param name="ct">The ct token</param>
-    /// <returns>The parsed response</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c></exception>
-    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/></exception>
+    /// <typeparam name="TContract">The type to parse the response into.</typeparam>
+    /// <param name="relative">The relative request URL.</param>
+    /// <param name="parser">The parser for deserializing the response.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="queryParams">Optional query parameters.</param>
+    /// <param name="ct">The ct token.</param>
+    /// <returns>The parsed response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> is <c>null</c>.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/>.</exception>
     protected async Task<TContract> GetAsync<TContract>(string relative, IParser<TContract> parser, string acceptHeader, QueryParameters? queryParams = null, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(parser);
 
@@ -102,22 +101,63 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Combines the base address with a relative URL to produce an absolute URI
+    /// Performs a POST request with a JSON body and parses the response into the specified contract type.
     /// </summary>
-    /// <param name="relativeUrl">The relative URL path</param>
-    /// <returns>An absolute URI</returns>
+    /// <typeparam name="TRequest">The type to serialize as the request body.</typeparam>
+    /// <typeparam name="TResponse">The type to parse the response into.</typeparam>
+    /// <param name="relative">The relative request URL.</param>
+    /// <param name="request">The request body to serialize.</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type.</param>
+    /// <param name="parser">The parser for deserializing the response.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>The parsed response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> or <paramref name="requestType"/> is <c>null</c>.</exception>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled via <paramref name="ct"/>.</exception>
+    protected async Task<TResponse> PostAsync<TRequest, TResponse>(string relative, TRequest request, JsonTypeInfo<TRequest> requestType, IParser<TResponse> parser, string acceptHeader, CancellationToken ct = default) {
+        ArgumentNullException.ThrowIfNull(parser);
+        ArgumentNullException.ThrowIfNull(requestType);
+
+        var requestUri = BuildRequestUri(relative);
+        var endpoint = requestUri.ToString();
+
+        using var activity = DotBahnTelemetry.StartRequest(ApiName, endpoint, HttpClient.BaseAddress?.Host);
+        var start = Stopwatch.GetTimestamp();
+
+        try {
+            var raw = await ExecuteRequestAsync(requestUri, request, requestType, acceptHeader, ct).ConfigureAwait(false);
+            var result = parser.Parse(raw);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            return result;
+        } catch (OperationCanceledException) {
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, null);
+            throw;
+        } catch (Exception exception) {
+            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+            activity?.SetTag(DotBahnTelemetry.ErrorTypeTag, exception.GetType().Name);
+            DotBahnTelemetry.RecordRequest(Stopwatch.GetElapsedTime(start).TotalSeconds, ApiName, endpoint, exception.GetType().Name);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Combines the base address with a relative URL to produce an absolute URI.
+    /// </summary>
+    /// <param name="relativeUrl">The relative URL path.</param>
+    /// <returns>An absolute URI.</returns>
     private static Uri BuildRequestUri(string relativeUrl) {
         var path = relativeUrl.TrimStart('/');
         return new Uri(path, UriKind.Relative);
     }
 
     /// <summary>
-    /// Sends an authorized GET request and processes the response
+    /// Sends an authorized GET request and processes the response.
     /// </summary>
-    /// <param name="uri">The request URI</param>
-    /// <param name="acceptHeader">The acceptance header value</param>
-    /// <param name="ct">The ct token</param>
-    /// <returns>The response body as a string</returns>
+    /// <param name="uri">The request URI.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The ct token.</param>
+    /// <returns>The response body as a string.</returns>
     private async Task<string> ExecuteRequestAsync(Uri uri, string acceptHeader, CancellationToken ct) {
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
@@ -129,30 +169,47 @@ public abstract class ClientBase : IDisposable {
     }
 
     /// <summary>
-    /// Processes the HTTP response, returning the body for success status codes or throwing on errors
+    /// Sends an authorized POST request with a JSON body and processes the response.
     /// </summary>
-    /// <param name="response">The HTTP response message</param>
-    /// <returns>The response body for successful requests; <c>string.Empty</c> for 404</returns>
-    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code with a descriptive message</exception>
-    private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) {
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+    /// <typeparam name="TRequest">The type to serialize as the request body.</typeparam>
+    /// <param name="uri">The request URI.</param>
+    /// <param name="request">The request body to serialize.</param>
+    /// <param name="requestType">The source-generated JSON type info for the request type.</param>
+    /// <param name="acceptHeader">The acceptance header value.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>The response body as a string.</returns>
+    private async Task<string> ExecuteRequestAsync<TRequest>(Uri uri, TRequest request, JsonTypeInfo<TRequest> requestType, string acceptHeader, CancellationToken ct) {
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+        requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+        requestMessage.Content = JsonContent.Create(request, requestType, MediaTypeHeaderValue.Parse("application/json"));
 
-        return response.StatusCode switch {
-            HttpStatusCode.NotFound => string.Empty,
-            HttpStatusCode.Unauthorized => throw new HttpRequestException("Request was not authorized.", null, response.StatusCode),
-            HttpStatusCode.BadRequest => throw new HttpRequestException($"Bad request: {DescribeBody(body)}", null, response.StatusCode),
-            HttpStatusCode.Forbidden => throw new HttpRequestException("Access denied.", null, response.StatusCode),
-            HttpStatusCode.TooManyRequests => throw new HttpRequestException("Rate limit exceeded.", null, response.StatusCode),
-            _ when !response.IsSuccessStatusCode => throw new HttpRequestException($"The API responded with status {(int)response.StatusCode}: {DescribeBody(body)}", null, response.StatusCode),
-            _ => body
-        };
+        _authorization.AuthorizeRequest(requestMessage);
+
+        using var response = await HttpClient.SendAsync(requestMessage, ct).ConfigureAwait(false);
+        return await ProcessResponseAsync(response).ConfigureAwait(false);
     }
 
     /// <summary>
-    /// Truncates the response body for inclusion in exception messages
+    /// Processes the HTTP response, returning the body for success status codes or throwing on errors.
     /// </summary>
-    /// <param name="body">The raw response body</param>
-    /// <returns>The body unchanged if 200 characters or fewer; otherwise the first 200 characters with an ellipsis</returns>
+    /// <param name="response">The HTTP response message.</param>
+    /// <returns>The response body for successful requests; <c>string.Empty</c> for 404.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API responds with a non-success status code with a descriptive message.</exception>
+    private static async Task<string> ProcessResponseAsync(HttpResponseMessage response) {
+        if (response.StatusCode == HttpStatusCode.NotFound) {
+            return string.Empty;
+        }
+
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return !response.IsSuccessStatusCode ? throw new HttpRequestException($"The API responded with {(int)response.StatusCode} ({response.ReasonPhrase}): {DescribeBody(body)}", null, response.StatusCode) : body;
+
+    }
+
+    /// <summary>
+    /// Truncates the response body for inclusion in exception messages.
+    /// </summary>
+    /// <param name="body">The raw response body.</param>
+    /// <returns>The body unchanged if 200 characters or fewer; otherwise the first 200 characters with an ellipsis.</returns>
     private static string DescribeBody(string body) => string.IsNullOrEmpty(body) ? string.Empty : body.Length <= 200 ? body : body[..200] + "...";
 
     /// <inheritdoc />

@@ -1,7 +1,7 @@
 namespace DotBahn.Common.Models;
 
 /// <summary>
-/// Geographic coordinates representing the location of an entity
+/// Geographic coordinates representing the location of an entity.
 /// </summary>
 public readonly record struct Coordinates {
     /// <summary>

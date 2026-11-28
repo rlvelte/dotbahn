@@ -12,19 +12,18 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Facilities;
 
 /// <summary>
-/// Extension methods for registering the DotBahn Facilities client
+/// Extension methods for registering the DotBahn Facilities client.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Facilities";
-
     private static readonly Uri DefaultFacilitiesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/fasta/v2/");
 
     /// <summary>
-    /// Registers the <see cref="IFacilityClient"/> with its parser and transformer services
+    /// Registers the <see cref="IFacilityClient"/> with its parser and transformer services.
     /// </summary>
-    /// <param name="services">The service collection to add to</param>
-    /// <param name="configuration">Optional action to override default client options</param>
-    /// <returns>The service collection for chaining</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configuration">Optional action to override default client options.</param>
+    /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddDotBahnFacilities(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {
@@ -37,7 +36,7 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<IFacilityClient, FacilityClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<IEnumerable<FacilityContract>>>();

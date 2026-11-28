@@ -12,19 +12,19 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Timetables;
 
 /// <summary>
-/// Extension methods for registering the DotBahn Timetables client
+/// Extension methods for registering the DotBahn Timetables client.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Timetables";
-
     private static readonly Uri DefaultTimetablesEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/");
 
     /// <summary>
-    /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services
+    /// Registers the <see cref="ITimetableClient"/> with its parser, transformer, and merger services.
     /// </summary>
-    /// <param name="services">The service collection to add to</param>
-    /// <param name="configuration">Optional action to override default client options</param>
-    /// <returns>The service collection for chaining</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configuration">Optional action to override default client options.</param>
+    /// <returns>The service collection for chaining.</returns>
+    [Obsolete("The Deutsche Bahn Timetables API is being shut down. Use AddDotBahnBoards() from DotBahn.Boards instead.", false)]
     public static IServiceCollection AddDotBahnTimetables(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {
@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<ITimetableClient, TimetableClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<TimetableResponseContract>>();

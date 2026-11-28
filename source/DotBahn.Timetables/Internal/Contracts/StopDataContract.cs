@@ -3,37 +3,37 @@ using System.Diagnostics.CodeAnalysis;
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
-/// Raw structure for a single stop
+/// Raw structure for a single stop.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record StopDataContract {
     /// <summary>
-    /// Unique stop ID
+    /// Unique stop ID.
     /// </summary>
     public string Id { get; init; } = string.Empty;
 
     /// <summary>
-    /// EVA number of the station
+    /// EVA number of the station.
     /// </summary>
     public string Eva { get; init; } = string.Empty;
 
     /// <summary>
-    /// Trip label information
+    /// Trip label information.
     /// </summary>
     public TripInfoContract? TripInfo { get; init; }
 
     /// <summary>
-    /// Arrival information
+    /// Arrival information.
     /// </summary>
     public EventContract? Arrival { get; init; }
 
     /// <summary>
-    /// Departure information
+    /// Departure information.
     /// </summary>
     public EventContract? Departure { get; init; }
 
     /// <summary>
-    /// List of messages
+    /// List of messages.
     /// </summary>
     public List<MessageContract>? Messages { get; init; }
 }

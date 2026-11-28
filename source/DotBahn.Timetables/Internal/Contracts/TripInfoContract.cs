@@ -3,32 +3,32 @@ using System.Diagnostics.CodeAnalysis;
 namespace DotBahn.Timetables.Internal.Contracts;
 
 /// <summary>
-/// Raw trip label (train information)
+/// Raw trip label (train information).
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal record TripInfoContract {
     /// <summary>
-    /// Filter flags
+    /// Filter flags.
     /// </summary>
     public string? FilterFlags { get; init; }
 
     /// <summary>
-    /// Trip type (p, e, f)
+    /// Trip type (p, e, f).
     /// </summary>
     public string? TripType { get; init; }
 
     /// <summary>
-    /// Train owner
+    /// Train owner.
     /// </summary>
     public string? Owner { get; init; }
 
     /// <summary>
-    /// Train category (e.g., ICE)
+    /// Train category (e.g., ICE).
     /// </summary>
     public string? Category { get; init; }
 
     /// <summary>
-    /// Train number
+    /// Train number.
     /// </summary>
     public string? Number { get; init; }
 }

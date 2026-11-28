@@ -13,5 +13,6 @@
     <InternalsVisibleTo Include="DotBahn.Common.Tests" />
     <InternalsVisibleTo Include="DotBahn.Telemetry.Tests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="DotBahn.Benchmarks" />
   </ItemGroup>
 </Project>

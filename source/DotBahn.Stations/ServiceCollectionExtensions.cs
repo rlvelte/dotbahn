@@ -12,18 +12,18 @@ using Microsoft.Extensions.Options;
 namespace DotBahn.Stations;
 
 /// <summary>
-/// Extension methods for registering the DotBahn Stations client
+/// Extension methods for registering the DotBahn Stations client.
 /// </summary>
 public static class ServiceCollectionExtensions {
     private const string OptionsName = "DotBahn.Stations";
     private static readonly Uri DefaultStationsEndpoint = new("https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/");
 
     /// <summary>
-    /// Registers the <see cref="IStationClient"/> with its parser and transformer services
+    /// Registers the <see cref="IStationClient"/> with its parser and transformer services.
     /// </summary>
-    /// <param name="services">The service collection to add to</param>
-    /// <param name="configuration">Optional action to override default client options</param>
-    /// <returns>The service collection for chaining</returns>
+    /// <param name="services">The service collection to add to.</param>
+    /// <param name="configuration">Optional action to override default client options.</param>
+    /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddDotBahnStations(this IServiceCollection services, Action<ClientOptions>? configuration = null) {
         services.AddOptions<ClientOptions>(OptionsName)
                 .Configure(opts => {
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions {
         services.AddHttpClient<IStationClient, StationClient>(OptionsName, (http, sp) => {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientOptions>>().Get(OptionsName);
             http.BaseAddress = options.BaseEndpoint;
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.0 (+https://github.com/rlvelte/dotbahn)");
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("DotBahn/2.X (+https://github.com/rlvelte/dotbahn)");
 
             var auth = sp.GetRequiredService<IAuthorization>();
             var parser = sp.GetRequiredService<IParser<StationsResponseContract>>();

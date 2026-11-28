@@ -33,12 +33,14 @@ jobs:
       - name: Setup .NET 10
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: '10.0.x'
+          global-json-file: global.json
           cache: true
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore
-        run: dotnet restore DotBahn.slnx --locked-mode
+        run: |
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
 
       - name: Pack NuGet
         run: dotnet pack DotBahn.slnx --no-restore --configuration Release --output ./nupkgs
@@ -85,13 +87,14 @@ jobs:
       - name: Setup .NET 10
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: '10.0.x'
+          global-json-file: global.json
           cache: true
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Build library (produces XML doc files)
         run: |
-          dotnet restore DotBahn.slnx --locked-mode
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
           dotnet build DotBahn.slnx --no-restore --configuration Release
 
       - name: Build docs
@@ -169,12 +172,13 @@ jobs:
       - name: Setup .NET 10
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: '10.0.x'
+          global-json-file: global.json
 
       - name: Generate dependency SBOM
         run: |
           dotnet tool restore
-          dotnet restore DotBahn.slnx --locked-mode
+          dotnet restore DotBahn.slnx --force-evaluate
+          git diff --exit-code -- '**/packages.lock.json'
           dotnet cyclonedx DotBahn.slnx -o ./build/sbom -F Json
 
       - name: Download packages
@@ -184,7 +188,7 @@ jobs:
           path: ./nupkgs
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}

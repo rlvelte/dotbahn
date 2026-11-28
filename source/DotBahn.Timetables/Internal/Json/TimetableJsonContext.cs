@@ -6,7 +6,7 @@ using DotBahn.Timetables.Models.Enumerations;
 namespace DotBahn.Timetables.Internal.Json;
 
 /// <summary>
-/// Source-generated JSON serialization metadata for timetable contracts and enums
+/// Source-generated JSON serialization metadata for timetable contracts and enums.
 /// </summary>
 [ExcludeFromCodeCoverage]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]

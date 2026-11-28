@@ -6,7 +6,7 @@ using DotBahn.Timetables.Internal.Contracts;
 namespace DotBahn.Timetables.Internal.Parsing;
 
 /// <summary>
-/// Manual XML parser for <see cref="TimetableResponseContract"/>
+/// Manual XML parser for <see cref="TimetableResponseContract"/>.
 /// </summary>
 internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     private static readonly XName StationName = "timetable";
@@ -17,7 +17,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     private static readonly XName MessageName = "m";
 
     /// <inheritdoc />
-    /// <exception cref="XmlException">Thrown when the XML is malformed or required attributes are missing</exception>
+    /// <exception cref="XmlException">Thrown when the XML is malformed or required attributes are missing.</exception>
     public TimetableResponseContract Parse(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
             return new TimetableResponseContract();
@@ -38,7 +38,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
     }
 
     /// <summary>
-    /// Parses a single stop element
+    /// Parses a single stop element.
     /// </summary>
     private static StopDataContract ParseStop(XElement stopElement) {
         var tripInfo = stopElement.Element(TripInfoName) is { } tripInfoElement ? ParseTripInfo(tripInfoElement) : null;
@@ -52,23 +52,23 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
             TripInfo = tripInfo,
             Arrival = arrival,
             Departure = departure,
-            Messages = messages.Count > 0 ? messages : null,
+            Messages = messages.Count > 0 ? messages : null
         };
     }
 
     /// <summary>
-    /// Parses a trip label element
+    /// Parses a trip label element.
     /// </summary>
     private static TripInfoContract ParseTripInfo(XElement element) => new() {
         Category = (string?)element.Attribute("c"),
         Number = (string?)element.Attribute("n"),
         Owner = (string?)element.Attribute("o"),
         TripType = (string?)element.Attribute("t"),
-        FilterFlags = (string?)element.Attribute("f"),
+        FilterFlags = (string?)element.Attribute("f")
     };
 
     /// <summary>
-    /// Parses an arrival or departure event element
+    /// Parses an arrival or departure event element.
     /// </summary>
     private static EventContract ParseEvent(XElement element) => new() {
         PlannedTime = (string?)element.Attribute("pt"),
@@ -84,11 +84,11 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
         PlannedDistantEndpoint = (string?)element.Attribute("pde"),
         ChangedDistantEndpoint = (string?)element.Attribute("cde"),
         Wings = (string?)element.Attribute("wings"),
-        Transition = (string?)element.Attribute("tra"),
+        Transition = (string?)element.Attribute("tra")
     };
 
     /// <summary>
-    /// Parses a message element
+    /// Parses a message element.
     /// </summary>
     private static MessageContract ParseMessage(XElement element) => new() {
         Id = (string?)element.Attribute("id"),
@@ -103,7 +103,7 @@ internal sealed class TimetableXmlParser : IParser<TimetableResponseContract> {
         Priority = (string?)element.Attribute("priority"),
         Owner = (string?)element.Attribute("owner"),
         Category = (string?)element.Attribute("cat"),
-        Text = element.Value,
+        Text = element.Value
     };
 
     private static string RequiredAttr(XElement element, string name) => (string?)element.Attribute(name) ?? throw new XmlException($"Missing required attribute '{name}' on <{element.Name}>.");

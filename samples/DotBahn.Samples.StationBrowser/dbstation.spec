@@ -19,6 +19,7 @@ built with DotBahn (https://github.com/rlvelte/dotbahn).
 
 %install
 install -Dm755 dbstation %{buildroot}%{_bindir}/dbstation
+install -Dm644 bom.json %{buildroot}%{_datadir}/%{name}/bom.json
 
 %check
 :
@@ -26,6 +27,7 @@ install -Dm755 dbstation %{buildroot}%{_bindir}/dbstation
 %files
 %license LICENSE
 %{_bindir}/dbstation
+%{_datadir}/%{name}/bom.json
 
 %changelog
 * Wed Oct 28 2026 Robin L. Velte <rlvelte@users.noreply.github.com> - 2.1.1-0

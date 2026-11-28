@@ -1,4 +1,6 @@
+# Publishes all CSPROJ marked as executable in the 'SAMPLES_DIR' as binaries.
 $ErrorActionPreference = 'Stop'
+
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Set-Location $root
 
@@ -12,7 +14,7 @@ function Get-Rid {
     } elseif ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) {
         'linux'
     } else {
-        throw "unsupported OS"
+        throw "unsupported os"
     }
 
     $arch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
@@ -21,6 +23,7 @@ function Get-Rid {
         'Arm64' { 'arm64' }
         default { 'x64' }
     }
+
     return "$os-$archName"
 }
 
@@ -29,11 +32,16 @@ $rid = Get-Rid
 foreach ($projectDir in Get-ChildItem (Join-Path $root $samplesDir) -Directory) {
     $csprojs = Get-ChildItem -Path (Join-Path $projectDir.FullName '*.csproj') -File
     foreach ($csproj in $csprojs) {
-        if (-not (Select-String -Path $csproj.FullName -Pattern '<OutputType>Exe</OutputType>' -Quiet)) { continue }
+        if (-not (Select-String -Path $csproj.FullName -Pattern '<OutputType>Exe</OutputType>' -Quiet)) {
+            continue
+        }
+
         $name = $csproj.BaseName
         $projectPath = $csproj.Directory.FullName
+
         $source = Join-Path $projectPath "bin/$configuration/net10.0/$rid/publish"
         $out = Join-Path $root "$publishDir/$rid/$name"
+
         New-Item -ItemType Directory -Force -Path $out | Out-Null
 
         dotnet publish $csproj.FullName `
@@ -42,10 +50,13 @@ foreach ($projectDir in Get-ChildItem (Join-Path $root $samplesDir) -Directory) 
             --self-contained `
             -p:PublishAot=true `
             -p:StripSymbols=true `
+            -p:NuGetLockFilePath=obj/aot.lock.json `
             --verbosity minimal
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+        if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+        }
 
         Copy-Item -Path (Join-Path $source '*') -Destination $out -Force
-        Write-Host "published: $out"
     }
 }

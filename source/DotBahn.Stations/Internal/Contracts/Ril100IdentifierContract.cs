@@ -10,13 +10,13 @@ namespace DotBahn.Stations.Internal.Contracts;
 [ExcludeFromCodeCoverage]
 internal record Ril100IdentifierContract {
     /// <summary>
-    /// Gets the Ril identifier
+    /// Gets the Ril identifier.
     /// </summary>
     [JsonPropertyName("rilIdentifier")]
     public string RilIdentifier { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets a value indicating whether this is the main identifier
+    /// Gets a value indicating whether this is the main identifier.
     /// </summary>
     [JsonConverter(typeof(BahnDialectJsonConverter))]
     [JsonPropertyName("isMain")]

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DotBahn.Stations;
 
 /// <summary>
-/// Client for accessing 'Deutsche Bahn StaDa'-API
+/// Client for accessing 'Deutsche Bahn StaDa'-API.
 /// </summary>
 public class StationClient : ClientBase, IStationClient {
     private readonly IParser<StationsResponseContract> _parser;
@@ -21,12 +21,12 @@ public class StationClient : ClientBase, IStationClient {
     protected override string ApiName => "stations";
 
     /// <summary>
-    /// Client for accessing 'Deutsche Bahn StaDa'-API
+    /// Client for accessing 'Deutsche Bahn StaDa'-API.
     /// </summary>
-    /// <param name="http">The HTTP client used for requests</param>
-    /// <param name="authorization">The provider used for retrieving access tokens</param>
-    /// <param name="parser">The parser for this contract type</param>
-    /// <param name="transformer">The transformer for this model and contract types</param>
+    /// <param name="http">The HTTP client used for requests.</param>
+    /// <param name="authorization">The provider used for retrieving access tokens.</param>
+    /// <param name="parser">The parser for this contract type.</param>
+    /// <param name="transformer">The transformer for this model and contract types.</param>
     [ActivatorUtilitiesConstructor]
     internal StationClient(HttpClient http, IAuthorization authorization, IParser<StationsResponseContract> parser, ITransformer<IEnumerable<Station>, StationsResponseContract> transformer)
         : base(http, authorization) {
@@ -35,16 +35,15 @@ public class StationClient : ClientBase, IStationClient {
     }
 
     /// <summary>
-    /// Client for accessing 'Deutsche Bahn StaDa'-API
+    /// Client for accessing 'Deutsche Bahn StaDa'-API.
     /// </summary>
     /// <remarks>
     /// Creates and owns its own <see cref="HttpClient"/>. Dispose this instance to release it.
-    /// Use only when instantiating manually without a DI container
+    /// Use only when instantiating manually without a DI container.
     /// </remarks>
-    /// <param name="options">The options for this instance</param>
-    /// <param name="auth">The auth credentials for the client</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <c>null</c></exception>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="auth"/> is <c>null</c></exception>
+    /// <param name="options">The options for this instance.</param>
+    /// <param name="auth">The auth credentials for the client.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="auth"/> is <c>null</c>.</exception>
     public StationClient(ClientOptions options, AuthorizationOptions auth)
         : base(options, auth) {
         _parser = new JsonParser<StationsResponseContract>(StationsJsonContext.Default.StationsResponseContract);
@@ -52,7 +51,7 @@ public class StationClient : ClientBase, IStationClient {
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c>.</exception>
     public async Task<IReadOnlyList<Station>> GetStationsAsync(StationQuery query, CancellationToken ct = default) {
         ArgumentNullException.ThrowIfNull(query);
 
